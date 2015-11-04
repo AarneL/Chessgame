@@ -1,0 +1,65 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf140
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww25400\viewh13220\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs48 \cf0 Project plan - Chess engine
+\fs36 \
+\
+\
+
+\b Topic description
+\b0 \
+
+\fs24 \
+Our topic is a chess engine with a graphical user interface. The game can be played with two players or with one player against artificial intelligence.\
+The AI will have different difficulty levels.
+\fs36 \
+\
+\
+
+\b Structure\
+\
+
+\b0\fs24 Henkka tekee hienon luokkakaavion t\'e4h\'e4n :) plus jotain h\'f6pin\'e4\'e4
+\b\fs36 \
+\
+Testing
+\b0 \
+\
+\
+\
+
+\b Schedule\
+\
+
+\b0\fs24 pit\'e4isk\'f6 t\'e4n olla joku taulukko tai muu niin sais enemm\'e4n tilaa k\'e4ytetty\'e4?:D
+\b\fs36 \
+\
+
+\b0\fs24 Week 45 (2.-8.11):\
+- Project plan (DL 6.11)\
+\
+Week 46 (9.-15.11):\
+\
+Week 47 (16.-22.11):\
+- Mid-meetings\
+\
+Week 48 (23.-29.11):\
+\
+Week 49 (30.11-6.12):\
+\
+Week 50 (7.-11.12):\
+- Final demo
+\b\fs36 \
+\
+Team work\
+
+\b0\fs24 \
+Our team is using git for keeping things together. We are using separate branches that are merged to master when they are done and working.\
+For communication we are using irc. \
+\
+
+\b\fs36 \
+}
