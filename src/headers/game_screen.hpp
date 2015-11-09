@@ -2,10 +2,10 @@
 
 #include <SFML/Graphics.hpp>
 
-class GaneScreen : public BaseScreen
+class GameScreen : public BaseScreen
 {
 private:
 public:
-    GaneScreen(void);
+    GameScreen(void);
     virtual BaseScreen* Run(sf::RenderWindow &App);
 };
