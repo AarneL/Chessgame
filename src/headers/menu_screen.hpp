@@ -14,6 +14,8 @@ public:
 private:
 	sf::Texture backgroundtexture;
 	sf::Sprite background;
+	sf::Texture playbuttontexture;
+	sf::Sprite playbutton;
 };
 
 #endif /* MENU_SCREEN_H */

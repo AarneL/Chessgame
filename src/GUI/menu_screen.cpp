@@ -9,6 +9,9 @@ void MenuScreen::LoadContent(void)
 {
 	backgroundtexture.loadFromFile("media/img/background.jpg");
 	background.setTexture(backgroundtexture);
+	playbuttontexture.loadFromFile("media/img/playbutton.png");
+	playbutton.setTexture(playbuttontexture);
+	playbutton.setPosition(sf::Vector2f(300, 400));
 }
 
 void MenuScreen::Update(void)
@@ -20,15 +23,19 @@ int MenuScreen::Run(sf::RenderWindow &App)
 {
 	sf::Event event;
     while (App.pollEvent(event)) {
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			return 1;
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			sf::Vector2i v = sf::Mouse::getPosition(App);
+			std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
+			if (playbutton.getLocalBounds().contains((sf::Vector2f)v))
+				return 1;
+		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-			return -1;
-			
+			return -1;		
     }
 
-    App.clear(sf::Color(200,10,200, 255));
 	App.draw(background);
+	App.draw(playbutton);
 	App.display();
 	return 0;
 }

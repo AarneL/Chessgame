@@ -21,8 +21,8 @@ int main(int argc, char** argv)
 	Screens.push_back(&gameScreen);
 
     // Window creation
-    sf::RenderWindow App(sf::VideoMode(640, 480, 32), "Best chess game ever");
-
+    sf::RenderWindow App(sf::VideoMode(800, 800), "Chess game");
+	
     // Mouse cursor no more visible
     App.setMouseCursorVisible(true);
 	
