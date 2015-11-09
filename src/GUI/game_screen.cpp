@@ -3,16 +3,28 @@
 #include "./../headers/menu_screen.hpp"
 #include <SFML/Graphics.hpp>
 
+
+
 GameScreen::GameScreen(void)
 {
 }
 
-BaseScreen* GameScreen::Run(sf::RenderWindow &App)
+void GameScreen::LoadContent(void)
+{
+
+}
+
+
+void GameScreen::Update(void)
+{
+
+}
+
+int GameScreen::Run(sf::RenderWindow &App)
 {
     while (1) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            return new MenuScreen();
-
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			return 0;
         App.clear(sf::Color(0,10,200, 255));
         App.display();
     }

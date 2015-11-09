@@ -9,7 +9,9 @@ class MenuScreen : public BaseScreen
 private:
 public:
     MenuScreen(void);
-    virtual BaseScreen* Run(sf::RenderWindow &App);
+	virtual void LoadContent(void);
+	virtual void Update(void);
+    virtual int Run(sf::RenderWindow &App);
 };
 
 #endif /* MENU_SCREEN_H */

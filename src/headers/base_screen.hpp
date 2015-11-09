@@ -5,7 +5,9 @@
 class BaseScreen
 {
 public :
-    virtual BaseScreen* Run (sf::RenderWindow &App) = 0;
+	virtual void LoadContent(void) = 0;
+	virtual void Update(void) = 0;
+    virtual int Run (sf::RenderWindow &App) = 0;
 };
 
 #endif
