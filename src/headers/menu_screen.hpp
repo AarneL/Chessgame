@@ -6,12 +6,14 @@
 
 class MenuScreen : public BaseScreen
 {
-private:
 public:
     MenuScreen(void);
 	virtual void LoadContent(void);
 	virtual void Update(void);
     virtual int Run(sf::RenderWindow &App);
+private:
+	sf::Texture backgroundtexture;
+	sf::Sprite background;
 };
 
 #endif /* MENU_SCREEN_H */

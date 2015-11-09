@@ -24,7 +24,7 @@ int main(int argc, char** argv)
     sf::RenderWindow App(sf::VideoMode(640, 480, 32), "Best chess game ever");
 
     // Mouse cursor no more visible
-    App.setMouseCursorVisible(false);
+    App.setMouseCursorVisible(true);
 	
 	// Load Screen contents, needs to be only once
 	for (auto s : Screens)
@@ -32,11 +32,11 @@ int main(int argc, char** argv)
 		s->LoadContent();
 	}
 
-    // sMain loop
+    // Main loop
     while (screen >= 0)
     {
         screen = Screens[screen]->Run(App);
     }
-
+	
     return EXIT_SUCCESS;
 }
