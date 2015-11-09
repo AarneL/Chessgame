@@ -60,11 +60,29 @@ int main() {
 		if (event.type == sf::Event::MouseButtonPressed) {
 			for (std::vector<sf::Sprite>::iterator i=vBoard_base.begin(); i!=vBoard_base.end(); i++){
 
-				if(sf::Mouse::getPosition(window).x > i->getGlobalBounds().left
+			/*
+			if(sf::Mouse::getPosition(window).x > i->getGlobalBounds().left
 					&& sf::Mouse::getPosition(window).x < (i->getGlobalBounds().left + i->getGlobalBounds().width)
 					&& sf::Mouse::getPosition(window).y > i->getGlobalBounds().top
 					&& sf::Mouse::getPosition(window).y < (i->getGlobalBounds().top + i->getGlobalBounds().height))	{
-						//set highlight
+			*/
+			sf::Vector2i mpos = sf::Mouse::getPosition(window);
+			//sf::Vector2i mpos = sf::Mouse::getPosition();
+
+			if (i->getGlobalBounds().contains((sf::Vector2f)mpos) ) {
+			//if (i->getLocalBounds().contains((sf::Vector2f)mpos) ) {
+
+			//sf::Vector2f spos = i->getPosition();
+			//sf::FloatRect sbounds = i->getLocalBounds();
+
+
+				/*
+				if(sf::Mouse::getPosition().x > i->getGlobalBounds().left
+					&& sf::Mouse::getPosition().x < (i->getGlobalBounds().left + i->getGlobalBounds().width)
+					&& sf::Mouse::getPosition().y > i->getGlobalBounds().top
+					&& sf::Mouse::getPosition().y < (i->getGlobalBounds().top + i->getGlobalBounds().height))	{
+				*/
+					//set highlight
 						if (i->getColor() == color_square_dark)
 							i->setColor(color_highlight_square_dark);
 						else if (i->getColor() == color_square_light)
