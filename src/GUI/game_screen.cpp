@@ -1,3 +1,8 @@
+#include "./../headers/base_screen.hpp"
+#include "./../headers/game_screen.hpp"
+#include "./../headers/menu_screen.hpp"
+#include <SFML/Graphics.hpp>
+
 GameScreen::GameScreen(void)
 {
 }

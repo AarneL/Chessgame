@@ -1,6 +1,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "headers/screens.hpp"
+#include "./headers/base_screen.hpp"
+#include "./headers/game_screen.hpp"
+#include "./headers/menu_screen.hpp"
 
 int main(int argc, char** argv)
 {

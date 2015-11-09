@@ -1,3 +1,6 @@
+#include "./../headers/menu_screen.hpp"
+#include "./../headers/base_screen.hpp"
+
 MenuScreen::MenuScreen(void)
 {
 }
