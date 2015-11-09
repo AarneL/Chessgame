@@ -17,7 +17,7 @@ class Square {
 
 		//Check if there is a piece, and return the piece
 		bool isOccupied() const;
-		Piece& getOccupant() const;
+		Piece* getOccupant() const;
 
 		//Use this when rendering
 		sf::Sprite& getSprite() const;
@@ -42,7 +42,7 @@ class Square {
 
 		//Piece class instance
 		//TODO: reference or pointer, how about unoccupied squares? "NonePiece"?
-		Piece& occupant;
+		Piece* occupant;
 
 
 
