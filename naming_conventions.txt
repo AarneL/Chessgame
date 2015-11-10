@@ -1,0 +1,22 @@
+Variable names: lowerCamelCase
+	e.g. screens, menuScreen
+
+Functions: lowerCamelCase
+	e.g. draw(), loadContent()
+
+Classes: UpperCamelCase
+	e.g. class MenuScreen
+
+Names representing types: UpperCamelCase
+	e.g. typedef enum MyType
+
+Template types: single capital letter
+	e.g. template<class T>
+
+Named constants: UPPER_CASE with underscore separating words
+	e.g. MAX_ITERATIONS = 10
+
+File names: lower_case with underscore seprating words
+	e.g. menu_screen.hpp
+
+Tab size: 4
