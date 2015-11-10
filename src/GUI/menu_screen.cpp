@@ -27,8 +27,13 @@ int MenuScreen::Run(sf::RenderWindow &App)
 		{
 			sf::Vector2i v = sf::Mouse::getPosition(App);
 			std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
-			if (playbutton.getLocalBounds().contains((sf::Vector2f)v))
+
+			if (playbutton.getGlobalBounds().contains((sf::Vector2f)v))
+			{
+				// Start gamescreen
+				std::cout << "User pressed playbutton." << std::endl;
 				return 1;
+			}
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			return -1;		
