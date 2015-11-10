@@ -1,6 +1,7 @@
 #ifndef BASESCREEN_H
 #define BASESCREEN_H
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 class BaseScreen
 {

@@ -5,6 +5,7 @@
 #include "./headers/base_screen.hpp"
 #include "./headers/game_screen.hpp"
 #include "./headers/menu_screen.hpp"
+#include "./headers/options_screen.hpp"
 
 int main(int argc, char** argv)
 {
@@ -16,9 +17,10 @@ int main(int argc, char** argv)
 	// Screens
 	MenuScreen menuScreen;
 	GameScreen gameScreen;
-
+	OptionsScreen optionsScreen;
 	Screens.push_back(&menuScreen);
 	Screens.push_back(&gameScreen);
+	Screens.push_back(&optionsScreen);
 
     // Window creation
     sf::RenderWindow App(sf::VideoMode(800, 800), "Chess game");
