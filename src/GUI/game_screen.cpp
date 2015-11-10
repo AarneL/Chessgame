@@ -9,27 +9,26 @@ GameScreen::GameScreen(void)
 {
 }
 
-void GameScreen::LoadContent(void)
+void GameScreen::loadContent(void)
 {
 
 }
 
 
-void GameScreen::Update(void)
-{
-
-}
-
-int GameScreen::Run(sf::RenderWindow &App)
+int GameScreen::update(sf::RenderWindow &window)
 {
 	sf::Event event;
-    while (App.pollEvent(event)) {
+    while (window.pollEvent(event)) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 			return 0;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			return -1;
     }
-	App.clear(sf::Color(0, 10, 200, 255));
-    App.display();
 	return 1;
+}
+
+void GameScreen::draw(sf::RenderWindow &window)
+{
+	window.clear(sf::Color(0, 10, 200, 255));
+    window.display();
 }

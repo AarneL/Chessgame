@@ -7,12 +7,12 @@ class OptionsScreen : public BaseScreen
 {
 public:
 	OptionsScreen(void);
-	virtual void LoadContent(void);
-	virtual void Update(void);
-	virtual int Run(sf::RenderWindow &App);
+	virtual void loadContent(void);
+	virtual int update(sf::RenderWindow &window);
+	virtual void draw(sf::RenderWindow &window);
 private:
-	sf::Texture backbuttontexture;
-	sf::Sprite backbutton;
+	sf::Texture backButtonTexture;
+	sf::Sprite backButton;
 };
 
 #endif /* OPTIONS_SCREEN_H */

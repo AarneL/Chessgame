@@ -8,9 +8,9 @@ class GameScreen : public BaseScreen
 private:
 public:
     GameScreen(void);
-	virtual void LoadContent(void);
-	virtual void Update(void);
-    virtual int Run(sf::RenderWindow &App);
+	virtual void loadContent(void);
+	virtual int update(sf::RenderWindow &window);
+    virtual void draw(sf::RenderWindow &window);
 };
 
 #endif

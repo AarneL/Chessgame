@@ -5,66 +5,63 @@ MenuScreen::MenuScreen(void)
 {
 }
 
-void MenuScreen::LoadContent(void)
+void MenuScreen::loadContent(void)
 {
-	backgroundtexture.loadFromFile("media/img/background.jpg");
-	background.setTexture(backgroundtexture);
-	playbuttontexture.loadFromFile("media/img/playbutton.png");
-	playbutton.setTexture(playbuttontexture);
-	playbutton.setPosition(sf::Vector2f(300, 200));
-	optionsbuttontexture.loadFromFile("media/img/optionsbutton.png");
-	optionsbutton.setTexture(optionsbuttontexture);
-	optionsbutton.setPosition(sf::Vector2f(300, 400));
-	exitbuttontexture.loadFromFile("media/img/exitbutton.png");
-	exitbutton.setTexture(exitbuttontexture);
-	exitbutton.setPosition(sf::Vector2f(300, 600));
+	backgroundTexture.loadFromFile("media/img/background.jpg");
+	background.setTexture(backgroundTexture);
+	playButtonTexture.loadFromFile("media/img/playbutton.png");
+	playButton.setTexture(playButtonTexture);
+	playButton.setPosition(sf::Vector2f(300, 200));
+	optionsButtonTexture.loadFromFile("media/img/optionsbutton.png");
+	optionsButton.setTexture(optionsButtonTexture);
+	optionsButton.setPosition(sf::Vector2f(300, 400));
+	exitButtonTexture.loadFromFile("media/img/exitbutton.png");
+	exitButton.setTexture(exitButtonTexture);
+	exitButton.setPosition(sf::Vector2f(300, 600));
 }
 
-void MenuScreen::Update(void)
-{
-
-}
-
-int MenuScreen::Run(sf::RenderWindow &App)
+int MenuScreen::update(sf::RenderWindow &window)
 {
 	sf::Event event;
-    while (App.pollEvent(event)) {
+	while (window.pollEvent(event)) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			sf::Vector2i v = sf::Mouse::getPosition(App);
+			sf::Vector2i v = sf::Mouse::getPosition(window);
 			std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
 
-			if (playbutton.getGlobalBounds().contains((sf::Vector2f)v))
+			if (playButton.getGlobalBounds().contains((sf::Vector2f)v))
 			{
 				// Start gamescreen
 				std::cout << "User pressed playbutton." << std::endl;
 				return 1;
 			}
-			
-			if (optionsbutton.getGlobalBounds().contains((sf::Vector2f)v))
+
+			if (optionsButton.getGlobalBounds().contains((sf::Vector2f)v))
 			{
 				// Start optionsscreen
 				std::cout << "User pressed optionsbutton." << std::endl;
 				return 2;
 			}
 
-			if (exitbutton.getGlobalBounds().contains((sf::Vector2f)v))
+			if (exitButton.getGlobalBounds().contains((sf::Vector2f)v))
 			{
 				// Exit program
 				std::cout << "User pressed exitbutton." << std::endl;
 				return -1;
 			}
 
-
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-			return -1;		
-    }
-
-	App.draw(background);
-	App.draw(playbutton);
-	App.draw(optionsbutton);
-	App.draw(exitbutton);
-	App.display();
+			return -1;
+	}
 	return 0;
+}
+
+void MenuScreen::draw(sf::RenderWindow &window)
+{
+	window.draw(background);
+	window.draw(playButton);
+	window.draw(optionsButton);
+	window.draw(exitButton);
+	window.display();
 }

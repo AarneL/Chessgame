@@ -7,18 +7,18 @@ class MenuScreen : public BaseScreen
 {
 public:
     MenuScreen(void);
-	virtual void LoadContent(void);
-	virtual void Update(void);
-    virtual int Run(sf::RenderWindow &App);
+	virtual void loadContent(void);
+	virtual int update(sf::RenderWindow &window);
+    virtual void draw(sf::RenderWindow &window);
 private:
-	sf::Texture backgroundtexture;
+	sf::Texture backgroundTexture;
 	sf::Sprite background;
-	sf::Texture playbuttontexture;
-	sf::Sprite playbutton;
-	sf::Texture optionsbuttontexture;
-	sf::Sprite optionsbutton;
-	sf::Texture exitbuttontexture;
-	sf::Sprite exitbutton;
+	sf::Texture playButtonTexture;
+	sf::Sprite playButton;
+	sf::Texture optionsButtonTexture;
+	sf::Sprite optionsButton;
+	sf::Texture exitButtonTexture;
+	sf::Sprite exitButton;
 };
 
 #endif /* MENU_SCREEN_H */

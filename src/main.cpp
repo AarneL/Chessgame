@@ -12,33 +12,36 @@ int main(int argc, char** argv)
 
     // Applications variables
 	int screen = 0;
-	std::vector<BaseScreen*> Screens;
-	
-	// Screens
+	std::vector<BaseScreen*> screens;
+
+	// screens
 	MenuScreen menuScreen;
 	GameScreen gameScreen;
 	OptionsScreen optionsScreen;
-	Screens.push_back(&menuScreen);
-	Screens.push_back(&gameScreen);
-	Screens.push_back(&optionsScreen);
+	screens.push_back(&menuScreen);
+	screens.push_back(&gameScreen);
+	screens.push_back(&optionsScreen);
 
     // Window creation
-    sf::RenderWindow App(sf::VideoMode(800, 800), "Chess game");
-	
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Chess game");
+
     // Mouse cursor no more visible
-    App.setMouseCursorVisible(true);
-	
+    window.setMouseCursorVisible(true);
+
 	// Load Screen contents, needs to be only once
-	for (auto s : Screens)
+	for (auto s : screens)
 	{
-		s->LoadContent();
+		s->loadContent();
 	}
 
     // Main loop
     while (screen >= 0)
     {
-        screen = Screens[screen]->Run(App);
+        screen = screens[screen]->update(window);
+        if (screen >= 0) {
+            screens[screen]->draw(window);
+        }
     }
-	
+
     return EXIT_SUCCESS;
 }

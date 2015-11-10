@@ -5,28 +5,23 @@ OptionsScreen::OptionsScreen(void)
 {
 }
 
-void OptionsScreen::LoadContent(void)
+void OptionsScreen::loadContent(void)
 {
-	backbuttontexture.loadFromFile("media/img/backbutton.jpg");
-	backbutton.setTexture(backbuttontexture);
-	backbutton.setPosition(sf::Vector2f(300, 200));
+	backButtonTexture.loadFromFile("media/img/backbutton.jpg");
+	backButton.setTexture(backButtonTexture);
+	backButton.setPosition(sf::Vector2f(300, 200));
 }
 
-void OptionsScreen::Update(void)
-{
-
-}
-
-int OptionsScreen::Run(sf::RenderWindow &App)
+int OptionsScreen::update(sf::RenderWindow &window)
 {
 	sf::Event event;
-	while (App.pollEvent(event)) {
+	while (window.pollEvent(event)) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			sf::Vector2i v = sf::Mouse::getPosition(App);
+			sf::Vector2i v = sf::Mouse::getPosition(window);
 			std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
 
-			if (backbutton.getGlobalBounds().contains((sf::Vector2f)v))
+			if (backButton.getGlobalBounds().contains((sf::Vector2f)v))
 			{
 				// Start optionsscreen
 				std::cout << "User pressed backbutton." << std::endl;
@@ -36,8 +31,11 @@ int OptionsScreen::Run(sf::RenderWindow &App)
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			return -1;
 	}
-
-	App.draw(backbutton);
-	App.display();
 	return 0;
+}
+
+void OptionsScreen::draw(sf::RenderWindow &window)
+{
+	window.draw(backButton);
+	window.display();
 }
