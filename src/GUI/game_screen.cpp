@@ -195,7 +195,7 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 					if (gameBoard[35].getGlobalBounds().contains((sf::Vector2f)mpos)) {
 						std::cout << "This is the right position" << std::endl;
 						auto pos = gameBoard[35].getPosition();
-						pieceClicked->move(pos);
+						pieceClicked->setPosition(pos);
 					}
 					// Take away the higlights
 					std::cout << "Take away the higlights" << std::endl;
