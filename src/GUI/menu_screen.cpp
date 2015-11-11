@@ -69,7 +69,7 @@ int MenuScreen::update(sf::RenderWindow &window, sf::Event & event)
 		if (newGameButton.getGlobalBounds().contains(v))
 		{
 			// Start newgamescreen
-			std::cout << "User pressed playButton." << std::endl;
+			std::cout << "User pressed newGameButton." << std::endl;
 			return 1;
 		}
 

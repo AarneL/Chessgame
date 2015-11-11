@@ -15,11 +15,13 @@ void NewGameScreen::loadContent(void)
 		std::cout << "File not found!" << std::endl;
 	onePlayerButton.setTexture(onePlayerButtonTexture);
 	onePlayerButton.setPosition(sf::Vector2f(300, 200));
+	elements.push_back(onePlayerButton);
 
 	if (!twoPlayersButtonTexture.loadFromFile("media/img/two_players.png"))
 		std::cout << "File not found!" << std::endl;
 	twoPlayersButton.setTexture(twoPlayersButtonTexture);
 	twoPlayersButton.setPosition(sf::Vector2f(300, 400));
+	elements.push_back(twoPlayersButton);
 }
 
 void NewGameScreen::createGame(int players)
@@ -84,7 +86,8 @@ int NewGameScreen::update(sf::RenderWindow &window, sf::Event &event)
 void NewGameScreen::draw(sf::RenderWindow &window)
 {
 	window.clear(sf::Color(0, 255, 0, 0));
-	window.draw(onePlayerButton);
-	window.draw(twoPlayersButton);
+	for (auto element : elements) {
+		window.draw(element);
+	}
 	window.display();
 }

@@ -7,7 +7,7 @@ class GameScreen : public BaseScreen
 {
 private:
 	/* To draw board properly program must have different sprite for each piece
-	 * 
+	 *
 	 */
 	// White pieces
 	sf::Texture whitePawnTexture;
@@ -38,6 +38,9 @@ private:
 	sf::Sprite whiteQueen;
 	sf::Sprite whiteKing;
 
+	// Vector of white pieces
+	std::vector<sf::Sprite> whitePieces;
+
 	// Black pieces
 	sf::Texture blackPawnTexture;
 	sf::Texture blackRookTexture;
@@ -67,11 +70,22 @@ private:
 	sf::Sprite blackQueen;
 	sf::Sprite blackKing;
 
+	std::vector<sf::Sprite> blackPieces;
+
+	// Game board
+	sf::Texture squareTexture;
+	std::vector<sf::Sprite> gameBoard;
+
+	// Containers for sprite elements so it can be looped
+	std::vector<sf::Sprite> elements;
+
+	sf::Sprite* pieceClicked;
+
 public:
     GameScreen(void);
-	virtual void loadContent(void);
-	virtual int update(sf::RenderWindow &window, sf::Event & event);
-    virtual void draw(sf::RenderWindow &window);
+	void loadContent(void);
+	int update(sf::RenderWindow &window, sf::Event & event);
+    void draw(sf::RenderWindow &window);
 };
 
 #endif

@@ -20,14 +20,14 @@ int main(int argc, char** argv)
     NewGameScreen newGameScreen;
 	GameScreen gameScreen;
 	OptionsScreen optionsScreen;
-	
+
 	screens.push_back(&menuScreen);
     screens.push_back(&newGameScreen);
 	screens.push_back(&gameScreen);
 	screens.push_back(&optionsScreen);
 
     // Window creation
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Chess game", 4);
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Chess game");
 
     // Mouse cursor no more visible
     window.setMouseCursorVisible(true);

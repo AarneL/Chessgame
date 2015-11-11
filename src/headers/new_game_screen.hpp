@@ -17,6 +17,9 @@ private:
 	sf::Sprite onePlayerButton;
 	sf::Texture twoPlayersButtonTexture;
 	sf::Sprite twoPlayersButton;
+
+	// Containers for sprite elements so it can be looped
+	std::vector<sf::Sprite> elements;
 };
 
 #endif
