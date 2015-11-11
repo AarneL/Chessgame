@@ -20,3 +20,13 @@ File names: lower_case with underscore seprating words
 	e.g. menu_screen.hpp
 
 Tab size: 4
+
+Comments:
+    - One-line comment: // This is my comment
+    
+    - Comment after sentence: int var = 0; // This is my comment after sentence
+    
+    - Multiline:    /* This is a multi-line comment.
+                     * the matching asterisks to the left
+                     * can make this easier to read
+                     */

@@ -18,6 +18,7 @@ int main(int argc, char** argv)
 	MenuScreen menuScreen;
 	GameScreen gameScreen;
 	OptionsScreen optionsScreen;
+	
 	screens.push_back(&menuScreen);
 	screens.push_back(&gameScreen);
 	screens.push_back(&optionsScreen);

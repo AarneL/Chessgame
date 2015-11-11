@@ -11,14 +11,20 @@ public:
 	virtual int update(sf::RenderWindow &window);
     virtual void draw(sf::RenderWindow &window);
 private:
+	// Temporary containers for elements
 	sf::Texture backgroundTexture;
 	sf::Sprite background;
-	sf::Texture playButtonTexture;
-	sf::Sprite playButton;
+	sf::Texture newGameButtonTexture;
+	sf::Sprite newGameButton;
+	sf::Texture loadGameButtonTexture;
+	sf::Sprite loadGameButton;
 	sf::Texture optionsButtonTexture;
 	sf::Sprite optionsButton;
 	sf::Texture exitButtonTexture;
 	sf::Sprite exitButton;
+
+	// Containers for sprite elements so it can be looped
+	std::vector<sf::Sprite> elements;
 };
 
 #endif /* MENU_SCREEN_H */
