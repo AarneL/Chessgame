@@ -39,7 +39,7 @@ private:
 	sf::Sprite whiteKing;
 
 	// Vector of white pieces
-	std::vector<sf::Sprite> whitePieces;
+	std::vector<sf::Sprite*> whitePieces;
 
 	// Black pieces
 	sf::Texture blackPawnTexture;

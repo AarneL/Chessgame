@@ -30,38 +30,38 @@ void GameScreen::loadContent(void)
 
 	// Set textures to pieces and push them to whitePieces vector in a right order
 	whitePawn1.setTexture(whitePawnTexture);
-	whitePieces.push_back(whitePawn1);
+	whitePieces.push_back(&whitePawn1);
 	whitePawn2.setTexture(whitePawnTexture);
-	whitePieces.push_back(whitePawn2);
+	whitePieces.push_back(&whitePawn2);
 	whitePawn3.setTexture(whitePawnTexture);
-	whitePieces.push_back(whitePawn3);
+	whitePieces.push_back(&whitePawn3);
 	whitePawn4.setTexture(whitePawnTexture);
-	whitePieces.push_back(whitePawn4);
+	whitePieces.push_back(&whitePawn4);
 	whitePawn5.setTexture(whitePawnTexture);
-	whitePieces.push_back(whitePawn5);
+	whitePieces.push_back(&whitePawn5);
 	whitePawn6.setTexture(whitePawnTexture);
-	whitePieces.push_back(whitePawn6);
+	whitePieces.push_back(&whitePawn6);
 	whitePawn7.setTexture(whitePawnTexture);
-	whitePieces.push_back(whitePawn7);
+	whitePieces.push_back(&whitePawn7);
 	whitePawn8.setTexture(whitePawnTexture);
-	whitePieces.push_back(whitePawn8);
+	whitePieces.push_back(&whitePawn8);
 
 	whiteRook1.setTexture(whiteRookTexture);
-	whitePieces.push_back(whiteRook1);
+	whitePieces.push_back(&whiteRook1);
 	whiteKnight1.setTexture(whiteKnightTexture);
-	whitePieces.push_back(whiteKnight1);
+	whitePieces.push_back(&whiteKnight1);
 	whiteBishop1.setTexture(whiteBishopTexture);
-	whitePieces.push_back(whiteBishop1);
+	whitePieces.push_back(&whiteBishop1);
 	whiteQueen.setTexture(whiteQueenTexture);
-	whitePieces.push_back(whiteQueen);
+	whitePieces.push_back(&whiteQueen);
 	whiteKing.setTexture(whiteKingTexture);
-	whitePieces.push_back(whiteKing);
+	whitePieces.push_back(&whiteKing);
 	whiteBishop2.setTexture(whiteBishopTexture);
-	whitePieces.push_back(whiteBishop2);
+	whitePieces.push_back(&whiteBishop2);
 	whiteKnight2.setTexture(whiteKnightTexture);
-	whitePieces.push_back(whiteKnight2);
+	whitePieces.push_back(&whiteKnight2);
 	whiteRook2.setTexture(whiteRookTexture);
-	whitePieces.push_back(whiteRook2);
+	whitePieces.push_back(&whiteRook2);
 
 	// Same for black pieces
 	blackRook1.setTexture(blackRookTexture);
@@ -127,7 +127,7 @@ void GameScreen::loadContent(void)
 		blackPieces[i].setPosition(sf::Vector2f( (i%8)*96, (i/8)*96 ));
 	}
 	for (int i = 0; i < 16; i++){
-		whitePieces[i].setPosition(sf::Vector2f( ((i+48)%8)*96, ((i+48)/8)*96 ));
+		whitePieces[i]->setPosition(sf::Vector2f( ((i+48)%8)*96, ((i+48)/8)*96 ));
 	}
 }
 
@@ -154,7 +154,7 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 		// If white turn
 		for (auto i : whitePieces) {
 			// Check if current piece is in the mouse position
-			if (i.getGlobalBounds().contains((sf::Vector2f)mpos) ) {
+			if (i->getGlobalBounds().contains((sf::Vector2f)mpos) ) {
 				// Check if some piece clicked
 				// If no, ask where the piece can move (get indexes for gameBoard)
 				// Like std::vector possibleIndexes = board.possibleMoves()
@@ -167,7 +167,7 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 					else if (gameBoard[35].getColor() == color_square_light)
 						gameBoard[35].setColor(color_highlight_square_light);
 					// Set piece clicked
-					pieceClicked = &i;
+					pieceClicked = i;
 					return 2;
 				}
 				else {
@@ -230,7 +230,7 @@ void GameScreen::draw(sf::RenderWindow &window)
 		window.draw(*i);
 	for (std::vector<sf::Sprite>::iterator i=blackPieces.begin(); i!=blackPieces.end(); i++)
 		window.draw(*i);
-	for (std::vector<sf::Sprite>::iterator i=whitePieces.begin(); i!=whitePieces.end(); i++)
+	for (auto i : whitePieces)
 		window.draw(*i);
     window.display();
 }
