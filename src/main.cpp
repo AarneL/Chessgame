@@ -9,12 +9,12 @@
 
 int main(int argc, char** argv)
 {
-
     // Applications variables
 	int screen = 0;
 	std::vector<BaseScreen*> screens;
+	sf::Event event;
 
-	// screens
+	// Screens
 	MenuScreen menuScreen;
 	GameScreen gameScreen;
 	OptionsScreen optionsScreen;
@@ -38,8 +38,11 @@ int main(int argc, char** argv)
     // Main loop
     while (screen >= 0)
     {
-        screen = screens[screen]->update(window);
-        if (screen >= 0) {
+		// Update window if event occurs
+		while (window.pollEvent(event)) {
+			screen = screens[screen]->update(window, event);
+		}
+		if (screen >= 0) {
             screens[screen]->draw(window);
         }
     }

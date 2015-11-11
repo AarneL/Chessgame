@@ -15,15 +15,12 @@ void GameScreen::loadContent(void)
 }
 
 
-int GameScreen::update(sf::RenderWindow &window)
-{
-	sf::Event event;
-    while (window.pollEvent(event)) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			return 0;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
+{		
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			return 0;	
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			return -1;
-    }
 	return 1;
 }
 

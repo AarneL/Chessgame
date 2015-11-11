@@ -8,7 +8,7 @@ class MenuScreen : public BaseScreen
 public:
     MenuScreen(void);
 	virtual void loadContent(void);
-	virtual int update(sf::RenderWindow &window);
+	virtual int update(sf::RenderWindow &window, sf::Event & event);
     virtual void draw(sf::RenderWindow &window);
 private:
 	// Temporary containers for elements

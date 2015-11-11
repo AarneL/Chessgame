@@ -10,9 +10,9 @@ void MenuScreen::loadContent(void)
 	/* All sprites need to be added to "elements" in right order 
 	 * so that what is drawn "behind" will be added first
 	 */
-	backgroundTexture.loadFromFile("media/img/background.jpg");
-	background.setTexture(backgroundTexture);
-	elements.push_back(background);
+	//backgroundTexture.loadFromFile("media/img/background.jpg");
+	//background.setTexture(backgroundTexture);
+	//elements.push_back(background);
 
 	newGameButtonTexture.loadFromFile("media/img/new_game_button.png");
 	newGameButton.setTexture(newGameButtonTexture);
@@ -21,66 +21,88 @@ void MenuScreen::loadContent(void)
 
 	loadGameButtonTexture.loadFromFile("media/img/load_game_button.png");
 	loadGameButton.setTexture(loadGameButtonTexture);
-	loadGameButton.setPosition(sf::Vector2f(300, 300));
+	loadGameButton.setPosition(sf::Vector2f(300, 250));
 	elements.push_back(loadGameButton);
 
 	optionsButtonTexture.loadFromFile("media/img/options_button.png");
 	optionsButton.setTexture(optionsButtonTexture);
-	optionsButton.setPosition(sf::Vector2f(300, 500));
+	optionsButton.setPosition(sf::Vector2f(300, 400));
 	elements.push_back(optionsButton);
 
 	exitButtonTexture.loadFromFile("media/img/exit_button.png");
 	exitButton.setTexture(exitButtonTexture);
-	exitButton.setPosition(sf::Vector2f(300, 700));
+	exitButton.setPosition(sf::Vector2f(300, 550));
 	elements.push_back(exitButton);
-
-	// Set positions
 	
 }
 
-int MenuScreen::update(sf::RenderWindow &window)
+int MenuScreen::update(sf::RenderWindow &window, sf::Event & event)
 {
-	sf::Event event;
-	while (window.pollEvent(event)) {
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	sf::Vector2f v = (sf::Vector2f)(sf::Mouse::getPosition(window));
+
+	// Hovering button highlights the sprite
+	if (event.type == sf::Event::MouseMoved)
+	{
+		std::cout << "Mouse moved" << std::endl;
+		if (newGameButton.getGlobalBounds().contains(v))
 		{
-			sf::Vector2i v = sf::Mouse::getPosition(window);
-			std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
-
-			if (newGameButton.getGlobalBounds().contains((sf::Vector2f)v))
-			{
-				// Start gamescreen
-				std::cout << "User pressed playButton." << std::endl;
-				return 1;
-			}
-
-			if (loadGameButton.getGlobalBounds().contains((sf::Vector2f)v))
-			{
-				// Exit program
-				std::cout << "User pressed loadButton." << std::endl;
-				return -1;
-			}
-
-			if (optionsButton.getGlobalBounds().contains((sf::Vector2f)v))
-			{
-				// Start optionsscreen
-				std::cout << "User pressed optionsbutton." << std::endl;
-				return 2;
-			}
-
-			if (exitButton.getGlobalBounds().contains((sf::Vector2f)v))
-			{
-				// Exit program
-				std::cout << "User pressed exitbutton." << std::endl;
-				return -1;
-			}
-
+			std::cout << "Mouse hovering newgamebutton" << std::endl;
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-			return -1;
+		if (loadGameButton.getGlobalBounds().contains(v))
+		{
+			std::cout << "Mouse hovering loadgamebutton" << std::endl;
+		}
+		if (optionsButton.getGlobalBounds().contains(v))
+		{
+			std::cout << "Mouse hovering optionsbutton" << std::endl;
+		}
+		if (exitButton.getGlobalBounds().contains(v))
+		{
+			std::cout << "Mouse hovering exitbutton" << std::endl;
+		}
 	}
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
+
+		if (newGameButton.getGlobalBounds().contains(v))
+		{
+			// Start gamescreen
+			std::cout << "User pressed playButton." << std::endl;
+			return 1;
+		}
+
+		if (loadGameButton.getGlobalBounds().contains(v))
+		{
+			// User pressed loadbutton->Open dialog box
+			std::cout << "User pressed loadButton." << std::endl;
+				
+		}
+
+		if (optionsButton.getGlobalBounds().contains(v))
+		{
+			// Start optionsscreen
+			std::cout << "User pressed optionsbutton." << std::endl;
+			return 2;
+		}
+
+		if (exitButton.getGlobalBounds().contains(v))
+		{
+			// Exit program
+			std::cout << "User pressed exitbutton." << std::endl;
+			return -1;
+		}
+	}
+
+	// Close whole program
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		return -1;
+
+	// Continue using same screen
 	return 0;
 }
+
 
 void MenuScreen::draw(sf::RenderWindow &window)
 {
