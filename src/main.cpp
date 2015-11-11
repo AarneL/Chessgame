@@ -40,6 +40,10 @@ int main(int argc, char** argv)
     {
 		// Update window if event occurs
 		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Resized) {
+				std::cout << "User resized window" << std::endl;
+				window.setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
+			}
 			screen = screens[screen]->update(window, event);
 		}
 		if (screen >= 0) {

@@ -106,6 +106,7 @@ int MenuScreen::update(sf::RenderWindow &window, sf::Event & event)
 
 void MenuScreen::draw(sf::RenderWindow &window)
 {
+	window.clear();
 	for (auto element : elements) {
 		window.draw(element);
 	}
