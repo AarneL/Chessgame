@@ -1,5 +1,5 @@
-#include "./../headers/menu_screen.hpp"
-#include "./../headers/base_screen.hpp"
+#include "../headers/menu_screen.hpp"
+#include "../headers/base_screen.hpp"
 
 MenuScreen::MenuScreen(void)
 {
@@ -7,7 +7,7 @@ MenuScreen::MenuScreen(void)
 
 void MenuScreen::loadContent(void)
 {
-	/* All sprites need to be added to "elements" in right order 
+	/* All sprites need to be added to "elements" in right order
 	 * so that what is drawn "behind" will be added first
 	 */
 	//backgroundTexture.loadFromFile("media/img/background.jpg");
@@ -33,7 +33,7 @@ void MenuScreen::loadContent(void)
 	exitButton.setTexture(exitButtonTexture);
 	exitButton.setPosition(sf::Vector2f(300, 550));
 	elements.push_back(exitButton);
-	
+
 }
 
 int MenuScreen::update(sf::RenderWindow &window, sf::Event & event)
@@ -68,7 +68,7 @@ int MenuScreen::update(sf::RenderWindow &window, sf::Event & event)
 
 		if (newGameButton.getGlobalBounds().contains(v))
 		{
-			// Start gamescreen
+			// Start newgamescreen
 			std::cout << "User pressed playButton." << std::endl;
 			return 1;
 		}
@@ -77,14 +77,14 @@ int MenuScreen::update(sf::RenderWindow &window, sf::Event & event)
 		{
 			// User pressed loadbutton->Open dialog box
 			std::cout << "User pressed loadButton." << std::endl;
-				
+
 		}
 
 		if (optionsButton.getGlobalBounds().contains(v))
 		{
 			// Start optionsscreen
 			std::cout << "User pressed optionsbutton." << std::endl;
-			return 2;
+			return 3;
 		}
 
 		if (exitButton.getGlobalBounds().contains(v))

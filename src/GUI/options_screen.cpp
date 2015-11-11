@@ -1,5 +1,5 @@
-#include "./../headers/options_screen.hpp"
-#include "./../headers/base_screen.hpp"
+#include "../headers/options_screen.hpp"
+#include "../headers/base_screen.hpp"
 
 OptionsScreen::OptionsScreen(void)
 {
@@ -13,7 +13,7 @@ void OptionsScreen::loadContent(void)
 	backButton.setPosition(sf::Vector2f(300, 200));
 }
 
-int OptionsScreen::update(sf::RenderWindow &window, sf::Event & event)
+int OptionsScreen::update(sf::RenderWindow &window, sf::Event &event)
 {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
@@ -22,14 +22,15 @@ int OptionsScreen::update(sf::RenderWindow &window, sf::Event & event)
 
 		if (backButton.getGlobalBounds().contains((sf::Vector2f)v))
 		{
-			// Start optionsscreen
+			// Start menuscreen
 			std::cout << "User pressed backbutton." << std::endl;
 			return 0;
 		}
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		return -1;
-	return 2;
+
+	return 3;
 }
 
 void OptionsScreen::draw(sf::RenderWindow &window)

@@ -1,6 +1,6 @@
 #ifndef MENU_SCREEN_H
 #define MENU_SCREEN_H
-#include "./../headers/base_screen.hpp"
+#include "../headers/base_screen.hpp"
 #include <SFML/Graphics.hpp>
 
 class MenuScreen : public BaseScreen
