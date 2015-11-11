@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	screens.push_back(&optionsScreen);
 
     // Window creation
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Chess game");
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Chess game", 4);
 
     // Mouse cursor no more visible
     window.setMouseCursorVisible(true);
@@ -45,7 +45,6 @@ int main(int argc, char** argv)
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Resized) {
 				std::cout << "User resized window" << std::endl;
-				window.setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
 			}
 			screen = screens[screen]->update(window, event);
 		}
