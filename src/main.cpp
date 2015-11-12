@@ -41,18 +41,22 @@ int main(int argc, char** argv)
     // Main loop
     while (screen >= 0)
     {
-		// Update window if event occurs
-		while (window.pollEvent(event)) {
+		// Update window if event occurs, if screen is already -1 -> break the loop
+		while (window.pollEvent(event) && screen != -1) {
+		
 			// Close whole program
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 				screen = -1;
 				break;
 			}
+			
+			// Updates screen elements
 			screen = screens[screen]->update(window, event);
-			if (screen == -1)
-				break;
 		}
+
 		if (screen >= 0) {
+			
+			// Draws all sprites
             screens[screen]->draw(window);
         }
     }
