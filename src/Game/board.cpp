@@ -31,6 +31,11 @@ Board::Board(void)
 			board[i] = W_KING;
 		}
 
+		else if(i < 15 && i > 7)
+		{
+			board[i] = B_PAWN;
+		}
+
 		else if(i == 63 || i==55)
 		{
 			board[i] = B_ROOK;
@@ -41,7 +46,7 @@ Board::Board(void)
 			board[i] = B_KNIGHT;
 		}
 
-		else if(i == 61 || i = 57)
+		else if(i == 61 || i == 57)
 		{
 			board[i] = B_BISHOP;
 		}
@@ -56,6 +61,15 @@ Board::Board(void)
 			board[i] = B_KING;
 		}
 
+		else if(i < 55 && i > 47)
+		{
+			board[i] = B_PAWN;
+		}
+
+		else
+		{
+			board[i] = NONE;
+		}
 	}
 	//initialize the board
 }
@@ -63,7 +77,58 @@ Board::Board(void)
 std::vector<int> Board::possibleMoves(int index)
 {
 	std::vector<int> moves;
-	return moves; //return indexes to be highlighted
+	moves[0] = index;
+	switch (board[index])
+	{
+		case W_PAWN:
+			return moves;
+			break;
+
+		case B_PAWN:
+			return moves;
+			break;
+
+		case W_ROOK:
+			return moves;
+			break;
+
+		case B_ROOK:
+			return moves;
+			break;
+
+		case W_KNIGHT:
+			return moves;
+			break;
+			
+		case B_KNIGHT:
+			return moves;
+			break;
+
+		case W_BISHOP:
+			return moves;
+			break;
+			
+		case B_BISHOP:
+			return moves;
+			break;
+
+		case W_QUEEN:
+			return moves;
+			break;
+
+		case B_QUEEN:
+			return moves;
+			break;	
+
+		case W_KING:
+			return moves;
+			break;
+
+		case B_KING:
+			return moves;
+			break;			
+	}
+	return moves; // in case of NONE
 }
 
 bool Board::movePiece(int origin, int destination)
@@ -81,4 +146,9 @@ bool Board::movePiece(int origin, int destination)
 	boardHistory.push_back(board);
 
 	return true;
+}
+
+std::vector<int> Board::getBoard()
+{
+	return board;
 }
