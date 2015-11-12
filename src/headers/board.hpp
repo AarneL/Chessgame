@@ -2,13 +2,22 @@
 #define BOARD_H
 #include <vector>
 
-enum Piece {NONE, 
-	W_PAWN, B_PAWN, 
-	W_KNIGHT, B_KNIGHT, 
-	W_BISHOP, B_BISHOP, 
-	W_ROOK, B_ROOK, 
-	W_QUEEN, B_QUEEN, 
-	W_KING, B_KING};
+enum Piece 
+	{
+		NONE = 0, 
+		W_PAWN = 1, 
+		B_PAWN = 2, 
+		W_KNIGHT = 3, 
+		B_KNIGHT = 4, 
+		W_BISHOP = 5, 
+		B_BISHOP = 6, 
+		W_ROOK = 7, 
+		B_ROOK = 8, 
+		W_QUEEN = 9, 
+		B_QUEEN = 10, 
+		W_KING = 11, 
+		B_KING = 12
+	};
 
 class Board
 {
@@ -16,6 +25,7 @@ public:
 	Board(void);
 	std::vector<int> possibleMoves(int index);
 	bool movePiece(int origin, int destination);
+	std::vector<int> getBoard();
 
 private:
 	std::vector<int> board; //contains pieces
