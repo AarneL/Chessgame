@@ -8,8 +8,54 @@ Board::Board(void)
 	for (int i = 0; i < 64; i++){
 		if(i == 0 || i == 7)
 		{
-			board[i] = 
+			board[i] = W_ROOK;
 		}
+
+		else if(i == 1 || i == 6)
+		{
+			board[i] = W_KNIGHT;
+		}
+
+		else if(i==2 || i == 5)
+		{
+			board[i] = W_BISHOP;
+		}
+
+		else if(i == 3)
+		{
+			board[i] = W_QUEEN;
+		}
+
+		else if(i == 4)
+		{
+			board[i] = W_KING;
+		}
+
+		else if(i == 63 || i==55)
+		{
+			board[i] = B_ROOK;
+		}
+
+		else if(i == 62 || i == 56)
+		{
+			board[i] = B_KNIGHT;
+		}
+
+		else if(i == 61 || i = 57)
+		{
+			board[i] = B_BISHOP;
+		}
+
+		else if(i == 60)
+		{
+			board[i] = B_QUEEN;
+		}
+
+		else if(i == 59)
+		{
+			board[i] = B_KING;
+		}
+
 	}
 	//initialize the board
 }
