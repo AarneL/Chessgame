@@ -1,5 +1,6 @@
 #include "./../headers/board.hpp"
 #include "./../headers/game.hpp"
+#include "./../headers/rules.hpp"
 #include <vector>
 
 Board::Board(void)
@@ -77,14 +78,30 @@ Board::Board(void)
 std::vector<int> Board::possibleMoves(int index)
 {
 	std::vector<int> moves;
-	moves[0] = index;
+	moves.push_back(index);
+	std::pair<int, int> lastMove;
+
+	if(moveList.size() == 0)
+	{
+		lastMove = std::make_pair(0, 0);
+	}
+	else 
+		lastMove = moveList[moveList.size() -1];
+
+
 	switch (board[index])
 	{
 		case W_PAWN:
+			moves = join(moves, Rules::whitePawnMoveForward(board, index));
+			moves = join(moves, Rules::whitePawnMoveForwardLeft(board, index, lastMove));
+			moves = join(moves, Rules::whitePawnMoveForwardRight(board, index, lastMove));
 			return moves;
 			break;
 
 		case B_PAWN:
+			moves = join(moves, Rules::blackPawnMoveForward(board, index));
+			moves = join(moves, Rules::blackPawnMoveForwardLeft(board, index, lastMove));
+			moves = join(moves, Rules::blackPawnMoveForwardRight(board, index, lastMove));
 			return moves;
 			break;
 
@@ -134,7 +151,8 @@ std::vector<int> Board::possibleMoves(int index)
 bool Board::movePiece(int origin, int destination)
 {
 	//making the move
-	board[destination] = board[origin];	
+	board[destination] = board[origin];
+	board[origin] = NONE;
 
 	//saving move to movelist
 	std::pair <int, int> move;
@@ -148,7 +166,16 @@ bool Board::movePiece(int origin, int destination)
 	return true;
 }
 
-std::vector<int> Board::getBoard()
+std::vector<int>& Board::getBoard()
 {
 	return board;
+}
+
+std::vector<int> join(std::vector<int> a, std::vector<int> b)
+{
+	std::vector<int> result;
+	result.reserve( a.size() + b.size() );
+	result.insert( result.end(), a.begin(), a.end() );
+	result.insert( result.end(), b.begin(), b.end() );
+	return result;
 }

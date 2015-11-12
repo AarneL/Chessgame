@@ -25,12 +25,14 @@ public:
 	Board(void);
 	std::vector<int> possibleMoves(int index);
 	bool movePiece(int origin, int destination);
-	std::vector<int> getBoard();
+	std::vector<int>& getBoard();
 
 private:
 	std::vector<int> board; //contains pieces
 	std::vector<std::pair<int, int>> moveList; //vector containing old moves
 	std::vector<std::vector<int>> boardHistory;
 };
+
+std::vector<int> join(std::vector<int>, std::vector<int>);
 
 #endif /* OPTIONS_SCREEN_H */
