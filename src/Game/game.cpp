@@ -5,11 +5,24 @@
 Game::Game(void)
 {
 	board = Board();
+	pieceActive = false;
 }
 
 std::vector<int> Game::possibleMoves(int index)
 {
-	return board.possibleMoves(index);
+	std::vector<int> v;
+	if (pieceActive) {
+		// If piece is active check if index is on possibleMovesList
+
+		// If not, clear pieceActive and clear highlights (return empty list)
+
+	}
+
+	else if (containsPlayerPiece(index, PLAYER_ON_TURN)) {
+		pieceActive = true;
+		return board.possibleMoves(index);
+	}
+	return v;
 }
 
 bool Game::movePiece(int origin, int destination)
@@ -21,3 +34,7 @@ bool Game::movePiece(int origin, int destination)
 	return false;
 }
 
+bool Game::containsPlayerPiece(int, int)
+{
+
+}
