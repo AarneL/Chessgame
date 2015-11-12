@@ -13,7 +13,6 @@ public:
 
 private:
 	Board board;
-	std::vector<std::pair<int, int>> moveList; //vector containing old moves
 };
 
 #endif /* OPTIONS_SCREEN_H */

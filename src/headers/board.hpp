@@ -19,6 +19,8 @@ public:
 
 private:
 	std::vector<int> board; //contains pieces
+	std::vector<std::pair<int, int>> moveList; //vector containing old moves
+	std::vector<std::vector<int>> boardHistory;
 };
 
 #endif /* OPTIONS_SCREEN_H */

@@ -16,10 +16,6 @@ bool Game::movePiece(int origin, int destination)
 {
 	if(board.movePiece(origin, destination))
 	{
-		std::pair <int, int> move;
-		move.first = origin;
-		move.second = destination;
-		moveList.push_back(move);
 		return true;
 	}
 	return false;
