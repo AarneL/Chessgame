@@ -95,10 +95,6 @@ int MenuScreen::update(sf::RenderWindow &window, sf::Event & event)
 		}
 	}
 
-	// Close whole program
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-		return -1;
-
 	// Continue using same screen
 	return 0;
 }

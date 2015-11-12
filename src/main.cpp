@@ -43,10 +43,14 @@ int main(int argc, char** argv)
     {
 		// Update window if event occurs
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Resized) {
-				std::cout << "User resized window" << std::endl;
+			// Close whole program
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+				screen = -1;
+				break;
 			}
 			screen = screens[screen]->update(window, event);
+			if (screen == -1)
+				break;
 		}
 		if (screen >= 0) {
             screens[screen]->draw(window);
