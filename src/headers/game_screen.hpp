@@ -38,9 +38,6 @@ private:
 	sf::Sprite whiteQueen;
 	sf::Sprite whiteKing;
 
-	// Vector of white pieces
-	std::vector<sf::Sprite*> whitePieces;
-
 	// Black pieces
 	sf::Texture blackPawnTexture;
 	sf::Texture blackRookTexture;
@@ -70,16 +67,11 @@ private:
 	sf::Sprite blackQueen;
 	sf::Sprite blackKing;
 
-	std::vector<sf::Sprite> blackPieces;
+	std::vector<sf::Sprite*> pieces;
 
 	// Game board
 	sf::Texture squareTexture;
-	std::vector<sf::Sprite> gameBoard;
-
-	// Containers for sprite elements so it can be looped
-	std::vector<sf::Sprite> elements;
-
-	sf::Sprite* pieceClicked;
+	std::vector<sf::Sprite*> gameBoard;
 
 public:
     GameScreen(void);
