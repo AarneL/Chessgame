@@ -93,7 +93,7 @@ namespace Rules
 		if ( board[index - 8] == 0 && (index + 8) >= 0 ) {
 			v.push_back(index - 8);
 			//2 forward if the -2*8 square is also free and the piece is on the start row
-			if ( board[index - 16] != 0 && index >= 48 && index <= 55 )
+			if ( board[index - 16] == 0 && index >= 48 && index <= 55 )
 				v.push_back(index - 16);
 		}
 		return v;

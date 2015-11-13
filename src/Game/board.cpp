@@ -2,9 +2,11 @@
 #include "./../headers/game.hpp"
 #include "./../headers/rules.hpp"
 #include <vector>
+#include <iostream>
 
 Board::Board(void)
 {
+	board.reserve(64);
 	// Set initial positions for pieces
 	for (int i = 0; i < 64; i++){
 		if(i == 0 || i == 7)
@@ -32,37 +34,37 @@ Board::Board(void)
 			board[i] = W_KING;
 		}
 
-		else if(i < 15 && i > 7)
+		else if(i < 16 && i > 7)
 		{
-			board[i] = B_PAWN;
+			board[i] = W_PAWN;
 		}
 
-		else if(i == 63 || i==55)
+		else if(i == 63 || i==56)
 		{
 			board[i] = B_ROOK;
 		}
 
-		else if(i == 62 || i == 56)
+		else if(i == 62 || i == 57)
 		{
 			board[i] = B_KNIGHT;
 		}
 
-		else if(i == 61 || i == 57)
+		else if(i == 61 || i == 58)
 		{
 			board[i] = B_BISHOP;
 		}
 
-		else if(i == 60)
+		else if(i == 59)
 		{
 			board[i] = B_QUEEN;
 		}
 
-		else if(i == 59)
+		else if(i == 60)
 		{
 			board[i] = B_KING;
 		}
 
-		else if(i < 55 && i > 47)
+		else if(i < 56 && i > 47)
 		{
 			board[i] = B_PAWN;
 		}
@@ -71,8 +73,7 @@ Board::Board(void)
 		{
 			board[i] = NONE;
 		}
-	}
-	//initialize the board
+	}	
 }
 
 std::vector<int> Board::possibleMoves(int index)
@@ -87,8 +88,6 @@ std::vector<int> Board::possibleMoves(int index)
 	}
 	else 
 		lastMove = moveList[moveList.size() -1];
-
-
 	switch (board[index])
 	{
 		case W_PAWN:

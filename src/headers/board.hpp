@@ -22,7 +22,7 @@ enum Piece
 class Board
 {
 public:
-	Board(void);
+	Board();
 	std::vector<int> possibleMoves(int index);
 	bool movePiece(int origin, int destination);
 	std::vector<int>& getBoard();
