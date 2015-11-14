@@ -1,6 +1,7 @@
 #ifndef GAME_SCREEN_H
 #define GAME_SCREEN_H
 
+#include "./../headers/game.hpp"
 #include <SFML/Graphics.hpp>
 
 class GameScreen : public BaseScreen
@@ -73,11 +74,15 @@ private:
 	sf::Texture squareTexture;
 	std::vector<sf::Sprite*> gameBoard;
 
+
 public:
     GameScreen(void);
 	void loadContent(void);
 	int update(sf::RenderWindow &window, sf::Event & event);
     void draw(sf::RenderWindow &window);
+
+	// Game interface
+	Game game;
 };
 
 #endif
