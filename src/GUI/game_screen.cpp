@@ -183,12 +183,10 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 void GameScreen::draw(sf::RenderWindow &window)
 {
 	window.clear(sf::Color(0, 10, 200, 255));
-	for (auto i : gameBoard) {
-		window.draw(*i);
-	}
-	for (auto i : pieces) {
-		if (i != NULL) {
-			window.draw(*i);
+	for (int i = 0; i < 63; i++) {
+		window.draw(*(gameBoard[i]));
+		if (!(pieces[i] == NULL)) {
+			window.draw(*(pieces[i]));
 		}
 	}
     window.display();

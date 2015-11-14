@@ -6,8 +6,10 @@
 
 Board::Board(void)
 {
-	board.reserve(64);
-
+	//board.reserve(64);
+	for (int s = 0; s < 64;  s++) {
+		board.push_back(0);
+	}
 	// Set initial positions for pieces
 	for (int i = 0; i < 64; i++){
 		if(i == 0 || i == 7)
