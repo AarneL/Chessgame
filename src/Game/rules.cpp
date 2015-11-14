@@ -180,7 +180,7 @@ namespace Rules
 
 	//Rook moves
 	//Left, right, up, down; not over other pieces
-	std::vector<int> rookMoves(const std::vector<int>& board, int index){
+	std::vector<int> rookMove(const std::vector<int>& board, int index){
 
 		std::vector<int> v;
 		int dest;
