@@ -160,26 +160,5 @@ namespace Rules
 
 
 
-	//Utility to check boundary crossing by movement (change of position)
-	//This takes the direction of movement into account (start - destination check would not do)
-	//Return true if the move is valid (not crossing the board boundary)
-	bool checkBoundaries(int start, int diff){
-
-
-		//Calculate the x/y coordinates of the destination
-		int dest_x = start%8 + diff%8;
-		int dest_y = start/8 + diff/8;
-
-		bool ret;
-
-		if ( dest_x > 7 || dest_x < 0 || dest_y > 7 || dest_y < 0 )
-			ret = false;
-		else
-			ret = true;
-
-		return ret;
-
-	}
-
 
 }

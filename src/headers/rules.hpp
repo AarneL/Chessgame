@@ -20,8 +20,6 @@ namespace Rules {
 	std::vector<int> whiteKnightMove(const std::vector<int>&, int);
 
 
-	//Utilities
-	bool checkBoundaries(int, int);
 }
 
 
