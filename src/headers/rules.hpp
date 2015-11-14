@@ -19,6 +19,8 @@ namespace Rules {
 
 	std::vector<int> knightMove(const std::vector<int>&, int);
 
+	std::vector<int> rookMove(const std::vector<int>&, int);
+
 
 }
 

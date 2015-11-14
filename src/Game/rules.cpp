@@ -178,5 +178,95 @@ namespace Rules
 
 
 
+	//Rook moves
+	//Left, right, up, down; not over other pieces
+	std::vector<int> rookMoves(const std::vector<int>& board, int index){
+
+		std::vector<int> v;
+		int dest;
+
+		//Up = +8
+		for (int i=8; i<=56; i+=8){
+			dest = index+i;
+
+			//Over top boundary
+			if (dest > 63)
+				break;
+
+			//Empty square -> valid move
+			if (board[dest] == 0)
+				v.push_back(dest);
+			//Not empty, valid if enemy piece
+			else {
+				if ( board[dest]%2 != board[index]%2 )
+					v.push_back(dest);
+				break;	//Moving further is not valid
+			}
+		}
+
+		//Down = -8
+		for (int i=-8; i>=-56; i-=8){
+			dest = index+i;
+
+			//Over bottom boundary
+			if (dest < 0)
+				break;
+
+			//Empty square -> valid move
+			if (board[dest] == 0)
+				v.push_back(dest);
+			//Not empty, valid if enemy piece
+			else {
+				if ( board[dest]%2 != board[index]%2 )
+					v.push_back(dest);
+				break;	//Moving further is not valid
+			}
+		}
+
+		//Left = -1
+		for (int i=-1; i>=-7; i--){
+			dest = index+i;
+
+			//Jumped over left boundary -> break
+			//NOTE: this also covers the case when jumping from 0 to -1
+			if ( (dest+1)%8 == 0 )
+				break;
+
+			//Empty square -> valid move
+			if (board[dest] == 0)
+				v.push_back(dest);
+			//Not empty, valid if enemy piece
+			else {
+				if ( board[dest]%2 != board[index]%2 )
+					v.push_back(dest);
+				break;	//Moving further is not valid
+			}
+		}
+
+		//Right = +1
+		for (int i=1; i<=7; i++){
+
+			dest = index+i;
+			//Jumped over right boundary -> break
+			//NOTE: this also covers the case when jumping from 63 to 64
+			if ( dest%8 == 0 )
+				break;
+
+			//Empty square -> valid move
+			if (board[dest] == 0)
+				v.push_back(dest);
+			//Not empty, valid if enemy piece
+			else {
+				if ( board[dest]%2 != board[index]%2 )
+					v.push_back(dest);
+				break;	//Moving further is not valid
+			}
+		}
+
+		return v;
+	}
+
+
+
 
 }
