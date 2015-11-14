@@ -23,6 +23,15 @@ namespace Rules {
 
 	std::vector<int> bishopMove(const std::vector<int>&, int);
 
+	std::vector<int> queenMove(const std::vector<int>&, int);
+
+	//NOTE the 3rd argument to prevent infinite recursions (when false)
+	std::vector<int> kingMove(const std::vector<int>& board, int index, bool recurse=true);
+
+
+
+	bool isThreatenedAfter(const std::vector<int>&, int, int);
+
 
 }
 

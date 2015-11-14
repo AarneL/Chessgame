@@ -1,6 +1,7 @@
-//#include <vector>
+#include <algorithm>	//find
 
 #include "../headers/rules.hpp"
+#include "../headers/board.hpp"	//enum Piece, join(v1,v2)
 
 namespace Rules
 {
@@ -351,6 +352,100 @@ namespace Rules
 		}
 
 		return v;
+	}
+
+
+	//Queen moves
+	//These are just bishop moves + rook moves
+	std::vector<int> queenMove(const std::vector<int>& board, int index) {
+		std::vector<int> v = rookMove(board, index);
+		std::vector<int> w = bishopMove(board, index);
+
+		std::vector<int> ret = join(v, w);
+		return ret;
+	}
+
+
+	//King moves
+	//1 step to any direction that is not threatened
+	//+1, -1, +8, -8, +7, +9, -7, -9
+	//NOTE the 3rd argument
+	std::vector<int> kingMove(const std::vector<int>& board, int index, bool recurse){
+		std::vector<int> v;
+		int dest;
+
+		std::vector<int> testvector = {1, -1, 8, -8, 7, 9, -7, -9};
+
+		for (int i : testvector) {
+			dest = index + i;
+
+			//Boundary check - move to next option if stepping over boundaries
+			if (dest > 63 || dest < 0	//Top or bottom, any column
+				|| ( (index+1)%8==0 && dest%8==0 )	//Stepping over right
+				|| ( index%8==0 && (dest+1)%8==0 ) )	//Stepping over left
+				continue;
+
+			//If the function was called when checking available moves of a king...
+			if (recurse) {
+				//If square is empty or occupied by enemy piece...       and the king is not under attack after move
+				if ( (board[dest]==0 || board[dest]%2 != board[index]%2) && !isThreatenedAfter(board, index, dest) )
+					v.push_back(dest);
+			}
+			//If the function was called when checking whether threatened
+			// - don't check again, it would lead to infinite recursion
+			//Instead, check as if the king could capture the other king.
+			else {
+				 if ( board[dest]==0 || board[dest]%2 != board[index]%2 )
+					v.push_back(dest);
+			}
+
+		}
+
+		return v;
+	}
+
+
+	//Test if the piece/square is threatened after a simulated move
+	//NOTE: The threatened status should be checked after the move, as pawn moves depend on
+	// what is surrounding them. That's why both start and destination are needed by the function
+	bool isThreatenedAfter(const std::vector<int>& board, int start, int destination){
+
+		std::vector<int> newboard(board);
+
+		//Simulate the move
+		newboard[destination] = board[start];
+		newboard[start] = 0;
+
+		std::vector<int> testvector;
+		//Check possible moves of all pieces
+		for (int i=0; i<newboard.size(); i++) {
+			//Do not check "none" pieces (empty square) and friendly pieces
+			if (newboard[i] != 0 && newboard[i]%2 != newboard[destination]%2 ) {
+				if (newboard[i]==W_PAWN)
+					{}	//TODO
+				else if (newboard[i]==B_PAWN)
+					{}	//TODO
+				else if (newboard[i]==W_KNIGHT || newboard[i]==B_KNIGHT)
+					testvector = knightMove(newboard, i);
+				else if (newboard[i]==W_ROOK || newboard[i]==B_ROOK)
+					testvector = rookMove(newboard, i);
+				else if (newboard[i]==W_BISHOP || newboard[i]==B_BISHOP)
+					testvector = bishopMove(newboard, i);
+				else if (newboard[i]==W_QUEEN || newboard[i]==B_QUEEN)
+					testvector = queenMove(newboard, i);
+				//NOTE: Be careful with kings and don't end up in infinite recursion...
+				else if (newboard[i]==W_KING || newboard[i]==B_KING)
+					testvector = kingMove(newboard, i, false);	//NOTE the 3rd argument
+
+			}
+
+			//The destination is a possible move of one of the enemy pieces
+			// -> the moving piece will be under attack
+			if ( std::find(testvector.begin(), testvector.end(), destination) )
+				return true;
+		}
+
+		return false;
 	}
 
 
