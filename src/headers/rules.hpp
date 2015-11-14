@@ -17,7 +17,7 @@ namespace Rules {
 	std::vector<int> blackPawnMoveForwardLeft(const std::vector<int>&, int, const std::pair<int,int>&);
 	std::vector<int> blackPawnMoveForwardRight(const std::vector<int>&, int, const std::pair<int,int>&);
 
-	std::vector<int> whiteKnightMove(const std::vector<int>&, int);
+	std::vector<int> knightMove(const std::vector<int>&, int);
 
 
 }

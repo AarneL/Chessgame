@@ -141,18 +141,36 @@ namespace Rules
 
 	//Moves for knight
 	//Possible moves:
-	//+16+1, +16-1, +2+8, +2-8, -16+1, -16-1, -2+8, -2-8
+	//+16+1, +16-1, -16+1, -16-1, +2+8, +2-8, -2+8, -2-8
+	// = 17, 15, -15, -17, 10, -6, 6, -10
+	//Possible X/Y diffs:
+	//(1,2), (-1,2), (1,-2), (-1,-2), (2,1), (2,-1), (-2,1), (-2,-1)
 	std::vector<int> knightMove(const std::vector<int>& board, int index) {
 
 		std::vector<int> v;
 
 		//Moves (changes in position) to be tested
-		std::vector<int> testvector = {17, 15, 10, -6, -15, -17, 6, -10};	//C++11...
+		std::vector<int> testvector = {17, 15, -15, -17, 10, -6, 6, -10};	//C++11...
+		int dest; int diffX; int diffY;
 
 		for (int i : testvector){
+			//Destination
+			dest = index+i;
+			//X/Y difference
+			diffX = (dest%8)-(index%8);
+			diffY = (dest/8)-(index/8);
 
-			//TODO
-
+			//Absolute boundary check (0-63)
+			if ( dest <= 63 || dest >= 0 ) {
+				//Boundary check by parity
+				//Check that either X or Y changes its parity, but both do not
+				if ( (diffX%2 != 0 && diffY%2 == 0) || (diffX%2 == 0 && diffY != 0) ) {
+					//Target check
+					//If destination is empty or different color, then proceed
+					if ( board[dest] == 0 || board[dest]%2 != board[index]%2 )
+						v.push_back(dest);
+				}
+			}
 		}
 
 		return v;
