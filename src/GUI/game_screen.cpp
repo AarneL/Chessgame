@@ -128,7 +128,7 @@ void GameScreen::loadContent(void)
 			else if ( (i+j)%2 == 1 ) {
 				square.setColor(color_square_light);
 			}
-			gameBoard.push_back(&square);
+			gameBoard.push_back(square);
 		}
 	}
 	// Set positions to pieces
@@ -151,9 +151,9 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 	else if (event.type == sf::Event::MouseButtonPressed) {
 		// Get mouse position
 		sf::Vector2i mpos = sf::Mouse::getPosition(window);
-		for (auto i : gameBoard) {
+		for (auto square : gameBoard) {
 			// Check if current square is in the mouse position
-			if (i->getGlobalBounds().contains((sf::Vector2f)mpos) ) {
+			if (square.getGlobalBounds().contains((sf::Vector2f)mpos) ) {
 				// std::vector<int> possibleIndexes = game.possibleMoves(i) (actually this shloud be inxed of i)
 				// if (possibleIndexes.size() > 0) {
 					// Then highlight these indexes
@@ -183,8 +183,8 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 void GameScreen::draw(sf::RenderWindow &window)
 {
 	window.clear(sf::Color(0, 10, 200, 255));
-	for (int i = 0; i < 63; i++) {
-		window.draw(*(gameBoard[i]));
+	for (int i = 0; i < 64; i++) {
+		window.draw(gameBoard[i]);
 		if (!(pieces[i] == NULL)) {
 			window.draw(*(pieces[i]));
 		}

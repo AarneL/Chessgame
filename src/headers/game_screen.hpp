@@ -72,7 +72,7 @@ private:
 
 	// Game board
 	sf::Texture squareTexture;
-	std::vector<sf::Sprite*> gameBoard;
+	std::vector<sf::Sprite> gameBoard;
 
 
 public:
