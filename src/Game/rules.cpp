@@ -267,6 +267,92 @@ namespace Rules
 	}
 
 
+	//Bishop moves
+	//Diagonally  up-right, down-right, up-left, down-left; not over other pieces
+	std::vector<int> bishopMove(const std::vector<int>& board, int index){
+		std::vector<int> v;
+		int dest;
+
+		//Up-right = +8+1 = +9
+		for (int i=9; i<=63; i+=9) {
+			dest = index + i;
+
+			//Jumped over right or top boundary
+			if ( dest%8 == 0 || dest > 63)
+				break;
+
+			//Empty square -> valid move
+			if ( board[dest] == 0 )
+				v.push_back(dest);
+			//Not empty, valid if enemy piece
+			else {
+				if ( board[dest]%2 != board[index]%2 )
+					v.push_back(dest);
+				break;	//Moving further is not valid
+			}
+		}
+
+		//Down-right = -8+1 = -7
+		for (int i=-7; i>=-49; i-=7) {
+			dest = index + i;
+
+			//Jumped over right or bottom boundary
+			if ( dest%8 == 0 || dest < 0)
+				break;
+
+			//Empty square -> valid move
+			if ( board[dest] == 0 )
+				v.push_back(dest);
+			//Not empty, valid if enemy piece
+			else {
+				if ( board[dest]%2 != board[index]%2 )
+					v.push_back(dest);
+				break;	//Moving further is not valid
+			}
+		}
+
+
+		//Up-left = +8-1 = 7
+		for (int i=7; i<=49; i+=7) {
+			dest = index + i;
+
+			//Jumped over left or top boundary
+			if ( (dest+1)%8 == 0 || dest > 63 )
+				break;
+
+			//Empty square -> valid move
+			if ( board[dest] == 0 )
+				v.push_back(dest);
+			//Not empty, valid if enemy piece
+			else {
+				if ( board[dest]%2 != board[index]%2 )
+					v.push_back(dest);
+				break;	//Moving further is not valid
+			}
+		}
+
+		//Down-left = -8-1 = -9
+		for (int i=-9; i>=-63; i-=9) {
+			dest = index + i;
+
+			//Jumped over left or bottom boundary
+			if ( (dest+1)%8 == 0 || dest < 0 )
+				break;
+
+			//Empty square -> valid move
+			if ( board[dest] == 0 )
+				v.push_back(dest);
+			//Not empty, valid if enemy piece
+			else {
+				if ( board[dest]%2 != board[index]%2 )
+					v.push_back(dest);
+				break;	//Moving further is not valid
+			}
+		}
+
+		return v;
+	}
+
 
 
 }

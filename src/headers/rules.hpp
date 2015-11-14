@@ -21,6 +21,8 @@ namespace Rules {
 
 	std::vector<int> rookMove(const std::vector<int>&, int);
 
+	std::vector<int> bishopMove(const std::vector<int>& board, int index);
+
 
 }
 
