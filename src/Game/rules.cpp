@@ -85,6 +85,7 @@ namespace Rules
 	
 
 	// ======= Moves for black pieces ======
+	//Black pawn forward
 	std::vector<int> blackPawnMoveForward(const std::vector<int>& board, int index)
 	{
 		std::vector<int> v;
@@ -135,6 +136,49 @@ namespace Rules
 				v.push_back(dest);
 		}
 		return v;
+	}
+
+
+	//Moves for knight
+	//Possible moves:
+	//+16+1, +16-1, +2+8, +2-8, -16+1, -16-1, -2+8, -2-8
+	std::vector<int> knightMove(const std::vector<int>& board, int index) {
+
+		std::vector<int> v;
+
+		//Moves (changes in position) to be tested
+		std::vector<int> testvector = {17, 15, 10, -6, -15, -17, 6, -10};	//C++11...
+
+		for (int i : testvector){
+
+			//TODO
+
+		}
+
+		return v;
+	}
+
+
+
+	//Utility to check boundary crossing by movement (change of position)
+	//This takes the direction of movement into account (start - destination check would not do)
+	//Return true if the move is valid (not crossing the board boundary)
+	bool checkBoundaries(int start, int diff){
+
+
+		//Calculate the x/y coordinates of the destination
+		int dest_x = start%8 + diff%8;
+		int dest_y = start/8 + diff/8;
+
+		bool ret;
+
+		if ( dest_x > 7 || dest_x < 0 || dest_y > 7 || dest_y < 0 )
+			ret = false;
+		else
+			ret = true;
+
+		return ret;
+
 	}
 
 
