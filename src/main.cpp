@@ -6,7 +6,7 @@
 #include "headers/game_screen.hpp"
 #include "headers/menu_screen.hpp"
 #include "headers/options_screen.hpp"
-#include "headers/new_game_screen.hpp"
+//#include "headers/new_game_screen.hpp"
 
 int main(int argc, char** argv)
 {
@@ -17,12 +17,12 @@ int main(int argc, char** argv)
 
 	// Screens
 	MenuScreen menuScreen;
-    NewGameScreen newGameScreen;
+    //NewGameScreen newGameScreen;
 	GameScreen gameScreen;
 	OptionsScreen optionsScreen;
 
 	screens.push_back(&menuScreen);
-    screens.push_back(&newGameScreen);
+    //screens.push_back(&newGameScreen);
 	screens.push_back(&gameScreen);
 	screens.push_back(&optionsScreen);
 

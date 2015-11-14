@@ -70,7 +70,7 @@ int MenuScreen::update(sf::RenderWindow &window, sf::Event & event)
 		{
 			// Start newgamescreen
 			std::cout << "User pressed newGameButton." << std::endl;
-			return 1;
+			return 1; // NOTE: For now new game will start game immeaditely
 		}
 
 		if (loadGameButton.getGlobalBounds().contains(v))
@@ -84,7 +84,7 @@ int MenuScreen::update(sf::RenderWindow &window, sf::Event & event)
 		{
 			// Start optionsscreen
 			std::cout << "User pressed optionsbutton." << std::endl;
-			return 3;
+			return 2;
 		}
 
 		if (exitButton.getGlobalBounds().contains(v))

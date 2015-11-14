@@ -1,6 +1,7 @@
 #include "../headers/base_screen.hpp"
 #include "../headers/game_screen.hpp"
 #include "../headers/menu_screen.hpp"
+#include "../headers/game.hpp"
 // #include "../headers/board.hpp"
 #include <SFML/Graphics.hpp>
 
@@ -8,6 +9,7 @@
 
 GameScreen::GameScreen(void)
 {
+	game = Game();
 }
 
 void GameScreen::loadContent(void)
@@ -171,11 +173,11 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 				// 		gameBoard[35].setColor(color_square_light);
 				// 	return 2;
 				// }
-				return 2;
+				return 1;
 			}
 		}
 	}
-	return 2;
+	return 1;
 }
 
 void GameScreen::draw(sf::RenderWindow &window)
