@@ -3,6 +3,7 @@
 
 #include "./../headers/game.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 class GameScreen : public BaseScreen
 {
@@ -83,6 +84,9 @@ private:
 	sf::Color color_highlight_square_light;
 
 	std::vector<std::pair<int, int> > moveList;
+
+	sf::SoundBuffer moveSoundBuffer;
+	sf::Sound moveSound;
 
 public:
     GameScreen(void);

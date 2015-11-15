@@ -4,6 +4,7 @@
 #include "../headers/game.hpp"
 // #include "../headers/board.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 
 
@@ -131,6 +132,14 @@ void GameScreen::loadContent(void)
 			gameBoard.push_back(square);
 		}
 	}
+
+	// Load game sounds
+	if (!moveSoundBuffer.loadFromFile("media/sound/movePiece.wav")) {
+		std::cout << "Could not load sound file." << std::endl;
+	}
+	else {
+		moveSound.setBuffer(moveSoundBuffer);
+	}
 }
 
 int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
@@ -160,6 +169,7 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 					// Get the latest move and update the pieces vector
 					std::pair<int, int> lastMove = moveList.back();
 					movePiece(lastMove);
+					moveSound.play();
 				}
 			}
 		}
