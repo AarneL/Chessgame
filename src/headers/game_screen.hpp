@@ -77,11 +77,12 @@ private:
 	// Square colors
 	sf::Color color_square_dark;	//"chocolate"
 	sf::Color color_square_light;	//"burntsienna"
-	
+
 	// Square highlight colors
 	sf::Color color_highlight_square_dark;
 	sf::Color color_highlight_square_light;
 
+	std::vector<std::pair<int, int> > moveList;
 
 public:
     GameScreen(void);
@@ -90,6 +91,7 @@ public:
     void draw(sf::RenderWindow &window);
 	void highlight(std::vector<int> v);
 	void clearHighlights();
+	void movePiece(std::pair<int, int> move);
 
 	// Game interface
 	Game game;

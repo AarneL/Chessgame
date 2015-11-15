@@ -22,7 +22,7 @@ std::vector<int> Game::getPossibleMoves(int index)
 	if (activeSquare != -1) {
 		// If piece is active check if index is on possibleMovesList
 		// If not, clear pieceActive and clear highlights(done in GUI) (return empty list)
-		if (std::find(possibleMoves.begin(), possibleMoves.end(), index) != possibleMoves.end())
+		if (std::find(possibleMoves.begin(), possibleMoves.end(), index) != possibleMoves.end() && activeSquare != index)
 		{
 			board.movePiece(activeSquare, index);
 			changeTurn();
@@ -64,9 +64,9 @@ bool Game::containsPlayerPiece(int i, Player* p)
 
 bool Game::belongsToPlayer(int i, Player* p)
 {
-	if ((p->getColor() == ColorType::White) && (i % 2 == 0) && (i != 0))
+	if ((p->getColor() == ColorType::White) && (i % 2 == 1) && (i != 0))
 		return true;
-	else if ((p->getColor() == ColorType::Black) && (i % 2 == 1) && (i != 0))
+	else if ((p->getColor() == ColorType::Black) && (i % 2 == 0) && (i != 0))
 		return true;
 	return false;
 }
@@ -80,3 +80,9 @@ void Game::changeTurn()
 		playerOnTurn = black;
 	}
 }
+
+std::vector<std::pair<int, int> > Game::getMoveList() const
+{
+	return board.getMoveList();
+}
+

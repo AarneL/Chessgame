@@ -7,24 +7,24 @@ namespace Rules
 {
 	//typedef std::vector<int> ivector;
 
-	/* Here are implementations all the specific rules that might 
+	/* Here are implementations all the specific rules that might
 	 * prevent moving specific piece to location or to all locations in direction
 	 * Some notable information:
 	 *    - Every rule gets vector of integers as parameter (board). Each index of vector
 	 *    - represents location on map.
 	 *
-	 *				    + 8		
-	 *				     	
+	 *				    + 8
+	 *
 	 *           - 1   piece  + 1
-	 *				   
+	 *
 	 *				    - 8
-	 *    
+	 *
 	 *	  - Target location should be withing boundaries 0 <= target <= 63
 	 *
-	 *    - If player is moving piece to left, there should be check that it is not on left edge 
+	 *    - If player is moving piece to left, there should be check that it is not on left edge
 	 *      this is easily done: if(currentIndex % 8 = 0) -> its on left edge
 	 *
-	 *    - If player is moving piece to left, there should be check that it is not on left edge 
+	 *    - If player is moving piece to left, there should be check that it is not on left edge
 	 *      this is easily done: if((index + 1) % 8 = 0) -> its on right edge
 	 *
 	 *
@@ -34,7 +34,7 @@ namespace Rules
 	//
 	std::vector<int> whitePawnMoveForward(const std::vector<int>& board, int index)
 	{
-		std::vector<int> v; 
+		std::vector<int> v;
 		// If there is piece in front of whitepawn it cannot go there or behind it
 		if ( board[index + 8] == 0 && (index + 8) <= 63 ) {
 			v.push_back(index + 8);
@@ -83,7 +83,7 @@ namespace Rules
 		return v;
 	}
 
-	
+
 
 	// ======= Moves for black pieces ======
 	//Black pawn forward

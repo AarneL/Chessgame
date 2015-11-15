@@ -76,7 +76,7 @@ Board::Board(void)
 		{
 			board[i] = NONE;
 		}
-	}	
+	}
 }
 
 std::vector<int> Board::possibleMoves(int index)
@@ -89,7 +89,7 @@ std::vector<int> Board::possibleMoves(int index)
 	{
 		lastMove = std::make_pair(0, 0);
 	}
-	else 
+	else
 		lastMove = moveList[moveList.size() -1];
 	switch (board[index])
 	{
@@ -118,7 +118,7 @@ std::vector<int> Board::possibleMoves(int index)
 		case W_KNIGHT:
 			return moves;
 			break;
-			
+
 		case B_KNIGHT:
 			return moves;
 			break;
@@ -126,7 +126,7 @@ std::vector<int> Board::possibleMoves(int index)
 		case W_BISHOP:
 			return moves;
 			break;
-			
+
 		case B_BISHOP:
 			return moves;
 			break;
@@ -137,7 +137,7 @@ std::vector<int> Board::possibleMoves(int index)
 
 		case B_QUEEN:
 			return moves;
-			break;	
+			break;
 
 		case W_KING:
 			return moves;
@@ -145,7 +145,7 @@ std::vector<int> Board::possibleMoves(int index)
 
 		case B_KING:
 			return moves;
-			break;			
+			break;
 	}
 	return moves; // in case of NONE
 }
@@ -172,6 +172,12 @@ std::vector<int>& Board::getBoard()
 {
 	return board;
 }
+
+std::vector<std::pair<int, int> > Board::getMoveList() const
+{
+	return moveList;
+}
+
 
 std::vector<int> join(std::vector<int> a, std::vector<int> b)
 {

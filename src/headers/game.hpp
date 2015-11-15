@@ -13,7 +13,7 @@ public:
 	// If GUI sends index when piece is not active and square contains piece owned by player on turn
 	std::vector<int> getPossibleMoves(int index);
 
-	// 
+	//
 	void movePiece(int origin, int destination);
 
 	// Returns true if square contains piece owned by player p
@@ -24,6 +24,8 @@ public:
 
 	//
 	void changeTurn(void);
+
+	std::vector<std::pair<int, int> > getMoveList() const;
 
 private:
 	Player* white;

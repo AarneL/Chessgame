@@ -153,6 +153,14 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 				else {
 					clearHighlights();
 				}
+				// Ask game for moveList to check if a move has been done
+				std::vector<std::pair<int, int> > newMoveList = game.getMoveList();
+				if (newMoveList.size() > moveList.size()) {
+					moveList = newMoveList;
+					// Get the latest move and update the pieces vector
+					std::pair<int, int> lastMove = moveList.back();
+					movePiece(lastMove);
+				}
 			}
 		}
 	}
@@ -188,12 +196,22 @@ void GameScreen::highlight(std::vector<int> v)
 
 void GameScreen::clearHighlights()
 {
-	for (int i = 0; i < 64; i++) {
-		if (i % 2 == 0) {
-			gameBoard[i].setColor(color_square_dark);
-		}
-		else {
-			gameBoard[i].setColor(color_square_light);
+	for (int i = 7; i >= 0; i--) {
+		for (int j = 0; j < 8; j++) {
+			if ( (i+j)%2 == 0 ) {
+				gameBoard[i*8+j].setColor(color_square_light);
+			}
+			else if ( (i+j)%2 == 1 ) {
+				gameBoard[i*8+j].setColor(color_square_dark);
+			}
 		}
 	}
+}
+
+void GameScreen::movePiece(std::pair<int, int> move)
+{
+	int origin = move.first;
+	int destination = move.second;
+	pieces[destination] = pieces[origin];
+	pieces[origin] = NULL;
 }
