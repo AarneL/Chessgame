@@ -74,12 +74,22 @@ private:
 	sf::Texture squareTexture;
 	std::vector<sf::Sprite> gameBoard;
 
+	// Square colors
+	sf::Color color_square_dark;	//"chocolate"
+	sf::Color color_square_light;	//"burntsienna"
+	
+	// Square highlight colors
+	sf::Color color_highlight_square_dark;
+	sf::Color color_highlight_square_light;
+
 
 public:
     GameScreen(void);
 	void loadContent(void);
 	int update(sf::RenderWindow &window, sf::Event & event);
     void draw(sf::RenderWindow &window);
+	void highlight(std::vector<int> v);
+	void clearHighlights(std::vector<int> v);
 
 	// Game interface
 	Game game;

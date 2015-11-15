@@ -4,6 +4,7 @@
 #include "./../headers/player.hpp"
 #include <vector>
 #include <string>
+#include <algorithm>
 
 Game::Game()
 {
@@ -12,22 +13,28 @@ Game::Game()
 	white = new Human(name1, ColorType::White);
 	black = new Human(name2, ColorType::Black);
 	board = Board();
-	pieceActive = false;
+	activeSquare = -1;
 	playerOnTurn = white;
 }
 
-std::vector<int> Game::possibleMoves(int index)
+std::vector<int> Game::getPossibleMoves(int index)
 {
 	std::vector<int> v;
-	if (pieceActive) {
+	if (activeSquare != -1) {
 		// If piece is active check if index is on possibleMovesList
-		// If not, clear pieceActive and clear highlights (return empty list)
-
+		// If not, clear pieceActive and clear highlights(done in GUI) (return empty list)
+		if (std::find(possibleMoves.begin(), possibleMoves.end(), index) != possibleMoves.end())
+		{
+			board.movePiece(activeSquare, index);
+			changeTurn();
+		}
+		activeSquare = -1;
 	}
 
 	else if (containsPlayerPiece(index, playerOnTurn)) {
-		pieceActive = true;
-		return board.possibleMoves(index);
+		activeSquare = index;
+		possibleMoves = board.possibleMoves(index);
+		return possibleMoves;
 	}
 	return v;
 }
@@ -63,4 +70,14 @@ bool Game::belongsToPlayer(int i, Player* p)
 	else if ((p->getColor() == ColorType::Black) && (i % 2 == 1) && (i != 0))
 		return true;
 	return false;
+}
+
+void Game::changeTurn()
+{
+	if (playerOnTurn == black) {
+		playerOnTurn = white;
+	}
+	else {
+		playerOnTurn = black;
+	}
 }

@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	screens.push_back(&optionsScreen);
 
     // Window creation
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Chess game");
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Chess game", 4); // Last parameter makes window unresizable
 
     // Mouse cursor no more visible
     window.setMouseCursorVisible(true);

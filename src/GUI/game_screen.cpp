@@ -108,11 +108,11 @@ void GameScreen::loadContent(void)
 	// Texture for board square
 	squareTexture.loadFromFile("media/img/square_white.png");
 	// Square colors
-	sf::Color color_square_dark(210, 105,30);	//"chocolate"
-	sf::Color color_square_light(138,54,15);	//"burntsienna"
+	color_square_dark = sf::Color(210, 105,30);	//"chocolate"
+	color_square_light = sf::Color(138,54,15);	//"burntsienna"
 	// Square highlight colors
-	sf::Color color_highlight_square_dark(0,200,0);
-	sf::Color color_highlight_square_light(0,255,255);
+	color_highlight_square_dark = sf::Color(0,200,0);
+	color_highlight_square_light = sf::Color(0,255,255);
 
 	//Create base board starting from down left corner
 	sf::Sprite square;
@@ -131,19 +131,10 @@ void GameScreen::loadContent(void)
 			gameBoard.push_back(square);
 		}
 	}
-	// Set positions to pieces
-
 }
 
 int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 {
-	// Square colors
-	sf::Color color_square_dark(210, 105,30);	//"chocolate"
-	sf::Color color_square_light(138,54,15);	//"burntsienna"
-	// Square highlight colors
-	sf::Color color_highlight_square_dark(0,200,0);
-	sf::Color color_highlight_square_light(0,255,255);
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		return 0;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
@@ -154,7 +145,9 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 		for (int i = 0; i < 64; i++) {
 			// Check if current square is in the mouse position
 			if (gameBoard[i].getGlobalBounds().contains((sf::Vector2f)mpos) ) {
-				
+				// Ask game for possible moves with square
+				std::vector<int> v = game.getPossibleMoves(i);
+				highlight(v);
 			}
 		}
 	}
@@ -172,4 +165,30 @@ void GameScreen::draw(sf::RenderWindow &window)
 		}
 	}
     window.display();
+}
+
+void GameScreen::highlight(std::vector<int> v)
+{
+	sf::Color color_highlight_square_dark(0, 200, 0);
+	sf::Color color_highlight_square_light(0, 255, 255);
+	for (auto i : v) {
+		if (i % 2 == 0){
+			gameBoard[i].setColor(color_highlight_square_dark);
+		}
+		else {
+			gameBoard[i].setColor(color_highlight_square_light);
+		}
+	}
+}
+
+void GameScreen::clearHighlights(std::vector<int> v)
+{
+	for (auto i : v) {
+		if (i % 2 == 0) {
+			gameBoard[i].setColor(color_square_dark);
+		}
+		else {
+			gameBoard[i].setColor(color_square_light);
+		}
+	}
 }

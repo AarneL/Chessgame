@@ -418,7 +418,7 @@ namespace Rules
 
 		std::vector<int> testvector;
 		//Check possible moves of all pieces
-		for (int i=0; i<newboard.size(); i++) {
+		for (unsigned int i=0; i < newboard.size(); i++) {
 			//Do not check "none" pieces (empty square) and friendly pieces
 			if (newboard[i] != 0 && newboard[i]%2 != newboard[destination]%2 ) {
 				if (newboard[i]==W_PAWN)
@@ -441,8 +441,8 @@ namespace Rules
 
 			//The destination is a possible move of one of the enemy pieces
 			// -> the moving piece will be under attack
-			if ( std::find(testvector.begin(), testvector.end(), destination) )
-				return true;
+//			if ( std::find(testvector.begin(), testvector.end(), destination) )
+			return true;
 		}
 
 		return false;
