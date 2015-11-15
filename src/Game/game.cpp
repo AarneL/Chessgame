@@ -19,7 +19,6 @@ Game::Game()
 
 std::vector<int> Game::getPossibleMoves(int index)
 {
-	std::vector<int> v;
 	if (activeSquare != -1) {
 		// If piece is active check if index is on possibleMovesList
 		// If not, clear pieceActive and clear highlights(done in GUI) (return empty list)
@@ -28,15 +27,15 @@ std::vector<int> Game::getPossibleMoves(int index)
 			board.movePiece(activeSquare, index);
 			changeTurn();
 		}
+		possibleMoves.clear();
 		activeSquare = -1;
 	}
 
 	else if (containsPlayerPiece(index, playerOnTurn)) {
 		activeSquare = index;
 		possibleMoves = board.possibleMoves(index);
-		return possibleMoves;
 	}
-	return v;
+	return possibleMoves;
 }
 
 void Game::movePiece(int origin, int destination)

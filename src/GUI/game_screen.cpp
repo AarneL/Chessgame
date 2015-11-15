@@ -147,7 +147,12 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 			if (gameBoard[i].getGlobalBounds().contains((sf::Vector2f)mpos) ) {
 				// Ask game for possible moves with square
 				std::vector<int> v = game.getPossibleMoves(i);
-				highlight(v);
+				if (v.size() != 0) {
+					highlight(v);
+				}
+				else {
+					clearHighlights();
+				}
 			}
 		}
 	}
@@ -181,9 +186,9 @@ void GameScreen::highlight(std::vector<int> v)
 	}
 }
 
-void GameScreen::clearHighlights(std::vector<int> v)
+void GameScreen::clearHighlights()
 {
-	for (auto i : v) {
+	for (int i = 0; i < 64; i++) {
 		if (i % 2 == 0) {
 			gameBoard[i].setColor(color_square_dark);
 		}

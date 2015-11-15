@@ -89,7 +89,7 @@ public:
 	int update(sf::RenderWindow &window, sf::Event & event);
     void draw(sf::RenderWindow &window);
 	void highlight(std::vector<int> v);
-	void clearHighlights(std::vector<int> v);
+	void clearHighlights();
 
 	// Game interface
 	Game game;
