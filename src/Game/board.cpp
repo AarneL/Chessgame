@@ -108,52 +108,32 @@ std::vector<int> Board::possibleMoves(int index)
 			break;
 
 		case W_ROOK:
-			moves = Rules::rookMove(board, index);
-			return moves;
-			break;
-
 		case B_ROOK:
 			moves = Rules::rookMove(board, index);
 			return moves;
 			break;
 
 		case W_KNIGHT:
-			// moves = Rules::knightMove(board, index);
-			return moves;
-			break;
-
 		case B_KNIGHT:
-			// moves = Rules::knightMove(board, index);
+			moves = Rules::knightMove(board, index);
 			return moves;
 			break;
 
 		case W_BISHOP:
-			moves = Rules::bishopMove(board, index);
-			return moves;
-			break;
-
 		case B_BISHOP:
 			moves = Rules::bishopMove(board, index);
 			return moves;
 			break;
 
 		case W_QUEEN:
-			moves = Rules::queenMove(board, index);
-			return moves;
-			break;
-
 		case B_QUEEN:
 			moves = Rules::queenMove(board, index);
 			return moves;
 			break;
 
 		case W_KING:
-			// moves = Rules::kingMove(board, index);
-			return moves;
-			break;
-
 		case B_KING:
-			// moves = Rules::kingMove(board, index);
+			moves = Rules::kingMove(board, index);
 			return moves;
 			break;
 	}
