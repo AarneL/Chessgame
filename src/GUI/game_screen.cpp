@@ -155,6 +155,8 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		return 0;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+		free(white);
+		free(black);
 		return -1;
 	}
 

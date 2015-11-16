@@ -163,7 +163,7 @@ namespace Rules
 			diffY = (dest/8)-(index/8);
 
 			//Absolute boundary check (0-63)
-			if ( dest <= 63 || dest >= 0 ) {
+			if ( dest <= 63 && dest >= 0 ) {
 				//Boundary check by parity
 				//Check that either X or Y changes its parity, but both do not
 				if ( (diffX%2 != 0 && diffY%2 == 0) || (diffX%2 == 0 && diffY%2 != 0) ) {
