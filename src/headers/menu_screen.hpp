@@ -10,6 +10,7 @@ public:
 	virtual void loadContent(void);
 	virtual int update(sf::RenderWindow &window, sf::Event & event);
     virtual void draw(sf::RenderWindow &window);
+
 private:
 	// Temporary containers for elements
 	sf::Texture backgroundTexture;
@@ -25,6 +26,11 @@ private:
 
 	// Containers for sprite elements so it can be looped
 	std::vector<sf::Sprite> elements;
+	
+	void clearButtonHighlights();
+
+	sf::Color defaultButtonColor;
+	sf::Color highlightedButtonColor;
 };
 
 #endif /* MENU_SCREEN_H */

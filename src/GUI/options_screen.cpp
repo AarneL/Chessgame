@@ -30,7 +30,7 @@ int OptionsScreen::update(sf::RenderWindow &window, sf::Event &event)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		return -1;
 
-	return 3;
+	return 2;
 }
 
 void OptionsScreen::draw(sf::RenderWindow &window)

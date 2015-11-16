@@ -33,7 +33,9 @@ void MenuScreen::loadContent(void)
 	exitButton.setTexture(exitButtonTexture);
 	exitButton.setPosition(sf::Vector2f(300, 550));
 	elements.push_back(exitButton);
-
+	
+	sf::Color defaultButtonColor = sf::Color(0,0,0,0);
+	sf::Color highlightedButtonColor = sf::Color(0,255,0,128);
 }
 
 int MenuScreen::update(sf::RenderWindow &window, sf::Event & event)
@@ -41,24 +43,19 @@ int MenuScreen::update(sf::RenderWindow &window, sf::Event & event)
 	sf::Vector2f v = (sf::Vector2f)(sf::Mouse::getPosition(window));
 
 	// Hovering button highlights the sprite
-	if (event.type == sf::Event::MouseMoved)
+	if(event.type == sf::Event::MouseMoved)
 	{
-		std::cout << "Mouse moved" << std::endl;
-		if (newGameButton.getGlobalBounds().contains(v))
-		{
-			std::cout << "Mouse hovering newgamebutton" << std::endl;
+		bool buttonHovered = false;
+		for (auto button : elements) {
+			if (button.getGlobalBounds().contains(v)) {
+				std::cout << "User hovered button" << std::endl;
+				button.setColor(highlightedButtonColor);
+				buttonHovered = true;
+			}
 		}
-		if (loadGameButton.getGlobalBounds().contains(v))
-		{
-			std::cout << "Mouse hovering loadgamebutton" << std::endl;
-		}
-		if (optionsButton.getGlobalBounds().contains(v))
-		{
-			std::cout << "Mouse hovering optionsbutton" << std::endl;
-		}
-		if (exitButton.getGlobalBounds().contains(v))
-		{
-			std::cout << "Mouse hovering exitbutton" << std::endl;
+		if(!buttonHovered){
+			// If nothing hovered
+			clearButtonHighlights();
 		}
 	}
 
@@ -107,4 +104,11 @@ void MenuScreen::draw(sf::RenderWindow &window)
 		window.draw(element);
 	}
 	window.display();
+}
+
+void MenuScreen::clearButtonHighlights()
+{
+	for (auto button : elements) {
+		button.setColor(defaultButtonColor);
+	}
 }

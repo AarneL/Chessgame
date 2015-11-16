@@ -119,7 +119,6 @@ void GameScreen::loadContent(void)
 	sf::Sprite square;
 	for (int i = 7; i >= 0; i--) {
 		for (int j = 0; j < 8; j++) {
-			std::cout << i << std::endl;
 			square = sf::Sprite();
 			square.setPosition(j*96, i*96);
 			square.setTexture(squareTexture);
@@ -179,7 +178,7 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 
 void GameScreen::draw(sf::RenderWindow &window)
 {
-	window.clear(sf::Color(0, 10, 200, 255));
+	window.clear();
 	for (int i = 0; i < 64; i++) {
 		window.draw(gameBoard[i]);
 		if (!(pieces[i] == NULL)) {
