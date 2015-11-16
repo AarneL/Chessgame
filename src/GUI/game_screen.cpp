@@ -14,7 +14,7 @@
 
 GameScreen::GameScreen(void)
 {
-	// Game starts with white players turn 
+	// Game starts with white players turn
 	board = Board();
 	activeSquare = -1;
 	white = new Human("White player", ColorType::White);
@@ -175,7 +175,7 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 						}
 					}
 					// If possible moves already found
-					else if (activeSquare != -1 && (std::find(possibleMoves.begin(), possibleMoves.end(), i) != possibleMoves.end())) {
+					else if (activeSquare != -1 && (std::find(possibleMoves.begin(), possibleMoves.end(), i) != possibleMoves.end()) && i != activeSquare) {
 						movePiece(std::make_pair(activeSquare, i));
 						changeTurn();
 						activeSquare = -1;
@@ -184,6 +184,7 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 
 					}
 					else {
+						activeSquare = -1;
 						possibleMoves.clear();
 						clearHighlights();
 					}
@@ -191,7 +192,7 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 				}
 			}
 		}
-	} 
+	}
 
 	// AI Turn
 	else {
@@ -244,10 +245,10 @@ void GameScreen::clearHighlights()
 
 void GameScreen::movePiece(std::pair<int,int> move)
 {
-	// Move in GUI 
+	// Move in GUI
 	pieces[move.second] = pieces[move.first];
 	pieces[move.first] = NULL;
-	
+
 	// Move in board
 	board.movePiece(move.first, move.second);
 }
