@@ -1,4 +1,5 @@
 #include <algorithm>	//find
+#include <iostream>		//cout, endl
 
 #include "../headers/rules.hpp"
 #include "../headers/board.hpp"	//enum Piece, join(v1,v2)
@@ -409,22 +410,28 @@ namespace Rules
 	//NOTE: The threatened status should be checked after the move, as pawn moves depend on
 	// what is surrounding them. That's why both start and destination are needed by the function
 	bool isThreatenedAfter(const std::vector<int>& board, int start, int destination){
-
 		std::vector<int> newboard(board);
 
 		//Simulate the move
 		newboard[destination] = board[start];
 		newboard[start] = 0;
 
+		std::pair<int,int> dummyMove = std::make_pair(0, 0);
 		std::vector<int> testvector;
 		//Check possible moves of all pieces
 		for (unsigned int i=0; i < newboard.size(); i++) {
 			//Do not check "none" pieces (empty square) and friendly pieces
 			if (newboard[i] != 0 && newboard[i]%2 != newboard[destination]%2 ) {
-				if (newboard[i]==W_PAWN)
-					{}	//TODO
-				else if (newboard[i]==B_PAWN)
-					{}	//TODO
+				//NOTE: 1) Do not take the forward move of pawns into accout, it cannot capture or check
+				//		2) En passant is not needed, dummy move can be used.
+				if (newboard[i]==W_PAWN) {
+					testvector = whitePawnMoveForwardLeft(newboard, i, dummyMove);
+					testvector = join(testvector, whitePawnMoveForwardRight(newboard, i, dummyMove) );
+				}
+				else if (newboard[i]==B_PAWN) {
+					testvector = blackPawnMoveForwardLeft(newboard, i, dummyMove);
+					testvector = join(testvector, blackPawnMoveForwardRight(newboard, i, dummyMove) );
+				}
 				else if (newboard[i]==W_KNIGHT || newboard[i]==B_KNIGHT)
 					testvector = knightMove(newboard, i);
 				else if (newboard[i]==W_ROOK || newboard[i]==B_ROOK)
@@ -441,8 +448,8 @@ namespace Rules
 
 			//The destination is a possible move of one of the enemy pieces
 			// -> the moving piece will be under attack
-//			if ( std::find(testvector.begin(), testvector.end(), destination) )
-			return true;
+			if ( std::find(testvector.begin(), testvector.end(), destination) != testvector.end() )
+				return true;
 		}
 
 		return false;
