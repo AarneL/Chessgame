@@ -27,8 +27,8 @@ namespace Rules {
 
 	//NOTE the 3rd argument to prevent infinite recursions (when false)
 	std::vector<int> kingMove(const std::vector<int>& board, int index, bool recurse=true);
-
-
+	std::vector<int> leftCastlingMove(const std::vector<int>& board, int index);
+	std::vector<int> rightCastlingMove(const std::vector<int>& board, int index);
 
 	bool isThreatenedAfter(const std::vector<int>&, int, int);
 

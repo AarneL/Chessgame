@@ -406,6 +406,41 @@ namespace Rules
 	}
 
 
+
+	//Left castling (king -2)
+	//NOTE: The castling flags should be checked before calling this
+	// because this function only checks if 1) pieces between king and rook,
+	// 2) king threatened before, during or after castling
+	std::vector<int> leftCastlingMove(const std::vector<int>& board, int index){
+		std::vector<int> v;
+		int dest = index-2;
+
+		if (board[index-1]==0 && board[index-2]==0 && board[index-3]==0	//No pieces between
+				&& !isThreatenedAfter(board, index, index)		//Not in check now (start=dest, "move from x to x")
+				&& !isThreatenedAfter(board, index, dest)		//Not in check after castling
+				&& !isThreatenedAfter(board, index, index-1) )	//Not in check when moving
+			v.push_back(dest);
+
+		return v;
+	}
+
+	//Right castling (king +2)
+	//NOTE: The castling flags should be checked before calling this
+	// because this function only checks if 1) pieces between king and rook,
+	// 2) king threatened before, during or after castling
+	std::vector<int> rightCastlingMove(const std::vector<int>& board, int index){
+		std::vector<int> v;
+		int dest = index+2;
+
+		if (board[index+1]==0 && board[index+2]==0				//No pieces between (2 squares)
+				&& !isThreatenedAfter(board, index, index)		//Not in check now
+				&& !isThreatenedAfter(board, index, dest)		//Not in check after castling
+				&& !isThreatenedAfter(board, index, index+1) )	//Not in check when moving
+			v.push_back(dest);
+
+		return v;
+	}
+
 	//Test if the piece/square is threatened after a simulated move
 	//NOTE: The threatened status should be checked after the move, as pawn moves depend on
 	// what is surrounding them. That's why both start and destination are needed by the function
@@ -413,8 +448,11 @@ namespace Rules
 		std::vector<int> newboard(board);
 
 		//Simulate the move
-		newboard[destination] = board[start];
+		//NOTE: it's possible that start==destination,
+		// so the start must be emptied first!
+		// Otherwise, the destination would be empty when start==dest
 		newboard[start] = 0;
+		newboard[destination] = board[start];
 
 		std::pair<int,int> dummyMove = std::make_pair(0, 0);
 		std::vector<int> testvector;
