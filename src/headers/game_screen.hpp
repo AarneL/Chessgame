@@ -3,9 +3,10 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "./../headers/player.hpp"
-#include "./../headers/board.hpp"
-#include "./../headers/human.hpp"
+#include "../headers/player.hpp"
+#include "../headers/board.hpp"
+#include "../headers/human.hpp"
+#include "../headers/ai.hpp"
 
 
 class GameScreen : public BaseScreen
@@ -101,7 +102,7 @@ public:
     void draw(sf::RenderWindow &window);
 	void highlight(std::vector<int> v);
 	void clearHighlights();
-	
+
 	// Game updating and analysis
 	void movePiece(std::pair<int, int> move);
 	void changeTurn();

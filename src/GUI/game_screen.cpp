@@ -10,15 +10,14 @@
 #include <typeinfo>
 
 
-
-
 GameScreen::GameScreen(void)
 {
 	// Game starts with white players turn
 	board = Board();
 	activeSquare = -1;
 	white = new Human("White player", ColorType::White);
-	black = new Human("Black player", ColorType::Black);
+	// black = new Human("Black player", ColorType::Black);
+	black = new AI("Black player", ColorType::Black, 1);
 	playerOnTurn = white;
 }
 
@@ -264,6 +263,7 @@ void GameScreen::changeTurn()
 	else {
 		playerOnTurn = black;
 	}
+	moveSound.play();
 }
 
 bool GameScreen::containsPlayerPiece(int i, Player* p)
@@ -289,10 +289,25 @@ std::vector<std::pair<int, int> > GameScreen::getMoveList() const
 
 std::pair<int,int> GameScreen::getAiMove(void)
 {
-	std::pair<int, int> pair;
-	// TODO: AI getMove here
+	// This dummy version gets random move from AI's all possible moves
+	std::vector<std::pair<int, int>> allPossibleMoves;
+	for (int i = 0; i < 64; i++) {
+		if (containsPlayerPiece(i, playerOnTurn)) {
+			possibleMoves = board.possibleMoves(i);
+			for (auto j : possibleMoves) {
+				if (i != j) {
+					std::pair<int, int> move;
+					move.first = i;
+					move.second = j;
+					allPossibleMoves.push_back(move);
+				}
+			}
+		}
+	}
+	std::srand(std::time(0));
+	auto randMove = std::rand() % allPossibleMoves.size();
 
-	return pair;
+	return allPossibleMoves[randMove];
 }
 
 
