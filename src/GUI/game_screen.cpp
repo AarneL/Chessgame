@@ -8,6 +8,8 @@
 #include <SFML/Audio.hpp>
 #include <algorithm>
 #include <typeinfo>
+#include <chrono>
+#include <thread>
 
 
 GameScreen::GameScreen(void)
@@ -289,6 +291,8 @@ std::vector<std::pair<int, int> > GameScreen::getMoveList() const
 
 std::pair<int,int> GameScreen::getAiMove(void)
 {
+	// A little delay before AI move
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	// This dummy version gets random move from AI's all possible moves
 	std::vector<std::pair<int, int>> allPossibleMoves;
 	for (int i = 0; i < 64; i++) {
