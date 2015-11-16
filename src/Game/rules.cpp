@@ -166,7 +166,7 @@ namespace Rules
 			if ( dest <= 63 || dest >= 0 ) {
 				//Boundary check by parity
 				//Check that either X or Y changes its parity, but both do not
-				if ( (diffX%2 != 0 && diffY%2 == 0) || (diffX%2 == 0 && diffY != 0) ) {
+				if ( (diffX%2 != 0 && diffY%2 == 0) || (diffX%2 == 0 && diffY%2 != 0) ) {
 					//Target check
 					//If destination is empty or different color, then proceed
 					if ( board[dest] == 0 || board[dest]%2 != board[index]%2 )
