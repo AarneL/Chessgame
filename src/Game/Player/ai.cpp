@@ -17,3 +17,7 @@ void AI::getMove()
 {
 
 }
+std::string AI::getType()
+{
+	return "AI";
+}

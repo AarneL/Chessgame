@@ -8,6 +8,7 @@ class Human : public Player
 public:
 	Human(std::string const &n, ColorType c);
 	void getMove();
+	std::string getType();
 private:
 };
 

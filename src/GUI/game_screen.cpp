@@ -1,16 +1,25 @@
 #include "../headers/base_screen.hpp"
 #include "../headers/game_screen.hpp"
 #include "../headers/menu_screen.hpp"
-#include "../headers/game.hpp"
+
+
 // #include "../headers/board.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <algorithm>
+#include <typeinfo>
+
 
 
 
 GameScreen::GameScreen(void)
 {
-	game = Game();
+	// Game starts with white players turn 
+	board = Board();
+	activeSquare = -1;
+	white = new Human("White player", ColorType::White);
+	black = new Human("Black player", ColorType::Black);
+	playerOnTurn = white;
 }
 
 void GameScreen::loadContent(void)
@@ -145,33 +154,49 @@ int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		return 0;
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 		return -1;
-	else if (event.type == sf::Event::MouseButtonPressed) {
-		// Get mouse position
-		sf::Vector2i mpos = sf::Mouse::getPosition(window);
-		for (int i = 0; i < 64; i++) {
-			// Check if current square is in the mouse position
-			if (gameBoard[i].getGlobalBounds().contains((sf::Vector2f)mpos) ) {
-				// Ask game for possible moves with square
-				std::vector<int> v = game.getPossibleMoves(i);
-				if (v.size() != 0) {
-					highlight(v);
-				}
-				else {
-					clearHighlights();
-				}
-				// Ask game for moveList to check if a move has been done
-				std::vector<std::pair<int, int> > newMoveList = game.getMoveList();
-				if (newMoveList.size() > moveList.size()) {
-					moveList = newMoveList;
-					// Get the latest move and update the pieces vector
-					std::pair<int, int> lastMove = moveList.back();
-					movePiece(lastMove);
-					moveSound.play();
+	}
+
+	// Human turn
+	if (playerOnTurn->getType() == std::string("Human")) {
+		if (event.type == sf::Event::MouseButtonPressed) {
+			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
+			for (int i = 0; i < 64; i++) {
+				if (gameBoard[i].getGlobalBounds().contains(mousePos)) {
+					// If no piece active yet
+					if (activeSquare == -1)
+					{
+						if (containsPlayerPiece(i, playerOnTurn))
+						{
+							possibleMoves = board.possibleMoves(i);
+							highlight(possibleMoves);
+							activeSquare = i;
+						}
+					}
+					// If possible moves already found
+					else if (activeSquare != -1 && (std::find(possibleMoves.begin(), possibleMoves.end(), i) != possibleMoves.end())) {
+						movePiece(std::make_pair(activeSquare, i));
+						changeTurn();
+						activeSquare = -1;
+						possibleMoves.clear();
+						clearHighlights();
+
+					}
+					else {
+						possibleMoves.clear();
+						clearHighlights();
+					}
+					break;
 				}
 			}
 		}
+	} 
+
+	// AI Turn
+	else {
+		movePiece(getAiMove());
+		changeTurn();
 	}
 	return 1;
 }
@@ -217,10 +242,56 @@ void GameScreen::clearHighlights()
 	}
 }
 
-void GameScreen::movePiece(std::pair<int, int> move)
+void GameScreen::movePiece(std::pair<int,int> move)
 {
-	int origin = move.first;
-	int destination = move.second;
-	pieces[destination] = pieces[origin];
-	pieces[origin] = NULL;
+	// Move in GUI 
+	pieces[move.second] = pieces[move.first];
+	pieces[move.first] = NULL;
+	
+	// Move in board
+	board.movePiece(move.first, move.second);
 }
+
+void GameScreen::changeTurn()
+{
+	// If its black turn
+	if (playerOnTurn == black) {
+		playerOnTurn = white;
+	}
+	else {
+		playerOnTurn = black;
+	}
+}
+
+bool GameScreen::containsPlayerPiece(int i, Player* p)
+{
+	if (belongsToPlayer(board.getBoard()[i], p))
+		return true;
+	return false;
+}
+
+bool GameScreen::belongsToPlayer(int i, Player* p)
+{
+	if ((p->getColor() == ColorType::White) && (i % 2 == 1) && (i != 0))
+		return true;
+	else if ((p->getColor() == ColorType::Black) && (i % 2 == 0) && (i != 0))
+		return true;
+	return false;
+}
+
+std::vector<std::pair<int, int> > GameScreen::getMoveList() const
+{
+	return board.getMoveList();
+}
+
+std::pair<int,int> GameScreen::getAiMove(void)
+{
+	std::pair<int, int> pair;
+	// TODO: AI getMove here
+
+	return pair;
+}
+
+
+
+

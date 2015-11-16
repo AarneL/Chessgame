@@ -11,3 +11,8 @@ void Human::getMove()
 {
 
 }
+
+std::string Human::getType()
+{
+	return "Human";
+}

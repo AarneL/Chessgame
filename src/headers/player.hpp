@@ -14,6 +14,7 @@ public:
 	std::string getName();
 	ColorType getColor();
 	virtual void getMove() = 0;
+	virtual std::string getType() = 0;
 protected:
 	std::string name;
 	ColorType color;

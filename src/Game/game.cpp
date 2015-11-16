@@ -8,13 +8,6 @@
 
 Game::Game()
 {
-	std::string name1 = "White player";
-	std::string name2 = "Black player";
-	white = new Human(name1, ColorType::White);
-	black = new Human(name2, ColorType::Black);
-	board = Board();
-	activeSquare = -1;
-	playerOnTurn = white;
 }
 
 std::vector<int> Game::getPossibleMoves(int index)
@@ -73,12 +66,7 @@ bool Game::belongsToPlayer(int i, Player* p)
 
 void Game::changeTurn()
 {
-	if (playerOnTurn == black) {
-		playerOnTurn = white;
-	}
-	else {
-		playerOnTurn = black;
-	}
+
 }
 
 std::vector<std::pair<int, int> > Game::getMoveList() const

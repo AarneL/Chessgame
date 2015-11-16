@@ -1,5 +1,4 @@
 #include "./../headers/board.hpp"
-#include "./../headers/game.hpp"
 #include "./../headers/rules.hpp"
 #include <vector>
 #include <iostream>

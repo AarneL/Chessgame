@@ -3,7 +3,6 @@
 #include "../headers/human.hpp"
 #include "../headers/ai.hpp"
 #include "../headers/player.hpp"
-// #include "../headers/game.hpp"
 
 NewGameScreen::NewGameScreen(void)
 {

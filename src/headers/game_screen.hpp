@@ -1,9 +1,12 @@
 #ifndef GAME_SCREEN_H
 #define GAME_SCREEN_H
 
-#include "./../headers/game.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "./../headers/player.hpp"
+#include "./../headers/board.hpp"
+#include "./../headers/human.hpp"
+
 
 class GameScreen : public BaseScreen
 {
@@ -88,17 +91,35 @@ private:
 	sf::SoundBuffer moveSoundBuffer;
 	sf::Sound moveSound;
 
+
 public:
     GameScreen(void);
+
+	// Draw related functions
 	void loadContent(void);
 	int update(sf::RenderWindow &window, sf::Event & event);
     void draw(sf::RenderWindow &window);
 	void highlight(std::vector<int> v);
 	void clearHighlights();
+	
+	// Game updating and analysis
 	void movePiece(std::pair<int, int> move);
+	void changeTurn();
+	bool containsPlayerPiece(int i, Player* p);
+	bool belongsToPlayer(int i, Player* p);
+	std::vector<std::pair<int, int> > getMoveList() const;
+	std::pair<int, int> getAiMove();
+
 
 	// Game interface
-	Game game;
+	Board board;
+	int activeSquare;
+
+	// Game functionality to gamescreen
+	Player *white;
+	Player *black;
+	Player *playerOnTurn;
+	std::vector<int> possibleMoves;
 };
 
 #endif
