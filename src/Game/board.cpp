@@ -78,10 +78,9 @@ Board::Board(void)
 	}
 }
 
-std::vector<int> Board::possibleMoves(int index)
+std::vector<int> Board::possibleMoves(int index) const
 {
 	std::vector<int> moves;
-	moves.push_back(index);
 	std::pair<int, int> lastMove;
 
 	if(moveList.size() == 0)
@@ -157,7 +156,7 @@ bool Board::movePiece(int origin, int destination)
 	return true;
 }
 
-std::vector<int>& Board::getBoard()
+std::vector<int> Board::getBoard() const
 {
 	return board;
 }
@@ -165,6 +164,21 @@ std::vector<int>& Board::getBoard()
 std::vector<std::pair<int, int> > Board::getMoveList() const
 {
 	return moveList;
+}
+
+bool Board::isCheckMate()
+{
+//
+	return false;
+}
+
+bool Board::isCheck()
+{
+	return false;
+}
+bool Board::isStaleMate()
+{
+	return false;
 }
 
 std::vector<int> join(std::vector<int> a, std::vector<int> b)

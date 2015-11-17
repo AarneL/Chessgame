@@ -23,10 +23,13 @@ class Board
 {
 public:
 	Board();
-	std::vector<int> possibleMoves(int index);
+	std::vector<int> possibleMoves(int index) const;
 	bool movePiece(int origin, int destination);
-	std::vector<int>& getBoard();
+	std::vector<int> getBoard() const;
 	std::vector<std::pair<int, int> > getMoveList() const;
+	bool isCheckMate();
+	bool isCheck();
+	bool isStaleMate();
 
 private:
 	std::vector<int> board; //contains pieces
