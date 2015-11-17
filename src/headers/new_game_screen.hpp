@@ -10,7 +10,7 @@ public:
     NewGameScreen(void);
 	void loadContent(void);
 	void createGame(int players);
-	int update(sf::RenderWindow &window, sf::Event &event);
+	int update(sf::RenderWindow &window);
     void draw(sf::RenderWindow &window);
 private:
 	sf::Texture onePlayerButtonTexture;

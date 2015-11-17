@@ -16,3 +16,8 @@ std::string Human::getType()
 {
 	return "Human";
 }
+
+int Human::getLevel()
+{
+	return 1;
+}

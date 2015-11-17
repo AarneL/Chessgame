@@ -38,62 +38,65 @@ void MenuScreen::loadContent(void)
 	sf::Color highlightedButtonColor = sf::Color(0,255,0,128);
 }
 
-int MenuScreen::update(sf::RenderWindow &window, sf::Event & event)
+int MenuScreen::update(sf::RenderWindow &window)
 {
-	sf::Vector2f v = (sf::Vector2f)(sf::Mouse::getPosition(window));
+	sf::Event event;
+	while(window.pollEvent(event)) {
+		sf::Vector2f v = (sf::Vector2f)(sf::Mouse::getPosition(window));
 
-	// Hovering button highlights the sprite
-	if(event.type == sf::Event::MouseMoved)
-	{
-		bool buttonHovered = false;
-		for (auto button : elements) {
-			if (button.getGlobalBounds().contains(v)) {
-				std::cout << "User hovered button" << std::endl;
-				button.setColor(highlightedButtonColor);
-				buttonHovered = true;
+		// Hovering button highlights the sprite
+		if (event.type == sf::Event::MouseMoved)
+		{
+			bool buttonHovered = false;
+			for (auto button : elements) {
+				if (button.getGlobalBounds().contains(v)) {
+					std::cout << "User hovered button" << std::endl;
+					button.setColor(highlightedButtonColor);
+					buttonHovered = true;
+				}
+			}
+			if (!buttonHovered) {
+				// If nothing hovered
+				clearButtonHighlights();
 			}
 		}
-		if(!buttonHovered){
-			// If nothing hovered
-			clearButtonHighlights();
-		}
-	}
 
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	{
-		std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
-
-		if (newGameButton.getGlobalBounds().contains(v))
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			// Start newgamescreen
-			std::cout << "User pressed newGameButton." << std::endl;
-			return 1; // NOTE: For now new game will start game immeaditely
+			std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
+
+			if (newGameButton.getGlobalBounds().contains(v))
+			{
+				// Start newgamescreen
+				std::cout << "User pressed newGameButton." << std::endl;
+				return 1; // NOTE: For now new game will start game immeaditely
+			}
+
+			if (loadGameButton.getGlobalBounds().contains(v))
+			{
+				// User pressed loadbutton->Open dialog box
+				std::cout << "User pressed loadButton." << std::endl;
+
+			}
+
+			if (optionsButton.getGlobalBounds().contains(v))
+			{
+				// Start optionsscreen
+				std::cout << "User pressed optionsbutton." << std::endl;
+				return 2;
+			}
+
+			if (exitButton.getGlobalBounds().contains(v))
+			{
+				// Exit program
+				std::cout << "User pressed exitbutton." << std::endl;
+				return -1;
+			}
 		}
 
-		if (loadGameButton.getGlobalBounds().contains(v))
-		{
-			// User pressed loadbutton->Open dialog box
-			std::cout << "User pressed loadButton." << std::endl;
-
+		// Continue using same screen
+		return 0;
 		}
-
-		if (optionsButton.getGlobalBounds().contains(v))
-		{
-			// Start optionsscreen
-			std::cout << "User pressed optionsbutton." << std::endl;
-			return 2;
-		}
-
-		if (exitButton.getGlobalBounds().contains(v))
-		{
-			// Exit program
-			std::cout << "User pressed exitbutton." << std::endl;
-			return -1;
-		}
-	}
-
-	// Continue using same screen
-	return 0;
 }
 
 

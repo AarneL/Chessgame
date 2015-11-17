@@ -18,9 +18,8 @@ GameScreen::GameScreen(void)
 	// Game starts with white players turn
 	board = Board();
 	activeSquare = -1;
-	white = new Human("White player", ColorType::White);
-	// black = new Human("Black player", ColorType::Black);
-	black = new AI("Black player", ColorType::Black, 1);
+	white = new Human("Jenni" , ColorType::White);
+	black = new AI( "Black player" , ColorType::Black, 3);
 	playerOnTurn = white;
 
 	// Graphical design constants
@@ -145,6 +144,10 @@ void GameScreen::loadContent(void)
 				square.setColor(color_square_light);
 			}
 			gameBoard.push_back(square);
+			int index = gameBoard.size() - 1;
+			if (pieces[index] != NULL) {
+				pieces[index]->setPosition(gameBoard[index].getPosition());
+			}
 		}
 	}
 
@@ -157,55 +160,63 @@ void GameScreen::loadContent(void)
 	}
 }
 
-int GameScreen::update(sf::RenderWindow &window, sf::Event & event)
+int GameScreen::update(sf::RenderWindow &window)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		return 0;
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-		free(white);
-		free(black);
-		return -1;
-	}
-
-	// Human turn
 	if (playerOnTurn->getType() == std::string("Human")) {
-		if (event.type == sf::Event::MouseButtonPressed) {
-			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
-			for (int i = 0; i < 64; i++) {
-				if (gameBoard[i].getGlobalBounds().contains(mousePos)) {
-					// If no piece active yet
-					if (activeSquare == -1)
-					{
-						if (containsPlayerPiece(i, playerOnTurn))
-						{
-							possibleMoves = board.possibleMoves(i);
-							highlight(possibleMoves);
-							activeSquare = i;
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+				return 0;
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+				free(white);
+				free(black);
+				return -1;
+			}
+
+			// Human turn
+			if (event.type == sf::Event::MouseButtonPressed) {
+				sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
+				for (int i = 0; i < 64; i++) {
+					if (gameBoard[i].getGlobalBounds().contains(mousePos)) {
+						// If no piece active yet
+						if (activeSquare == -1) {
+							if (containsPlayerPiece(i, playerOnTurn))
+							{
+								possibleMoves = board.possibleMoves(i);
+								highlight(possibleMoves);
+								activeSquare = i;
+							}
+						}
+						// If possible moves already found
+						else if (activeSquare != -1 && (std::find(possibleMoves.begin(), possibleMoves.end(), i) != possibleMoves.end()) && i != activeSquare) {
+							movePiece(std::make_pair(activeSquare, i));
+							std::cout << playerOnTurn->getName() << "(Human) made move." << std::endl;
+							changeTurn();
+							activeSquare = -1;
+							possibleMoves.clear();
+							clearHighlights();
+						}
+
+						else {
+							activeSquare = -1;
+							possibleMoves.clear();
+							clearHighlights();
 						}
 					}
-					// If possible moves already found
-					else if (activeSquare != -1 && (std::find(possibleMoves.begin(), possibleMoves.end(), i) != possibleMoves.end()) && i != activeSquare) {
-						movePiece(std::make_pair(activeSquare, i));
-						changeTurn();
-						activeSquare = -1;
-						possibleMoves.clear();
-						clearHighlights();
-
-					}
-					else {
-						activeSquare = -1;
-						possibleMoves.clear();
-						clearHighlights();
-					}
-					break;
 				}
 			}
 		}
 	}
-
 	// AI Turn
-	else {
-		movePiece(getAiMove());
+	else if (playerOnTurn->getType() == std::string("AI")) {
+
+		std::pair<int, int> aimove = getAiMove();
+		if(aimove.first==aimove.second) {
+			std::cout << "AI made illegal move!" << std::endl;
+		}
+		movePiece(aimove);
+		std::cout << playerOnTurn->getName()  << "(AI) made move." << std::endl;
 		changeTurn();
 	}
 	return 1;
@@ -217,11 +228,10 @@ void GameScreen::draw(sf::RenderWindow &window)
 	for (int i = 0; i < 64; i++) {
 		window.draw(gameBoard[i]);
 		if (!(pieces[i] == NULL)) {
-			pieces[i]->setPosition(gameBoard[i].getPosition());
 			window.draw(*pieces[i]);
 		}
 	}
-    window.display();
+	window.display();
 }
 
 void GameScreen::highlight(std::vector<int> v)
@@ -257,6 +267,7 @@ void GameScreen::movePiece(std::pair<int,int> move)
 	// Move in GUI
 	pieces[move.second] = pieces[move.first];
 	pieces[move.first] = NULL;
+	pieces[move.second]->setPosition(gameBoard[move.second].getPosition());
 
 	// Move in board
 	board.movePiece(move.first, move.second);
@@ -268,7 +279,7 @@ void GameScreen::changeTurn()
 	if (playerOnTurn == black) {
 		playerOnTurn = white;
 	}
-	else {
+	else if(playerOnTurn == white){
 		playerOnTurn = black;
 	}
 	moveSound.play();
@@ -297,7 +308,7 @@ std::vector<std::pair<int, int> > GameScreen::getMoveList() const
 
 std::pair<int,int> GameScreen::getAiMove(void)
 {
-	return AiAlgorithm::algorithm(board, 1, false);
+	return AiAlgorithm::algorithm(board, playerOnTurn->getLevel(), (playerOnTurn->getColor() == ColorType::White));
 }
 
 //TODO: THIS TO AI LVL0

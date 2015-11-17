@@ -12,6 +12,7 @@ int main(int argc, char** argv)
 {
     // Applications variables
 	int screen = 0;
+	int previousScreen = 0;
 	std::vector<BaseScreen*> screens;
 	sf::Event event;
 
@@ -42,17 +43,15 @@ int main(int argc, char** argv)
     while (screen >= 0)
     {
 		// Update window if event occurs, if screen is already -1 -> break the loop
-		while (window.pollEvent(event) && screen != -1) {
 		
 			// Close whole program
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 				screen = -1;
-				break;
 			}
 			
 			// Updates screen elements
-			screen = screens[screen]->update(window, event);
-		}
+			screen = screens[screen]->update(window);
+			
 
 		if (screen >= 0) {
 			

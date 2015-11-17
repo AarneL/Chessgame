@@ -157,10 +157,11 @@ namespace AiAlgorithm
 
 	int evaluate(Board& board)
 	{
+		std::vector<int> b = board.getBoard();
 		int value = 0;
 		for(int i = 0; i < 64; i++)
 		{
-			value = value + getValue(board.getBoard()[i]);
+			value = value + getValue(b[i]);
 		}
 
 		//evaluate
@@ -213,8 +214,18 @@ namespace AiAlgorithm
 			case B_QUEEN:
 				return -850;
 				break;
+			
+			case W_KING:
+				return 10000;
+				break;
+			
+			case B_KING:
+				return -10000;
+				break;
+			
+			default:
+				return 0;
 		}
-	return 0;
 	}
 
 }

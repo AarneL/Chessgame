@@ -7,7 +7,7 @@ class BaseScreen
 {
 public :
 	virtual void loadContent(void) = 0;
-	virtual int update(sf::RenderWindow &window, sf::Event &event) = 0;
+	virtual int update(sf::RenderWindow &window) = 0;
     virtual void draw(sf::RenderWindow &window) = 0;
 };
 

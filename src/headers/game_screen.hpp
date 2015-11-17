@@ -105,7 +105,7 @@ public:
 
 	// Draw related functions
 	void loadContent(void);
-	int update(sf::RenderWindow &window, sf::Event & event);
+	int update(sf::RenderWindow &window);
     void draw(sf::RenderWindow &window);
 	void highlight(std::vector<int> v);
 	void clearHighlights();

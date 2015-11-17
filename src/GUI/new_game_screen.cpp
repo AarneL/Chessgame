@@ -53,8 +53,10 @@ void NewGameScreen::createGame(int players)
 	// Game game = Game(player1, player2);
 }
 
-int NewGameScreen::update(sf::RenderWindow &window, sf::Event &event)
+int NewGameScreen::update(sf::RenderWindow &window)
 {
+	sf::Event event;
+	while(window.pollEvent(event)) {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		sf::Vector2i v = sf::Mouse::getPosition(window);
@@ -80,6 +82,7 @@ int NewGameScreen::update(sf::RenderWindow &window, sf::Event &event)
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		return -1;
 	return 1;
+}
 }
 
 void NewGameScreen::draw(sf::RenderWindow &window)

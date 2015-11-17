@@ -13,24 +13,27 @@ void OptionsScreen::loadContent(void)
 	backButton.setPosition(sf::Vector2f(300, 200));
 }
 
-int OptionsScreen::update(sf::RenderWindow &window, sf::Event &event)
+int OptionsScreen::update(sf::RenderWindow &window)
 {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	{
-		sf::Vector2i v = sf::Mouse::getPosition(window);
-		std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
-
-		if (backButton.getGlobalBounds().contains((sf::Vector2f)v))
+	sf::Event event;
+	while (window.pollEvent(event)) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			// Start menuscreen
-			std::cout << "User pressed backbutton." << std::endl;
-			return 0;
-		}
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-		return -1;
+			sf::Vector2i v = sf::Mouse::getPosition(window);
+			std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
 
-	return 2;
+			if (backButton.getGlobalBounds().contains((sf::Vector2f)v))
+			{
+				// Start menuscreen
+				std::cout << "User pressed backbutton." << std::endl;
+				return 0;
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+			return -1;
+
+	}
+		return 2;
 }
 
 void OptionsScreen::draw(sf::RenderWindow &window)
