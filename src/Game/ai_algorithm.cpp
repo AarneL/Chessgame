@@ -2,8 +2,6 @@
 #include <map>
 #include <string>
 #include <algorithm>
-//#include "./headers/ai_algorithm.hpp"
-
 
 #include "./../headers/ai_algorithm.hpp"
 #include "./../headers/board.hpp"
@@ -36,7 +34,7 @@ namespace AiAlgorithm
 					{
 						Board newboard = board;
 						newboard.movePiece(i, j);//supposing possibleMoves doesn't return origin
-						int temp = alphabeta(newboard, depth-1, a, b, false);
+						int temp = alphaBeta(newboard, depth-1, a, b, false);
 						if(v[0] < temp)
 						{
 							v[0] = temp;
@@ -64,7 +62,7 @@ namespace AiAlgorithm
 					{
 						Board newboard = board;
 						newboard.movePiece(i, j);
-						int temp = alphabeta(newboard, depth-1, a, b, true);
+						int temp = alphaBeta(newboard, depth-1, a, b, true);
 						if(temp < v[0])
 						{
 							v[0] = temp;

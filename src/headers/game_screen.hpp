@@ -92,6 +92,13 @@ private:
 	sf::SoundBuffer moveSoundBuffer;
 	sf::Sound moveSound;
 
+	//sf::SoundBuffer gameWinSoundBuffer;
+	//sf::SoundBuffer gameLoseSoundBuffer;
+
+	// Buttons
+	//sf::Texture mainMenuButtonTexture;
+	//sf::Sprite mainMenuButtonSprite;
+
 
 public:
     GameScreen(void);
@@ -121,6 +128,11 @@ public:
 	Player *black;
 	Player *playerOnTurn;
 	std::vector<int> possibleMoves;
+
+	// Parameters for graphical design
+	int BOARD_HORIZONTAL_OFFSET;
+	int BOARD_VERTICAL_OFFSET;
+
 };
 
 #endif

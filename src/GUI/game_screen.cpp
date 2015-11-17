@@ -1,6 +1,7 @@
 #include "../headers/base_screen.hpp"
 #include "../headers/game_screen.hpp"
 #include "../headers/menu_screen.hpp"
+#include "../headers/ai_algorithm.hpp"
 
 
 // #include "../headers/board.hpp"
@@ -21,6 +22,11 @@ GameScreen::GameScreen(void)
 	// black = new Human("Black player", ColorType::Black);
 	black = new AI("Black player", ColorType::Black, 1);
 	playerOnTurn = white;
+
+	// Graphical design constants
+	BOARD_HORIZONTAL_OFFSET = 0;
+	BOARD_VERTICAL_OFFSET = 100;
+
 }
 
 void GameScreen::loadContent(void)
@@ -130,7 +136,7 @@ void GameScreen::loadContent(void)
 	for (int i = 7; i >= 0; i--) {
 		for (int j = 0; j < 8; j++) {
 			square = sf::Sprite();
-			square.setPosition(j*96, i*96);
+			square.setPosition((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET));
 			square.setTexture(squareTexture);
 			if ( (i+j)%2 == 0 ) {
 				square.setColor(color_square_dark);
@@ -291,26 +297,29 @@ std::vector<std::pair<int, int> > GameScreen::getMoveList() const
 
 std::pair<int,int> GameScreen::getAiMove(void)
 {
-	// A little delay before AI move
-	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-	// This dummy version gets random move from AI's all possible moves
-	std::vector<std::pair<int, int>> allPossibleMoves;
-	for (int i = 0; i < 64; i++) {
-		if (containsPlayerPiece(i, playerOnTurn)) {
-			possibleMoves = board.possibleMoves(i);
-			for (auto j : possibleMoves) {
-				if (i != j) {
-					std::pair<int, int> move;
-					move.first = i;
-					move.second = j;
-					allPossibleMoves.push_back(move);
-				}
-			}
-		}
-	}
-	std::srand(std::time(0));
-	auto randMove = std::rand() % allPossibleMoves.size();
-
-	return allPossibleMoves[randMove];
+	return AiAlgorithm::algorithm(board, 1, false);
 }
 
+//TODO: THIS TO AI LVL0
+
+//// A little delay before AI move
+//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+//// This dummy version gets random move from AI's all possible moves
+//std::vector<std::pair<int, int>> allPossibleMoves;
+//for (int i = 0; i < 64; i++) {
+//	if (containsPlayerPiece(i, playerOnTurn)) {
+//		possibleMoves = board.possibleMoves(i);
+//		for (auto j : possibleMoves) {
+//			if (i != j) {
+//				std::pair<int, int> move;
+//				move.first = i;
+//				move.second = j;
+//				allPossibleMoves.push_back(move);
+//			}
+//		}
+//	}
+//}
+//std::srand(std::time(0));
+//auto randMove = std::rand() % allPossibleMoves.size();
+
+//return allPossibleMoves[randMove];

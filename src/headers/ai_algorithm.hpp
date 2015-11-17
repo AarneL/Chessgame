@@ -3,15 +3,15 @@
 
 #include <map>
 #include <vector>
-#include "./board.hpp"
+#include "../headers/board.hpp"
 
 
 namespace AiAlgorithm {
 
 
-	std::pair<int, int> algorithm(Board, int, bool);
+	std::pair<int, int> algorithm(Board&, int, bool);
 
-	int alphabeta(Board, int, int, int, bool);
+	int alphaBeta(Board&, int, int, int, bool);
 
 	int evaluate(Board&);
 
