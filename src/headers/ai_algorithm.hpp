@@ -9,7 +9,7 @@
 namespace AiAlgorithm {
 
 
-	std::pair<int, int> algorithm(Board&, int, bool);
+	std::pair<int, int> algorithm(const Board&, int, bool);
 
 	int alphaBeta(Board&, int, int, int, bool);
 
