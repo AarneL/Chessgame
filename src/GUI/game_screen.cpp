@@ -223,7 +223,7 @@ void GameScreen::highlight(std::vector<int> v)
 	sf::Color color_highlight_square_dark(0, 200, 0);
 	sf::Color color_highlight_square_light(0, 255, 255);
 	for (auto i : v) {
-		if (i % 2 == 0){
+		if (((i % 8)+(i / 8)) % 2 == 0) {
 			gameBoard[i].setColor(color_highlight_square_dark);
 		}
 		else {
@@ -313,7 +313,4 @@ std::pair<int,int> GameScreen::getAiMove(void)
 
 	return allPossibleMoves[randMove];
 }
-
-
-
 
