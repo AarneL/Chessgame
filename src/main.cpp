@@ -6,7 +6,7 @@
 #include "headers/game_screen.hpp"
 #include "headers/menu_screen.hpp"
 #include "headers/options_screen.hpp"
-//#include "headers/new_game_screen.hpp"
+#include "headers/new_game_screen.hpp"
 
 int main(int argc, char** argv)
 {
@@ -14,16 +14,15 @@ int main(int argc, char** argv)
 	int screen = 0;
 	int previousScreen = 0;
 	std::vector<BaseScreen*> screens;
-	sf::Event event;
 
 	// Screens
 	MenuScreen menuScreen;
-    //NewGameScreen newGameScreen;
 	GameScreen gameScreen;
+    NewGameScreen newGameScreen(&gameScreen); // Must be able to modify
 	OptionsScreen optionsScreen;
 
 	screens.push_back(&menuScreen);
-    //screens.push_back(&newGameScreen);
+    screens.push_back(&newGameScreen);
 	screens.push_back(&gameScreen);
 	screens.push_back(&optionsScreen);
 
@@ -42,15 +41,9 @@ int main(int argc, char** argv)
     // Main loop
     while (screen >= 0)
     {
-		// Update window if event occurs, if screen is already -1 -> break the loop
 		
-			// Close whole program
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-				screen = -1;
-			}
-			
-			// Updates screen elements
-			screen = screens[screen]->update(window);
+		// Updates screen elements
+		screen = screens[screen]->update(window);
 			
 
 		if (screen >= 0) {

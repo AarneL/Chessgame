@@ -15,12 +15,6 @@
 
 GameScreen::GameScreen(void)
 {
-	// Game starts with white players turn
-	board = Board();
-	activeSquare = -1;
-	white = new Human("Jenni" , ColorType::White);
-	black = new AI( "Black player" , ColorType::Black, 3);
-	playerOnTurn = white;
 
 	// Graphical design constants
 	BOARD_HORIZONTAL_OFFSET = 0;
@@ -260,6 +254,32 @@ void GameScreen::clearHighlights()
 			}
 		}
 	}
+}
+
+void GameScreen::initialize(std::string whiteType, std::string blackType)
+{
+	// Game starts with white players turn
+	board = Board();
+	activeSquare = -1;
+
+	// White player type
+	if (whiteType == "AI") {
+	white = new AI("White AI", ColorType::White, 3);
+	}
+	else {
+		white = new Human("HumanName", ColorType::White);
+	}
+
+	// Black player type
+	if (blackType == "AI") {
+		black = new AI("Black AI", ColorType::White, 3);
+	}
+	else {
+		black = new Human("HumanName", ColorType::Black);
+	}
+	playerOnTurn = white;
+
+
 }
 
 void GameScreen::movePiece(std::pair<int,int> move)

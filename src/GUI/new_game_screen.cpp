@@ -1,11 +1,17 @@
 #include "../headers/new_game_screen.hpp"
+#include "../headers/game_screen.hpp"
 #include "../headers/base_screen.hpp"
 #include "../headers/human.hpp"
 #include "../headers/ai.hpp"
 #include "../headers/player.hpp"
 
-NewGameScreen::NewGameScreen(void)
+NewGameScreen::NewGameScreen()
 {
+}
+
+NewGameScreen::NewGameScreen(GameScreen* g)
+{
+	gameScreen = g;
 }
 
 void NewGameScreen::loadContent(void)
@@ -56,34 +62,35 @@ void NewGameScreen::createGame(int players)
 int NewGameScreen::update(sf::RenderWindow &window)
 {
 	sf::Event event;
-	while(window.pollEvent(event)) {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	{
-		sf::Vector2i v = sf::Mouse::getPosition(window);
-		std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
+	while (window.pollEvent(event)) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			sf::Vector2i v = sf::Mouse::getPosition(window);
+			std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
 
-		if (onePlayerButton.getGlobalBounds().contains((sf::Vector2f)v))
-		{
-			std::cout << "User pressed oneplayerbutton." << std::endl;
-			createGame(1);
-			// Start gamescreen
-			std::cout << "players created" << std::endl;
-			return 2;
+			if (onePlayerButton.getGlobalBounds().contains((sf::Vector2f)v))
+			{
+				std::cout << "User pressed oneplayerbutton." << std::endl;
+				createGame(1);
+				// Start gamescreen
+				std::cout << "players created" << std::endl;
+				return 2;
+			}
+			else if (twoPlayersButton.getGlobalBounds().contains((sf::Vector2f)v))
+			{
+				std::cout << "User pressed twoplayersbutton." << std::endl;
+				createGame(2);
+				std::cout << "players created" << std::endl;
+				// Start gamescreen
+				return 2;
+			}
 		}
-		else if (twoPlayersButton.getGlobalBounds().contains((sf::Vector2f)v))
-		{
-			std::cout << "User pressed twoplayersbutton." << std::endl;
-			createGame(2);
-			std::cout << "players created" << std::endl;
-			// Start gamescreen
-			return 2;
-		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+			return -1;
+		return 1;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-		return -1;
-	return 1;
 }
-}
+
 
 void NewGameScreen::draw(sf::RenderWindow &window)
 {

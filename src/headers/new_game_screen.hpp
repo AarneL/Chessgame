@@ -3,11 +3,16 @@
 
 #include <SFML/Graphics.hpp>
 #include "base_screen.hpp"
+#include "game_screen.hpp"
+
 
 class NewGameScreen : public BaseScreen
 {
 public:
-    NewGameScreen(void);
+	NewGameScreen();
+
+	// New game screen needs to be able to use gameScreens initializer
+    NewGameScreen(GameScreen* g);
 	void loadContent(void);
 	void createGame(int players);
 	int update(sf::RenderWindow &window);
@@ -20,6 +25,7 @@ private:
 
 	// Containers for sprite elements so it can be looped
 	std::vector<sf::Sprite> elements;
+	GameScreen* gameScreen;
 };
 
 #endif
