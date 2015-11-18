@@ -16,52 +16,79 @@ void MenuScreen::loadContent(void)
 	/* All sprites need to be added to "elements" in right order
 	 * so that what is drawn "behind" will be added first
 	 */
-	//backgroundTexture.loadFromFile("media/img/background.jpg");
-	//background.setTexture(backgroundTexture);
-	//elements.push_back(background);
+	backgroundTexture.loadFromFile("media/img/background.jpg");
+	background.setTexture(backgroundTexture);
+	elements.push_back(background);
 
+	newGameButtonImg.loadFromFile("media/img/new_game_button.png");
+	newGameHighlightedButtonImg.loadFromFile("media/img/new_game_highlighted_button.png");
 	newGameButtonTexture.loadFromFile("media/img/new_game_button.png");
 	newGameButton.setTexture(newGameButtonTexture);
-	newGameButton.setPosition(sf::Vector2f(300, 100));
+	newGameButton.setPosition(sf::Vector2f(400, 100));
 	elements.push_back(newGameButton);
 
+	loadGameButtonImg.loadFromFile("media/img/load_game_button.png");
+	loadGameHighlightedButtonImg.loadFromFile("media/img/load_game_highlighted_button.png");
 	loadGameButtonTexture.loadFromFile("media/img/load_game_button.png");
 	loadGameButton.setTexture(loadGameButtonTexture);
-	loadGameButton.setPosition(sf::Vector2f(300, 250));
+	loadGameButton.setPosition(sf::Vector2f(400, 250));
 	elements.push_back(loadGameButton);
 
+	optionsButtonImg.loadFromFile("media/img/options_button.png");
+	optionsHighlightedButtonImg.loadFromFile("media/img/options_highlighted_button.png");
 	optionsButtonTexture.loadFromFile("media/img/options_button.png");
 	optionsButton.setTexture(optionsButtonTexture);
-	optionsButton.setPosition(sf::Vector2f(300, 400));
+	optionsButton.setPosition(sf::Vector2f(400, 400));
 	elements.push_back(optionsButton);
 
+	exitButtonImg.loadFromFile("media/img/exit_button.png");
+	exitHighlightedButtonImg.loadFromFile("media/img/exit_highlighted_button.png");
 	exitButtonTexture.loadFromFile("media/img/exit_button.png");
 	exitButton.setTexture(exitButtonTexture);
-	exitButton.setPosition(sf::Vector2f(300, 550));
+	exitButton.setPosition(sf::Vector2f(400, 550));
 	elements.push_back(exitButton);
-
-	sf::Color defaultButtonColor = sf::Color(0,0,0,0);
-	sf::Color highlightedButtonColor = sf::Color(0,255,0,128);
 }
 
 int MenuScreen::update(sf::RenderWindow &window)
 {
 	sf::Event event;
 	while(window.pollEvent(event)) {
+
 		sf::Vector2f v = (sf::Vector2f)(sf::Mouse::getPosition(window));
 
 		// Hovering button highlights the sprite
 		if (event.type == sf::Event::MouseMoved)
 		{
 			bool buttonHovered = false;
-			for (auto button : elements) {
-				if (button.getGlobalBounds().contains(v)) {
-					std::cout << "User hovered button" << std::endl;
-					button.setColor(highlightedButtonColor);
-					buttonHovered = true;
-				}
+			if (newGameButton.getGlobalBounds().contains(v))
+			{
+				// Highlight newGameButton
+				newGameButtonTexture.update(newGameHighlightedButtonImg);
+				buttonHovered = true;
 			}
-			if (!buttonHovered) {
+
+			else if (loadGameButton.getGlobalBounds().contains(v))
+			{
+				// Highlight loadGameButton
+				loadGameButtonTexture.update(loadGameHighlightedButtonImg);
+				buttonHovered = true;
+			}
+			else if (optionsButton.getGlobalBounds().contains(v))
+			{
+				// Highlight loadGameButton
+				optionsButtonTexture.update(optionsHighlightedButtonImg);
+				buttonHovered = true;
+			}
+
+
+			else if (exitButton.getGlobalBounds().contains(v))
+			{
+				// Highlight exitButton
+				exitButtonTexture.update(exitHighlightedButtonImg);
+				buttonHovered = true;
+			}
+
+			else if(!buttonHovered) {
 				// If nothing hovered
 				clearButtonHighlights();
 			}
@@ -69,8 +96,6 @@ int MenuScreen::update(sf::RenderWindow &window)
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
-
 			if (newGameButton.getGlobalBounds().contains(v))
 			{
 				// Start newgamescreen
@@ -110,7 +135,7 @@ int MenuScreen::update(sf::RenderWindow &window)
 
 void MenuScreen::draw(sf::RenderWindow &window)
 {
-	window.clear();
+	window.clear(sf::Color(250,250,250));
 	for (auto element : elements) {
 		window.draw(element);
 	}
@@ -119,9 +144,10 @@ void MenuScreen::draw(sf::RenderWindow &window)
 
 void MenuScreen::clearButtonHighlights()
 {
-	for (auto button : elements) {
-		button.setColor(defaultButtonColor);
-	}
+	newGameButtonTexture.update(newGameButtonImg);
+	loadGameButtonTexture.update(loadGameButtonImg);
+	optionsButtonTexture.update(optionsButtonImg);
+	exitButtonTexture.update(exitButtonImg);
 }
 
 void MenuScreen::loadGame()
