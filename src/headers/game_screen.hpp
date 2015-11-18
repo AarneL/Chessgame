@@ -110,7 +110,7 @@ public:
     void draw(sf::RenderWindow &window);
 	void highlight(std::vector<int> v);
 	void clearHighlights();
-	void initialize(std::string whiteType, std::string blackType);
+	void initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
 
 	// Game updating and analysis
 	void movePiece(std::pair<int, int> move);

@@ -1,8 +1,14 @@
 #include "../headers/menu_screen.hpp"
 #include "../headers/base_screen.hpp"
+#include <fstream>
 
 MenuScreen::MenuScreen(void)
 {
+}
+
+MenuScreen::MenuScreen(GameScreen* g)
+{
+	gameScreen = g;
 }
 
 void MenuScreen::loadContent(void)
@@ -76,7 +82,9 @@ int MenuScreen::update(sf::RenderWindow &window)
 			{
 				// User pressed loadbutton->Open dialog box
 				std::cout << "User pressed loadButton." << std::endl;
-
+				loadGame();
+				// Start gameScreen
+				return 2;
 			}
 
 			if (optionsButton.getGlobalBounds().contains(v))
@@ -114,4 +122,40 @@ void MenuScreen::clearButtonHighlights()
 	for (auto button : elements) {
 		button.setColor(defaultButtonColor);
 	}
+}
+
+void MenuScreen::loadGame()
+{
+	// This should first open a file dialog where the user can choose file to load
+
+	// Using testfile
+	std::ifstream ifs("test.txt", std::ifstream::in);
+	if (!ifs) {
+		std::cout << "File not found" << std::endl;
+	}
+
+	// Collect information about players
+	std::string white;
+	std::getline(ifs, white);
+	std::string black;
+	std::getline(ifs, black);
+
+	std::string whiteName = white.substr(0, white.find('-'));
+	std::string blackName = black.substr(0, black.find('-'));
+	int whiteLevel = atoi((white.substr(white.find('-')+1)).c_str());
+	int blackLevel = atoi((black.substr(black.find('-')+1)).c_str());
+
+	// Initialize the game screen with the players from file
+	gameScreen->initialize(whiteName, whiteLevel, blackName, blackLevel);
+
+	for (std::string line; std::getline(ifs, line); )
+	{
+		std::cout << line << std::endl;
+		std::pair<int, int> move;
+		move.first = atoi((line.substr(0, line.find('-'))).c_str());
+		move.second = atoi((line.substr(line.find('-')+1)).c_str());
+		gameScreen->movePiece(move);
+	}
+
+	ifs.close();
 }

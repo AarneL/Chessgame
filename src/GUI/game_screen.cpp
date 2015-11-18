@@ -267,30 +267,28 @@ void GameScreen::clearHighlights()
 	}
 }
 
-void GameScreen::initialize(std::string whiteType, std::string blackType)
+void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
 {
 	// Game starts with white players turn
 	board = Board();
 	activeSquare = -1;
 
 	// White player type
-	if (whiteType == "AI") {
-	white = new AI("White AI", ColorType::White, 3);
+	if (whiteName == "AI") {
+		white = new AI(whiteName, ColorType::White, whiteLevel);
 	}
 	else {
-		white = new Human("HumanName", ColorType::White);
+		white = new Human(whiteName, ColorType::White);
 	}
 
 	// Black player type
-	if (blackType == "AI") {
-		black = new AI("Black AI", ColorType::White, 3);
+	if (blackName == "AI") {
+		black = new AI(blackName, ColorType::Black, blackLevel);
 	}
 	else {
-		black = new Human("HumanName", ColorType::Black);
+		black = new Human(blackName, ColorType::Black);
 	}
 	playerOnTurn = white;
-
-
 }
 
 void GameScreen::movePiece(std::pair<int,int> move)
@@ -343,8 +341,10 @@ std::pair<int,int> GameScreen::getAiMove(void)
 }
 
 void GameScreen::showSaveGameDialog() {
-	// Show file dialog for saving file
-	board.saveGame();
+	// This should show file dialog for saving file
+
+	// Save the game
+	board.saveGame(white, black);
 }
 
 //TODO: THIS TO AI LVL0

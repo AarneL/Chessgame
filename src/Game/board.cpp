@@ -182,11 +182,14 @@ bool Board::isStaleMate()
 	return false;
 }
 
-void Board::saveGame()
+void Board::saveGame(Player* white, Player* black)
 {
 	std::ofstream ofs ("test.txt", std::ofstream::out);
-	ofs <<  << std::endl;
-	ofs << "lässynlää";
+	ofs << white->getName() << "-" << white->getLevel() << std::endl;
+	ofs << black->getName() << "-" << black->getLevel() << std::endl;
+	for (auto move : moveList) {
+		ofs << move.first << '-' << move.second << std::endl;
+	}
 	ofs.close();
 }
 

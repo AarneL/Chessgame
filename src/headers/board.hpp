@@ -1,6 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 #include <vector>
+#include "player.hpp"
 
 enum Piece
 	{
@@ -30,7 +31,7 @@ public:
 	bool isCheckMate();
 	bool isCheck();
 	bool isStaleMate();
-	void saveGame();
+	void saveGame(Player* white, Player* black);
 
 private:
 	std::vector<int> board; //contains pieces
