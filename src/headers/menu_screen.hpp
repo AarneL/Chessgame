@@ -15,12 +15,24 @@ private:
 	// Temporary containers for elements
 	sf::Texture backgroundTexture;
 	sf::Sprite background;
+
+	sf::Image newGameButtonImg;
+	sf::Image newGameHighlightedButtonImg;
 	sf::Texture newGameButtonTexture;
 	sf::Sprite newGameButton;
+
+	sf::Image loadGameButtonImg;
+	sf::Image loadGameHighlightedButtonImg;
 	sf::Texture loadGameButtonTexture;
 	sf::Sprite loadGameButton;
+	
+	sf::Image optionsButtonImg;
+	sf::Image optionsHighlightedButtonImg;
 	sf::Texture optionsButtonTexture;
 	sf::Sprite optionsButton;
+	
+	sf::Image exitButtonImg;
+	sf::Image exitHighlightedButtonImg;
 	sf::Texture exitButtonTexture;
 	sf::Sprite exitButton;
 
@@ -28,9 +40,6 @@ private:
 	std::vector<sf::Sprite> elements;
 	
 	void clearButtonHighlights();
-
-	sf::Color defaultButtonColor;
-	sf::Color highlightedButtonColor;
 };
 
 #endif /* MENU_SCREEN_H */
