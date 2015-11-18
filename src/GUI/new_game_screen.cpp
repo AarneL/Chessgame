@@ -62,39 +62,35 @@ void NewGameScreen::createGame(int players)
 int NewGameScreen::update(sf::RenderWindow &window)
 {
 	sf::Event event;
-	while (window.pollEvent(event)) {
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-		{
+	while(window.pollEvent(event)) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			sf::Vector2i v = sf::Mouse::getPosition(window);
-			std::cout << "Mouse clicked at:(" << v.x << "," << v.y << ")" << std::endl;
-
-			if (onePlayerButton.getGlobalBounds().contains((sf::Vector2f)v))
-			{
-				std::cout << "User pressed oneplayerbutton." << std::endl;
-				createGame(1);
+			if (onePlayerButton.getGlobalBounds().contains((sf::Vector2f)v)) {
+				// createGame(1);
+				// Needs to be replaced by collected information about players
+				gameScreen->initialize("Human", 1, "AI", 3);
 				// Start gamescreen
-				std::cout << "players created" << std::endl;
 				return 2;
 			}
-			else if (twoPlayersButton.getGlobalBounds().contains((sf::Vector2f)v))
-			{
-				std::cout << "User pressed twoplayersbutton." << std::endl;
-				createGame(2);
-				std::cout << "players created" << std::endl;
+			else if (twoPlayersButton.getGlobalBounds().contains((sf::Vector2f)v)) {
+				//createGame(2);
+				// Needs to be replaced by collected information about players
+				gameScreen->initialize("Human", 1, "Human", 1);
 				// Start gamescreen
 				return 2;
 			}
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			return -1;
-		return 1;
+		}
 	}
+	return 1;
 }
 
 
 void NewGameScreen::draw(sf::RenderWindow &window)
 {
-	window.clear(sf::Color(0, 255, 0, 0));
+	window.clear(sf::Color(0, 0, 0, 0));
 	for (auto element : elements) {
 		window.draw(element);
 	}

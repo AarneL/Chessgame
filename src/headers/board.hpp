@@ -30,6 +30,7 @@ public:
 	bool isCheckMate();
 	bool isCheck();
 	bool isStaleMate();
+	void saveGame();
 
 private:
 	std::vector<int> board; //contains pieces

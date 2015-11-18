@@ -98,7 +98,8 @@ private:
 	// Buttons
 	//sf::Texture mainMenuButtonTexture;
 	//sf::Sprite mainMenuButtonSprite;
-
+	sf::Texture saveButtonTexture;
+	sf::Sprite saveButton;
 
 public:
     GameScreen(void);
@@ -119,6 +120,7 @@ public:
 	std::vector<std::pair<int, int> > getMoveList() const;
 	std::pair<int, int> getAiMove();
 
+	void showSaveGameDialog();
 
 	// Game interface
 	Board board;

@@ -25,6 +25,7 @@ private:
 
 	// Containers for sprite elements so it can be looped
 	std::vector<sf::Sprite> elements;
+
 	GameScreen* gameScreen;
 };
 

@@ -2,6 +2,7 @@
 #include "./../headers/rules.hpp"
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 Board::Board(void)
 {
@@ -179,6 +180,14 @@ bool Board::isCheck()
 bool Board::isStaleMate()
 {
 	return false;
+}
+
+void Board::saveGame()
+{
+	std::ofstream ofs ("test.txt", std::ofstream::out);
+	ofs <<  << std::endl;
+	ofs << "lässynlää";
+	ofs.close();
 }
 
 std::vector<int> join(std::vector<int> a, std::vector<int> b)

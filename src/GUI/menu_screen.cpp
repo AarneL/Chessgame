@@ -33,7 +33,7 @@ void MenuScreen::loadContent(void)
 	exitButton.setTexture(exitButtonTexture);
 	exitButton.setPosition(sf::Vector2f(300, 550));
 	elements.push_back(exitButton);
-	
+
 	sf::Color defaultButtonColor = sf::Color(0,0,0,0);
 	sf::Color highlightedButtonColor = sf::Color(0,255,0,128);
 }
@@ -94,9 +94,9 @@ int MenuScreen::update(sf::RenderWindow &window)
 			}
 		}
 
-		// Continue using same screen
-		return 0;
-		}
+	}
+	// Continue using same screen
+	return 0;
 }
 
 

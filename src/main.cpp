@@ -16,8 +16,8 @@ int main(int argc, char** argv)
 	std::vector<BaseScreen*> screens;
 
 	// Screens
-	MenuScreen menuScreen;
-	GameScreen gameScreen;
+    GameScreen gameScreen;
+	MenuScreen menuScreen(&gameScreen);
     NewGameScreen newGameScreen(&gameScreen); // Must be able to modify
 	OptionsScreen optionsScreen;
 
@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	screens.push_back(&optionsScreen);
 
     // Window creation
-    sf::RenderWindow window(sf::VideoMode(1000, 800), "Chess game", 4); // Last parameter makes window unresizable
+    sf::RenderWindow window(sf::VideoMode(1200, 800), "Chess game", 4); // Last parameter makes window unresizable
 
     // Mouse cursor no more visible
     window.setMouseCursorVisible(true);
@@ -41,13 +41,11 @@ int main(int argc, char** argv)
     // Main loop
     while (screen >= 0)
     {
-		
 		// Updates screen elements
 		screen = screens[screen]->update(window);
-			
 
 		if (screen >= 0) {
-			
+
 			// Draws all sprites
             screens[screen]->draw(window);
         }

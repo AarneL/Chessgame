@@ -152,6 +152,11 @@ void GameScreen::loadContent(void)
 	else {
 		moveSound.setBuffer(moveSoundBuffer);
 	}
+
+	// Save button and file dialog
+	saveButtonTexture.loadFromFile("media/img/save_game_button.png");
+	saveButton.setTexture(saveButtonTexture);
+	saveButton.setPosition(sf::Vector2f(1000, 100));
 }
 
 int GameScreen::update(sf::RenderWindow &window)
@@ -171,31 +176,36 @@ int GameScreen::update(sf::RenderWindow &window)
 			// Human turn
 			if (event.type == sf::Event::MouseButtonPressed) {
 				sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
-				for (int i = 0; i < 64; i++) {
-					if (gameBoard[i].getGlobalBounds().contains(mousePos)) {
-						// If no piece active yet
-						if (activeSquare == -1) {
-							if (containsPlayerPiece(i, playerOnTurn))
-							{
-								possibleMoves = board.possibleMoves(i);
-								highlight(possibleMoves);
-								activeSquare = i;
+				if (saveButton.getGlobalBounds().contains(mousePos)) {
+					std::cout << "save clicked" << std::endl;
+					showSaveGameDialog();
+				} else {
+					for (int i = 0; i < 64; i++) {
+						if (gameBoard[i].getGlobalBounds().contains(mousePos)) {
+							// If no piece active yet
+							if (activeSquare == -1) {
+								if (containsPlayerPiece(i, playerOnTurn))
+								{
+									possibleMoves = board.possibleMoves(i);
+									highlight(possibleMoves);
+									activeSquare = i;
+								}
 							}
-						}
-						// If possible moves already found
-						else if (activeSquare != -1 && (std::find(possibleMoves.begin(), possibleMoves.end(), i) != possibleMoves.end()) && i != activeSquare) {
-							movePiece(std::make_pair(activeSquare, i));
-							std::cout << playerOnTurn->getName() << "(Human) made move." << std::endl;
-							changeTurn();
-							activeSquare = -1;
-							possibleMoves.clear();
-							clearHighlights();
-						}
+							// If possible moves already found
+							else if (activeSquare != -1 && (std::find(possibleMoves.begin(), possibleMoves.end(), i) != possibleMoves.end()) && i != activeSquare) {
+								movePiece(std::make_pair(activeSquare, i));
+								std::cout << playerOnTurn->getName() << "(Human) made move." << std::endl;
+								changeTurn();
+								activeSquare = -1;
+								possibleMoves.clear();
+								clearHighlights();
+							}
 
-						else {
-							activeSquare = -1;
-							possibleMoves.clear();
-							clearHighlights();
+							else {
+								activeSquare = -1;
+								possibleMoves.clear();
+								clearHighlights();
+							}
 						}
 					}
 				}
@@ -213,7 +223,7 @@ int GameScreen::update(sf::RenderWindow &window)
 		std::cout << playerOnTurn->getName()  << "(AI) made move." << std::endl;
 		changeTurn();
 	}
-	return 1;
+	return 2;
 }
 
 void GameScreen::draw(sf::RenderWindow &window)
@@ -225,6 +235,7 @@ void GameScreen::draw(sf::RenderWindow &window)
 			window.draw(*pieces[i]);
 		}
 	}
+	window.draw(saveButton);
 	window.display();
 }
 
@@ -329,6 +340,11 @@ std::vector<std::pair<int, int> > GameScreen::getMoveList() const
 std::pair<int,int> GameScreen::getAiMove(void)
 {
 	return AiAlgorithm::algorithm(board, playerOnTurn->getLevel(), (playerOnTurn->getColor() == ColorType::White));
+}
+
+void GameScreen::showSaveGameDialog() {
+	// Show file dialog for saving file
+	board.saveGame();
 }
 
 //TODO: THIS TO AI LVL0
