@@ -301,7 +301,7 @@ void GameScreen::movePiece(std::pair<int,int> move)
 
 	// Move in board
 	board.movePiece(move.first, move.second);
-	board.updateState();
+	board.updateState(move.second);
 }
 
 void GameScreen::changeTurn()

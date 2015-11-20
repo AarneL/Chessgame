@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include "../headers/ai_algorithm.hpp"
 
 Board::Board(void)
 {
@@ -88,12 +89,11 @@ std::vector<int> Board::possibleMoves(int index) const
 
 	//remove moves that would lead to Check
 	int turn = board[index] % 2;
-
 	for(int i = 0 ; i < (int) moves.size() ; i++)
 	{
-		Board test_board = *this;		//does this make a copy or does it mess up the actual board?
-		test_board.movePiece(index, moves[i]); //do move
-		if(test_board.isCheck(turn)) //se if it leads to check from play on turns point of view
+		Board test_board = *this;		
+		test_board.movePiece(index, moves[i]); //simulate move
+		if(test_board.isCheck(turn)) //see if it leads to check from player on turns point of view
 		{
 			moves.erase(moves.begin()+i);
 			i--;
@@ -192,82 +192,137 @@ std::vector<std::pair<int, int> > Board::getMoveList() const
 /* instead of using different functions for checking for chess, chessmate and stalemate it is
  * more efficient to check for them all in a single loop through the pieces */
 
-void Board::updateState()
+void Board::updateState(int index)
 {
-	int king_location = isCheck(0);
-	if(!king_location)
+	int turn = board[index] % 2;
+	if(turn)
+		turn = 0;
+	else
+		turn = 1;
+	int king_location = 0;
+	for(int i=0;i<64;i++)
 	{
-		king_location = isCheck(1);
+		if(board[i] == (12 - turn))
+		{
+			king_location = i;
+		}
 	}
-	if(king_location) //if it is check test for checkmate
+
+	//see if it's check
+	if(isCheck(turn))
 	{
 		if(isCheckMate(king_location))
 		{
 			state = 1;
-		//do some stuff to stop the game			
+			//do some stuff to end the game
+			if(turn)
+			{
+				std::cout << "Checkmate by black player" << std::endl; 
+			}
+			else
+			{
+				std::cout << "Checkmate by white player" << std::endl;
+			}
+			return;
 		}
 	}
-	if(isStaleMate(king_location%2))
+	else
 	{
-		state = 2;
-		//do some stuff to stop the game
-	}
+		if(isStaleMate(turn))
+		{
+			state = 2;
+			std::cout << "Stalemate" << std::endl;
+			return;
+		}
+	}		
+
+	return;
 }
 
 
 bool Board::isCheckMate(int king_location) const
 {
 	//this algorithm must only be called in case there is check
-
-	//phase a: see if moving the king will help
-	for(auto a:allPossibleMoves(king_location))
-	{
-		Board test_board = *this;  //is this a good idea
-		test_board.movePiece(king_location, a);
-		if(!test_board.isCheck(board[king_location]%2)) //for the player whos king is threatened in the first place
-		{
-			return false;
-		}
-
-	}
-
-	//phase b: if that didn't help see if moving other pieces of same color help
-	for(int i = 0; i < 64; i++)
-	{
-		if((board[king_location] % 2) == (board[i] % 2))
-		{
-			for(auto a:allPossibleMoves(i))
-			{
-				Board test_board = *this; //good idea?????
-				test_board.movePiece(i, a);
-				if(test_board.isCheck(a%2)) //see if the board is at check for the same player
-				{
-					return false;
-				}
-			}
-		}
-	}
-	//no can do it's checkmate
+	std::pair<int, int> pair = AiAlgorithm::algorithm(*this, 1, ((board[king_location]) % 2)==1);
+	if(pair.first || pair.second)
+		return false;
 	return true;
 }
 
-int Board::isCheck(int turn) const
+int Board::isCheck(int turn) const //0 test if black is checked
 {
-	//loop through all squares and call for possible moves and see if the location of king is included
-	//No need to check whos turn it is  because the king can't be threatened two turns in a row
-	for(int i = 0;i<64;i++)
+	std::vector<int> moves;
+	int king_location;
+
+	//search the king
+	for(int i = 0; i<64;i++)
 	{
-		if(board[i] != 0 && board[i]%2 != turn)	//test for piece other than the one in turn
+		if(board[i]== (12-turn))
 		{
-			for(auto a:allPossibleMoves(i))
-			{
-				if(board[a] == W_KING || board[a] == B_KING)
-				{
-					return a;
-				}
-			}
+			king_location = i;
 		}
 	}
+
+	//check moves for rook
+	moves = Rules::rookMove(board, king_location);
+	for(auto a:moves)
+	{	
+		if(board[a] == (7+turn) || board[a] == (9+turn))//check for enemys rook and queen
+		{
+			return king_location;
+		}
+	}
+
+	//check moves for bishop and queen
+
+	moves = Rules::bishopMove(board, king_location);
+	for(auto a:moves)
+	{
+		if(board[a] == (5+turn) || board[a] == (9+turn))
+		{
+			return king_location;
+		}
+	}
+
+//check moves for knight
+	moves = Rules::knightMove(board, king_location);
+	for(auto a:moves)
+	{
+		if(board[a] == (3+turn))
+		{
+			return king_location;
+		}
+	}
+
+	//check the pawns
+	std::pair<int,int>  nullpair= std::make_pair(0,0); //en passant is not valid
+	if(turn) //test if black player is checked
+	{
+		moves = Rules::whitePawnMoveForwardRight(board, king_location, nullpair);
+		moves = join(moves, Rules::whitePawnMoveForwardLeft(board, king_location, nullpair));
+		for(auto a:moves)
+		{
+			if(board[a] == 2)
+			{
+				return king_location;
+			}
+
+		}
+	}
+	else
+	{
+		moves = Rules::blackPawnMoveForwardRight(board, king_location, nullpair);
+		moves = join(moves, Rules::blackPawnMoveForwardLeft(board, king_location, nullpair));
+		for(auto a:moves)
+		{
+			if(board[a] == 1)
+			{
+				return king_location;
+			}
+
+		}
+	}		
+
 	return 0;
 }
 
@@ -275,7 +330,7 @@ bool Board::isStaleMate(int turn) const
 {
 	for(int i = 0;i<64;i++)
 	{
-		if(board[i] != 0 && (board[i] % 2 == turn) && (possibleMoves(i).size() != 0))
+		if((board[i] != 0 && (board[i] % 2 == turn) && (possibleMoves(i).size() != 0)))
 		{
 			return false;
 		}

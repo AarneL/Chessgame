@@ -221,14 +221,6 @@ namespace AiAlgorithm
 				return -850;
 				break;
 			
-			case W_KING:
-				return 10000;
-				break;
-			
-			case B_KING:
-				return -10000;
-				break;
-			
 			default:
 				return 0;
 		}
