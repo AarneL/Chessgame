@@ -7,6 +7,8 @@
 Board::Board(void)
 {
 	//board.reserve(64);
+	state = 0;
+
 	for (int s = 0; s < 64;  s++) {
 		board.push_back(0);
 	}
@@ -81,6 +83,29 @@ Board::Board(void)
 
 std::vector<int> Board::possibleMoves(int index) const
 {
+	//check for possible moves from which the check hasn't been removed
+	std::vector<int> moves = allPossibleMoves(index);
+
+	//remove moves that would lead to Check
+	int turn = board[index] % 2;
+
+	for(int i = 0 ; i < (int) moves.size() ; i++)
+	{
+		Board test_board = *this;		//does this make a copy or does it mess up the actual board?
+		test_board.movePiece(index, moves[i]); //do move
+		if(test_board.isCheck(turn)) //se if it leads to check from play on turns point of view
+		{
+			moves.erase(moves.begin()+i);
+			i--;
+		}
+	}
+
+	return moves;
+}
+
+//possibleMoves without testing for check
+std::vector<int> Board::allPossibleMoves(int index) const
+{
 	std::vector<int> moves;
 	std::pair<int, int> lastMove;
 
@@ -96,47 +121,40 @@ std::vector<int> Board::possibleMoves(int index) const
 			moves = join(moves, Rules::whitePawnMoveForward(board, index));
 			moves = join(moves, Rules::whitePawnMoveForwardLeft(board, index, lastMove));
 			moves = join(moves, Rules::whitePawnMoveForwardRight(board, index, lastMove));
-			return moves;
 			break;
 
 		case B_PAWN:
 			moves = join(moves, Rules::blackPawnMoveForward(board, index));
 			moves = join(moves, Rules::blackPawnMoveForwardLeft(board, index, lastMove));
 			moves = join(moves, Rules::blackPawnMoveForwardRight(board, index, lastMove));
-			return moves;
 			break;
 
 		case W_ROOK:
 		case B_ROOK:
 			moves = Rules::rookMove(board, index);
-			return moves;
 			break;
 
 		case W_KNIGHT:
 		case B_KNIGHT:
 			moves = Rules::knightMove(board, index);
-			return moves;
 			break;
 
 		case W_BISHOP:
 		case B_BISHOP:
 			moves = Rules::bishopMove(board, index);
-			return moves;
 			break;
 
 		case W_QUEEN:
 		case B_QUEEN:
 			moves = Rules::queenMove(board, index);
-			return moves;
 			break;
 
 		case W_KING:
 		case B_KING:
 			moves = Rules::kingMove(board, index);
-			return moves;
 			break;
 	}
-	return moves; // in case of NONE
+	return moves;
 }
 
 bool Board::movePiece(int origin, int destination)
@@ -154,6 +172,9 @@ bool Board::movePiece(int origin, int destination)
 	//saving the new state of board into boardhistory
 	boardHistory.push_back(board);
 
+	//update board state
+	//updateState(); do not do this here because methods inside updatestate() use movepiece
+
 	return true;
 }
 
@@ -167,19 +188,104 @@ std::vector<std::pair<int, int> > Board::getMoveList() const
 	return moveList;
 }
 
-bool Board::isCheckMate()
+
+/* instead of using different functions for checking for chess, chessmate and stalemate it is
+ * more efficient to check for them all in a single loop through the pieces */
+
+void Board::updateState()
 {
-//
-	return false;
+	int king_location = isCheck(0);
+	if(!king_location)
+	{
+		king_location = isCheck(1);
+	}
+	if(king_location) //if it is check test for checkmate
+	{
+		if(isCheckMate(king_location))
+		{
+			state = 1;
+		//do some stuff to stop the game			
+		}
+	}
+	if(isStaleMate(king_location%2))
+	{
+		state = 2;
+		//do some stuff to stop the game
+	}
 }
 
-bool Board::isCheck()
+
+bool Board::isCheckMate(int king_location) const
 {
-	return false;
+	//this algorithm must only be called in case there is check
+
+	//phase a: see if moving the king will help
+	for(auto a:allPossibleMoves(king_location))
+	{
+		Board test_board = *this;  //is this a good idea
+		test_board.movePiece(king_location, a);
+		if(!test_board.isCheck(board[king_location]%2)) //for the player whos king is threatened in the first place
+		{
+			return false;
+		}
+
+	}
+
+	//phase b: if that didn't help see if moving other pieces of same color help
+	for(int i = 0; i < 64; i++)
+	{
+		if((board[king_location] % 2) == (board[i] % 2))
+		{
+			for(auto a:allPossibleMoves(i))
+			{
+				Board test_board = *this; //good idea?????
+				test_board.movePiece(i, a);
+				if(test_board.isCheck(a%2)) //see if the board is at check for the same player
+				{
+					return false;
+				}
+			}
+		}
+	}
+	//no can do it's checkmate
+	return true;
 }
-bool Board::isStaleMate()
+
+int Board::isCheck(int turn) const
 {
-	return false;
+	//loop through all squares and call for possible moves and see if the location of king is included
+	//No need to check whos turn it is  because the king can't be threatened two turns in a row
+	for(int i = 0;i<64;i++)
+	{
+		if(board[i] != 0 && board[i]%2 != turn)	//test for piece other than the one in turn
+		{
+			for(auto a:allPossibleMoves(i))
+			{
+				if(board[a] == W_KING || board[a] == B_KING)
+				{
+					return a;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+bool Board::isStaleMate(int turn) const
+{
+	for(int i = 0;i<64;i++)
+	{
+		if(board[i] != 0 && (board[i] % 2 == turn) && (possibleMoves(i).size() != 0))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+int Board::getState() const
+{
+	return state;
 }
 
 void Board::saveGame(Player* white, Player* black)

@@ -68,7 +68,7 @@ int NewGameScreen::update(sf::RenderWindow &window)
 			if (onePlayerButton.getGlobalBounds().contains((sf::Vector2f)v)) {
 				// createGame(1);
 				// Needs to be replaced by collected information about players
-				gameScreen->initialize("Human", 1, "AI", 3);
+				gameScreen->initialize("Human", 1, "AI", 4);
 				// Start gamescreen
 				return 2;
 			}

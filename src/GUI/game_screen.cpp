@@ -194,6 +194,7 @@ int GameScreen::update(sf::RenderWindow &window)
 							// If possible moves already found
 							else if (activeSquare != -1 && (std::find(possibleMoves.begin(), possibleMoves.end(), i) != possibleMoves.end()) && i != activeSquare) {
 								movePiece(std::make_pair(activeSquare, i));
+
 								std::cout << playerOnTurn->getName() << "(Human) made move." << std::endl;
 								changeTurn();
 								activeSquare = -1;
@@ -300,6 +301,7 @@ void GameScreen::movePiece(std::pair<int,int> move)
 
 	// Move in board
 	board.movePiece(move.first, move.second);
+	board.updateState();
 }
 
 void GameScreen::changeTurn()

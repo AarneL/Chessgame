@@ -25,18 +25,22 @@ class Board
 public:
 	Board();
 	std::vector<int> possibleMoves(int index) const;
+	std::vector<int> allPossibleMoves(int index) const;
 	bool movePiece(int origin, int destination);
 	std::vector<int> getBoard() const;
 	std::vector<std::pair<int, int> > getMoveList() const;
-	bool isCheckMate();
-	bool isCheck();
-	bool isStaleMate();
+	void updateState();
+	bool isCheckMate(int) const; //argument gives turn
+	int isCheck(int) const; //returns position of king if it is checked
+	bool isStaleMate(int) const; //should end the game
 	void saveGame(Player* white, Player* black);
+	int getState() const;
 
 private:
 	std::vector<int> board; //contains pieces
 	std::vector<std::pair<int, int> > moveList; //vector containing old moves
 	std::vector<std::vector<int> > boardHistory;
+	int state; //0 normal, 1 checkmate, 2 stalemate
 };
 
 std::vector<int> join(std::vector<int>, std::vector<int>);

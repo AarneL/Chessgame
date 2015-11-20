@@ -84,26 +84,32 @@ namespace AiAlgorithm
 
 	int alphaBeta(Board& board, int depth, int a, int b, bool maximizingPlayer)
 	{
+		//staleMate
+
+		//check if the board is in chessmate
+		if(board.getState())
+		{
+			if(board.getState() == 1)
+			{
+				if(maximizingPlayer)
+				{
+					return MIN;	//if it's white players turn the result is good for black player
+				}
+				else
+				{
+					return MAX;
+				}
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
 		//check if the algorithm has reached it's depth
 		
 		if( depth == 0 )
 			return evaluate(board);
-
-		//staleMate
-
-		//check if the board is in chessmate
-		if( board.isCheckMate())
-		{
-			if(maximizingPlayer)
-			{
-				return MIN;	//if it's white players turn the result is good for black player
-			}
-			else
-			{
-				return MAX;
-			}
-
-		}
 
 		//find all own pieces
 		if (maximizingPlayer)//White players turn
