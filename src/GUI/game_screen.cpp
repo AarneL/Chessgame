@@ -302,10 +302,47 @@ void GameScreen::movePiece(std::pair<int,int> move)
 	// Move in board
 	board.movePiece(move.first, move.second);
 	board.updateState(move.second);
+
+	if((board.getState() >> 6) == 0x01) //01000000 passant made by white
+	{
+		pieces[move.second - 8] = NULL;
+	}
+
+	if((board.getState() >> 6) == 0x02) //10000000 passant made by black
+	{
+		pieces[move.second + 8] = NULL;
+	}
+
+	if((board.getState() >> 6) ==  0x03) //11000000 castling
+	{
+		if((move.second%8)>4) //castling to right
+		{
+			pieces[move.first + 1] = pieces[move.first + 3]; //move the rook
+			pieces[move.first + 3] = NULL;
+			pieces[move.first + 1]->setPosition(gameBoard[move.first + 1].getPosition());
+		}
+
+		else // castling to left
+		{
+			pieces[move.first - 1] = pieces[move.first - 4]; //move the rook
+			pieces[move.first - 4] = NULL;
+			pieces[move.first - 1]->setPosition(gameBoard[move.first - 1].getPosition());
+		}
+	}
 }
 
 void GameScreen::changeTurn()
 {
+	//test if it's checkmate
+	if(board.getState() & 0x01)
+	{
+		std::cout << "Checkmate by " << playerOnTurn->getName() << std::endl;
+	}
+	else if (board.getState() & 0x02)
+	{
+		std::cout << "Stalemate" << std::endl;
+	}
+
 	// If its black turn
 	if (playerOnTurn == black) {
 		playerOnTurn = white;

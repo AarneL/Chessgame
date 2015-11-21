@@ -87,23 +87,21 @@ namespace AiAlgorithm
 		//staleMate
 
 		//check if the board is in chessmate
-		if(board.getState())
+
+		if(board.getState() & 0x01)
 		{
-			if(board.getState() == 1)
+			if(maximizingPlayer)
 			{
-				if(maximizingPlayer)
-				{
-					return MIN;	//if it's white players turn the result is good for black player
-				}
-				else
-				{
-					return MAX;
-				}
+				return MAX;	//if it's white players turn the result is good for black player
 			}
 			else
 			{
-				return 0;
+				return MIN;
 			}
+		}
+		else if (board.getState() & 0x02)
+		{
+			return 0;
 		}
 
 		//check if the algorithm has reached it's depth
@@ -124,6 +122,7 @@ namespace AiAlgorithm
 					{
 						Board newboard = board;
 						newboard.movePiece(i, j);//supposing possibleMoves doesn't return origin
+						newboard.updateState(j);
 						v = std::max(v, alphaBeta(newboard, depth-1, a, b, false)); //call alphabeta for black player
 						a = std::max(a, v);
 						if (b <= a)
@@ -147,6 +146,7 @@ namespace AiAlgorithm
 					{
 						Board newboard = board;
 						newboard.movePiece(i, j);
+						newboard.updateState(j);
 						v = std::min(v, alphaBeta(newboard, depth-1, a, b, true));
 						b = std::min(b,v);
 						if(b<=a)

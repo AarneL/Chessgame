@@ -8,7 +8,7 @@
 Board::Board(void)
 {
 	//board.reserve(64);
-	state = 0;
+	state = 0x3c; //0011 1100
 
 	for (int s = 0; s < 64;  s++) {
 		board.push_back(0);
@@ -150,8 +150,27 @@ std::vector<int> Board::allPossibleMoves(int index) const
 			break;
 
 		case W_KING:
+			moves = Rules::kingMove(board, index);
+			if(state & 0x04)
+			{
+				moves = join(moves, Rules::leftCastlingMove(board, index));
+			}
+			if(state & 0x8)
+			{				
+				moves = join(moves, Rules::rightCastlingMove(board, index));
+			}
+			break;
+
 		case B_KING:
 			moves = Rules::kingMove(board, index);
+			if(state & 0x10)
+			{
+				moves = join(moves, Rules::leftCastlingMove(board, index));
+			}
+			if(state & 0x20)
+			{
+				moves = join(moves, Rules::rightCastlingMove(board, index));
+			}
 			break;
 	}
 	return moves;
@@ -171,7 +190,7 @@ bool Board::movePiece(int origin, int destination)
 
 	//saving the new state of board into boardhistory
 	boardHistory.push_back(board);
-
+	//updateState(move.second);
 	//update board state
 	//updateState(); do not do this here because methods inside updatestate() use movepiece
 
@@ -192,13 +211,119 @@ std::vector<std::pair<int, int> > Board::getMoveList() const
 /* instead of using different functions for checking for chess, chessmate and stalemate it is
  * more efficient to check for them all in a single loop through the pieces */
 
-void Board::updateState(int index)
+void Board::updateState(int index) //index is the destination of last move
 {
+
+	//turn lastmove flags off
+	state = state & 0x3F; //00111111
+
+	// 0 means it was blacks turn
 	int turn = board[index] % 2;
+	std::pair<int, int> lastMove;
+
+	lastMove = moveList[moveList.size() -1];
+	//check for el passant
+	if(moveList.size() > 4) //this needs to be done so we don't try invalid indexes
+	{
+		//test for white pawns
+		if (board[lastMove.second] == 1 
+			&& ((lastMove.second % 2) != (lastMove.first % 2)))
+		{
+			std::pair<int, int> secondLastMove;
+			secondLastMove = moveList[moveList.size() -2];
+			if( secondLastMove.second == (lastMove.second - 8) //if we have mowed abowe piece of secondlastmove
+				&& (board[secondLastMove.second] == 2)
+				&& ((secondLastMove.first) - (secondLastMove.second) == 16))
+			{
+				state = state | (0x1 << 6);
+				board[secondLastMove.second] = 0;
+			}
+
+		}
+
+		//test for black pawns
+		else if (board[lastMove.second] == 2 
+			&& ((lastMove.second % 2) != (lastMove.first % 2)))
+		{
+			std::pair<int, int> secondLastMove;
+			secondLastMove = moveList[moveList.size() -2];
+			if( secondLastMove.second == (lastMove.second + 8)
+				&& (board[secondLastMove.second] == 1)
+				&& ((secondLastMove.second) - (secondLastMove.first) == 16))
+			{
+				state = state | (0x1 << 7);
+				board[secondLastMove.second] = 0;
+			}
+
+		}
+	}
+
+	//check for castling
+	if ((board[lastMove.second] == 11 || board[lastMove.second] == 12)
+		&& ((lastMove.second-lastMove.first) == 2 || (lastMove.first - lastMove.second ==2)))
+	{
+		state = state | 0xC0; //11000000
+		if((lastMove.second%8)>4) //castling to right
+		{
+			board[lastMove.first + 1] = board[lastMove.first + 3]; //move the rook
+			board[lastMove.first + 3] = 0;
+		}
+
+		else // castling to left
+		{
+			board[lastMove.first - 1] = board[lastMove.first - 4]; //move the rook
+			board[lastMove.first - 4] = 0;
+		}
+	}
+
+
+
+
+
+	//castling flags
+	if(turn)
+	{
+		if((state >> 3) & 0x1)//right castling for white
+		{
+			if((board[4] != 11) || (board[7] != 7))
+			{
+				state = state & 0xF7; //11110111
+			} 
+		}
+		if((state >> 2) & 0x1)//left castling for white
+		{
+			if((board[4] != 11) || (board[0] != 7))
+			{
+				state = state & 0xFB; //11111011
+			} 
+		}
+	}
+
+	else
+	{
+		if((state >> 5) & 0x1)//right castling for black
+		{
+			if((board[60] != 12) || (board[63] != 8))
+			{
+				state = state & 0xDF; //11011111
+			} 
+		}
+		if((state >> 4) & 0x1)//left castling for black
+		{
+			if((board[60] != 12) || (board[56] != 8))
+			{
+				state = state & 0xEF; //11101111
+			} 
+		}
+	}
+
+	//checkmate should be checked for the opposite player
 	if(turn)
 		turn = 0;
 	else
 		turn = 1;
+
+
 	int king_location = 0;
 	for(int i=0;i<64;i++)
 	{
@@ -213,25 +338,18 @@ void Board::updateState(int index)
 	{
 		if(isCheckMate(king_location))
 		{
-			state = 1;
+			state = state | 0x1;
 			//do some stuff to end the game
-			if(turn)
-			{
-				std::cout << "Checkmate by black player" << std::endl; 
-			}
-			else
-			{
-				std::cout << "Checkmate by white player" << std::endl;
-			}
 			return;
 		}
 	}
+
 	else
 	{
 		if(isStaleMate(turn))
 		{
-			state = 2;
-			std::cout << "Stalemate" << std::endl;
+			state = state | 0x2;
+			//do some stuff to end the game
 			return;
 		}
 	}		
@@ -319,7 +437,6 @@ int Board::isCheck(int turn) const //0 test if black is checked
 			{
 				return king_location;
 			}
-
 		}
 	}		
 

@@ -40,7 +40,20 @@ private:
 	std::vector<int> board; //contains pieces
 	std::vector<std::pair<int, int> > moveList; //vector containing old moves
 	std::vector<std::vector<int> > boardHistory;
-	int state; //0 normal, 1 checkmate, 2 stalemate
+	unsigned char state;
+ /* Description of state:
+  *
+  * first two bits describe the last move
+  * 01 = el passant made by white, 10 = el passant made by black, 11 = castling
+  * rest of the bits are flags
+  * (state >> 5) & 0x1 = right castling allowed for black
+  * (state >> 4) & 0x1 = left castling allowed for black
+  * (state >> 3) & 0x1 = right castling allowed for white
+  * (state >> 2) & 0x1 = left castling allowed for white
+  * (state >> 1) & 0x1 = stalemate
+  * (state >> 0) & 0x1 = checkmate
+  */
+
 };
 
 std::vector<int> join(std::vector<int>, std::vector<int>);
