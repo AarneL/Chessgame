@@ -92,11 +92,11 @@ namespace AiAlgorithm
 		{
 			if(maximizingPlayer)
 			{
-				return MAX;	//if it's white players turn the result is good for black player
+				return MIN;	//if it's white players turn the result is good for black player
 			}
 			else
 			{
-				return MIN;
+				return MAX;
 			}
 		}
 		else if (board.getState() & 0x02)
