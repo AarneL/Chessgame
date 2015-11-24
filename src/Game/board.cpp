@@ -222,6 +222,16 @@ void Board::updateState(int index) //index is the destination of last move
 	std::pair<int, int> lastMove;
 
 	lastMove = moveList[moveList.size() -1];
+
+	//Check for promotion
+	//White first
+	if (board[lastMove.second] == W_PAWN && lastMove.second >= 56 && lastMove.second <= 63)
+		std::cout << "White pawn promoted" << std::endl;
+
+	//Then black
+	if (board[lastMove.second] == B_PAWN && lastMove.second >= 0 && lastMove.second <= 7)
+		std::cout << "Black pawn promoted" << std::endl;
+
 	//check for el passant
 	if(moveList.size() > 4) //this needs to be done so we don't try invalid indexes
 	{
