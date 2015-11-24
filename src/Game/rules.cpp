@@ -35,13 +35,17 @@ namespace Rules
 	//
 	std::vector<int> whitePawnMoveForward(const std::vector<int>& board, int index)
 	{
+
+		int destSingle = index+8;
+		int destDouble = index+16;
+
 		std::vector<int> v;
-		// If there is piece in front of whitepawn it cannot go there or behind it
-		if ( board[index + 8] == 0 && (index + 8) <= 63 ) {
-			v.push_back(index + 8);
+		//Single move
+		if ( destSingle <= 63 && board[destSingle] == 0 ) {
+			v.push_back(destSingle);
 			//2 forward if the +2*8 square is also free and the piece is on the start row
-			if ( board[index + 16] == 0 && index >= 8 && index <= 15  )
-				v.push_back(index + 16);
+			if ( index >= 8 && index <= 15 && board[destDouble] == 0 )
+				v.push_back(destDouble);
 		}
 		return v;
 	}
@@ -53,7 +57,8 @@ namespace Rules
 		int dest = index + 8 - 1;
 
 		//Boundary check
-		if ( (dest+1)%8 != 0 ){
+		// 1) not outside the board, 2) don't jump over the boundary
+		if ( dest <= 63 && (dest+1)%8 != 0 ){
 			//not empty and contains black piece
 			if (board[dest] != 0 && board[dest]%2 == 0)
 				v.push_back(dest);
@@ -71,8 +76,9 @@ namespace Rules
 		std::vector<int> v;
 		int dest = index + 8 + 1;
 
-		//Don't jump over the boundary
-		if ( dest%8 != 0 ){
+		//Boundary check
+		// 1) not outside the board, 2) don't jump over the boundary
+		if ( dest <= 63 && dest%8 != 0 ){
 			//not empty and contains black piece
 			if (board[dest] != 0 && board[dest]%2 == 0)
 				v.push_back(dest);
@@ -90,14 +96,17 @@ namespace Rules
 	//Black pawn forward
 	std::vector<int> blackPawnMoveForward(const std::vector<int>& board, int index)
 	{
+		int destSingle = index-8;
+		int destDouble = index-16;
+
 		std::vector<int> v;
 
-		// If there is piece in front of blackpawn it cannot go there or behind it
-		if ( board[index - 8] == 0 && (index + 8) >= 0 ) {
-			v.push_back(index - 8);
+		//Single move
+		if ( destSingle >= 0 && board[destSingle] == 0 ) {
+			v.push_back(destSingle);
 			//2 forward if the -2*8 square is also free and the piece is on the start row
-			if ( board[index - 16] == 0 && index >= 48 && index <= 55 )
-				v.push_back(index - 16);
+			if ( index >= 48 && index <= 55 && board[destDouble] == 0 )
+				v.push_back(destDouble);
 		}
 		return v;
 	}
@@ -109,7 +118,8 @@ namespace Rules
 		int dest = index - 8 - 1;
 
 		//Boundary check
-		if ( (dest+1)%8 != 0 ){
+		// 1) not outside the board, 2) don't jump over the boundary
+		if ( dest >= 0 && (dest+1)%8 != 0 ){
 			//not empty and contains white piece
 			if ( board[dest] != 0 && board[dest]%2 == 1 )
 				v.push_back(dest);
@@ -128,7 +138,8 @@ namespace Rules
 		int dest = index - 8 + 1;
 
 		//Boundary check
-		if ( dest%8 != 0 ){
+		// 1) not outside the board, 2) don't jump over the boundary
+		if ( dest >= 0 && dest%8 != 0 ){
 			//not empty and contains white piece
 			if ( board[dest] != 0 && board[dest]%2 == 1 )
 				v.push_back(dest);
