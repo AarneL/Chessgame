@@ -16,6 +16,7 @@ void MenuScreen::loadContent(void)
 	/* All sprites need to be added to "elements" in right order
 	 * so that what is drawn "behind" will be added first
 	 */
+	int buttonsFromEdge = (int)(1200 / 1.61); // Golden ratio baby
 	backgroundTexture.loadFromFile("media/img/background.jpg");
 	background.setTexture(backgroundTexture);
 	elements.push_back(background);
@@ -24,28 +25,28 @@ void MenuScreen::loadContent(void)
 	newGameHighlightedButtonImg.loadFromFile("media/img/new_game_highlighted_button.png");
 	newGameButtonTexture.loadFromFile("media/img/new_game_button.png");
 	newGameButton.setTexture(newGameButtonTexture);
-	newGameButton.setPosition(sf::Vector2f(400, 100));
+	newGameButton.setPosition(sf::Vector2f(buttonsFromEdge, 100));
 	elements.push_back(newGameButton);
 
 	loadGameButtonImg.loadFromFile("media/img/load_game_button.png");
 	loadGameHighlightedButtonImg.loadFromFile("media/img/load_game_highlighted_button.png");
 	loadGameButtonTexture.loadFromFile("media/img/load_game_button.png");
 	loadGameButton.setTexture(loadGameButtonTexture);
-	loadGameButton.setPosition(sf::Vector2f(400, 250));
+	loadGameButton.setPosition(sf::Vector2f(buttonsFromEdge, 250));
 	elements.push_back(loadGameButton);
 
 	optionsButtonImg.loadFromFile("media/img/options_button.png");
 	optionsHighlightedButtonImg.loadFromFile("media/img/options_highlighted_button.png");
 	optionsButtonTexture.loadFromFile("media/img/options_button.png");
 	optionsButton.setTexture(optionsButtonTexture);
-	optionsButton.setPosition(sf::Vector2f(400, 400));
+	optionsButton.setPosition(sf::Vector2f(buttonsFromEdge, 400));
 	elements.push_back(optionsButton);
 
 	exitButtonImg.loadFromFile("media/img/exit_button.png");
 	exitHighlightedButtonImg.loadFromFile("media/img/exit_highlighted_button.png");
 	exitButtonTexture.loadFromFile("media/img/exit_button.png");
 	exitButton.setTexture(exitButtonTexture);
-	exitButton.setPosition(sf::Vector2f(400, 550));
+	exitButton.setPosition(sf::Vector2f(buttonsFromEdge, 550));
 	elements.push_back(exitButton);
 }
 

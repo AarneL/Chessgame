@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include "../headers/ai_algorithm.hpp"
+#include <string>
 
 Board::Board(void)
 {

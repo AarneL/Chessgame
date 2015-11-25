@@ -27,6 +27,36 @@ void NewGameScreen::loadContent(void)
 	twoPlayersButton.setTexture(twoPlayersButtonTexture);
 	twoPlayersButton.setPosition(sf::Vector2f(300, 400));
 	elements.push_back(twoPlayersButton);
+
+	// Player texts
+	int topMargin = 100; // Text top margin
+	int midMargin = 200; // Text mid margin
+	if (!font.loadFromFile("media/img/Calibri.ttf"))
+		std::cout << "File not found!" << std::endl;
+	whitePlayerText.setFont(font);
+	whitePlayerText.setCharacterSize(38);
+	whitePlayerText.setString("White");
+	whitePlayerText.setPosition(sf::Vector2f(midMargin, topMargin));
+
+	blackPlayerText.setFont(font);
+	blackPlayerText.setCharacterSize(40);
+	blackPlayerText.setString("Black");
+	blackPlayerText.setPosition(sf::Vector2f(600 + midMargin, topMargin));
+	
+	// Player buttons
+	if (!humanButton.loadFromFile("media/img/humanButton.png"))
+		std::cout << "File not found!" << std::endl;
+	int buttonTopMargin = 300;
+	int buttonMidMargin = 300;
+
+	whiteHumanButtonTexture.loadFromImage(humanButton);
+	whiteHumanButton.setTexture(whiteHumanButtonTexture);
+	whiteHumanButton.setPosition(sf::Vector2f(buttonMidMargin, buttonTopMargin));
+	elements.push_back(whiteHumanButton);
+/*
+	blackHumanButtonTexture.loadFromImage(humanButton);
+	blackHumanButton.setTexture(blackHumanButtonTexture);
+	blackHumanButtonTexture;*/
 }
 
 void NewGameScreen::createGame(int players)
@@ -94,5 +124,7 @@ void NewGameScreen::draw(sf::RenderWindow &window)
 	for (auto element : elements) {
 		window.draw(element);
 	}
+	window.draw(whitePlayerText);
+	window.draw(blackPlayerText);
 	window.display();
 }
