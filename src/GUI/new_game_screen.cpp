@@ -42,7 +42,7 @@ void NewGameScreen::loadContent(void)
 	blackPlayerText.setCharacterSize(40);
 	blackPlayerText.setString("Black");
 	blackPlayerText.setPosition(sf::Vector2f(600 + midMargin, topMargin));
-	
+
 	// Player buttons
 	if (!humanButton.loadFromFile("media/img/humanButton.png"))
 		std::cout << "File not found!" << std::endl;
