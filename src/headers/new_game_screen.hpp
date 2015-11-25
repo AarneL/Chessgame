@@ -44,6 +44,9 @@ private:
 
 	sf::Sprite whiteAIButton;
 	sf::Sprite blackAIButton;
+
+	sf::Sprite* whitePlayerSelected;
+	sf::Sprite* blackPlayerSelected;
 };
 
 #endif

@@ -100,19 +100,19 @@ int NewGameScreen::update(sf::RenderWindow &window)
 		if (event.type == sf::Event::MouseMoved)
 		{
 			bool buttonHovered = false;
-			if (whiteHumanButton.getGlobalBounds().contains(v)) {
+			if (whiteHumanButton.getGlobalBounds().contains(v) && whitePlayerSelected != &whiteHumanButton) {
 				// Highlight whiteHumanButton
 				whiteHumanButton.setTexture(humanHighlightedButtonTexture, true);
 				buttonHovered = true;
-			} else if (blackHumanButton.getGlobalBounds().contains(v)) {
+			} else if (blackHumanButton.getGlobalBounds().contains(v) && blackPlayerSelected != &blackHumanButton) {
 				// Highlight blackHumanButton
 				blackHumanButton.setTexture(humanHighlightedButtonTexture, true);
 				buttonHovered = true;
-			} else if (whiteAIButton.getGlobalBounds().contains(v)) {
+			} else if (whiteAIButton.getGlobalBounds().contains(v) && whitePlayerSelected != &whiteAIButton) {
 				// Highlight whiteAIButton
 				whiteAIButton.setTexture(AIHighlightedButtonTexture, true);
 				buttonHovered = true;
-			} else if (blackAIButton.getGlobalBounds().contains(v)) {
+			} else if (blackAIButton.getGlobalBounds().contains(v) && blackPlayerSelected != &blackAIButton) {
 				// Highlight blackAIButton
 				blackAIButton.setTexture(AIHighlightedButtonTexture, true);
 				buttonHovered = true;
@@ -122,7 +122,24 @@ int NewGameScreen::update(sf::RenderWindow &window)
 			}
 		}
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			return 2;
+			if (whiteHumanButton.getGlobalBounds().contains(v)) {
+				// Select whiteHumanButton
+				whiteHumanButton.setTexture(humanSelectedButtonTexture, true);
+				whitePlayerSelected = &whiteHumanButton;
+			} else if (blackHumanButton.getGlobalBounds().contains(v)) {
+				// Select blackHumanButton
+				blackHumanButton.setTexture(humanSelectedButtonTexture, true);
+				blackPlayerSelected = &blackHumanButton;
+			} else if (whiteAIButton.getGlobalBounds().contains(v)) {
+				// Select whiteAIButton
+				whiteAIButton.setTexture(AISelectedButtonTexture, true);
+				whitePlayerSelected = &whiteAIButton;
+			} else if (blackAIButton.getGlobalBounds().contains(v)) {
+				// Select blackAIButton
+				blackAIButton.setTexture(AISelectedButtonTexture, true);
+				blackPlayerSelected = &blackAIButton;
+			}
+			return 1;
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			return -1;
@@ -133,10 +150,14 @@ int NewGameScreen::update(sf::RenderWindow &window)
 
 void NewGameScreen::clearButtonHighlights()
 {
-	whiteHumanButton.setTexture(humanButtonTexture);
-	blackHumanButton.setTexture(humanButtonTexture);
-	whiteAIButton.setTexture(AIButtonTexture);
-	blackAIButton.setTexture(AIButtonTexture);
+	if (whitePlayerSelected != &whiteHumanButton)
+		whiteHumanButton.setTexture(humanButtonTexture);
+	if (blackPlayerSelected != &blackHumanButton)
+		blackHumanButton.setTexture(humanButtonTexture);
+	if (whitePlayerSelected != &whiteAIButton)
+		whiteAIButton.setTexture(AIButtonTexture);
+	if (blackPlayerSelected != &blackAIButton)
+		blackAIButton.setTexture(AIButtonTexture);
 }
 
 
