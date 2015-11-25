@@ -13,41 +13,37 @@ MenuScreen::MenuScreen(GameScreen* g)
 
 void MenuScreen::loadContent(void)
 {
+	
+	// Button positioning variables
+	int buttonsFromLeftEdge = (int)(1200 / 1.61); // Golden ratio baby
+	int topMargin = 150;
+	int buttonDivLength = 200;
+	
 	/* All sprites need to be added to "elements" in right order
 	 * so that what is drawn "behind" will be added first
 	 */
-	int buttonsFromEdge = (int)(1200 / 1.61); // Golden ratio baby
+
 	backgroundTexture.loadFromFile("media/img/background.jpg");
 	background.setTexture(backgroundTexture);
-	elements.push_back(background);
+	elements.push_back(&background);
 
-	newGameButtonImg.loadFromFile("media/img/new_game_button.png");
-	newGameHighlightedButtonImg.loadFromFile("media/img/new_game_highlighted_button.png");
 	newGameButtonTexture.loadFromFile("media/img/new_game_button.png");
+	newGameHighlightedButtonTexture.loadFromFile("media/img/new_game_highlighted_button.png");
 	newGameButton.setTexture(newGameButtonTexture);
-	newGameButton.setPosition(sf::Vector2f(buttonsFromEdge, 100));
-	elements.push_back(newGameButton);
+	newGameButton.setPosition(sf::Vector2f(buttonsFromLeftEdge, topMargin));
+	elements.push_back(&newGameButton);
 
-	loadGameButtonImg.loadFromFile("media/img/load_game_button.png");
-	loadGameHighlightedButtonImg.loadFromFile("media/img/load_game_highlighted_button.png");
 	loadGameButtonTexture.loadFromFile("media/img/load_game_button.png");
+	loadGameHighlightedButtonTexture.loadFromFile("media/img/load_game_highlighted_button.png");
 	loadGameButton.setTexture(loadGameButtonTexture);
-	loadGameButton.setPosition(sf::Vector2f(buttonsFromEdge, 250));
-	elements.push_back(loadGameButton);
+	loadGameButton.setPosition(sf::Vector2f(buttonsFromLeftEdge, topMargin+buttonDivLength));
+	elements.push_back(&loadGameButton);
 
-	optionsButtonImg.loadFromFile("media/img/options_button.png");
-	optionsHighlightedButtonImg.loadFromFile("media/img/options_highlighted_button.png");
-	optionsButtonTexture.loadFromFile("media/img/options_button.png");
-	optionsButton.setTexture(optionsButtonTexture);
-	optionsButton.setPosition(sf::Vector2f(buttonsFromEdge, 400));
-	elements.push_back(optionsButton);
-
-	exitButtonImg.loadFromFile("media/img/exit_button.png");
-	exitHighlightedButtonImg.loadFromFile("media/img/exit_highlighted_button.png");
 	exitButtonTexture.loadFromFile("media/img/exit_button.png");
+	exitHighlightedButtonTexture.loadFromFile("media/img/exit_highlighted_button.png");
 	exitButton.setTexture(exitButtonTexture);
-	exitButton.setPosition(sf::Vector2f(buttonsFromEdge, 550));
-	elements.push_back(exitButton);
+	exitButton.setPosition(sf::Vector2f(buttonsFromLeftEdge, topMargin+2*buttonDivLength));
+	elements.push_back(&exitButton);
 }
 
 int MenuScreen::update(sf::RenderWindow &window)
@@ -64,28 +60,21 @@ int MenuScreen::update(sf::RenderWindow &window)
 			if (newGameButton.getGlobalBounds().contains(v))
 			{
 				// Highlight newGameButton
-				newGameButtonTexture.update(newGameHighlightedButtonImg);
+				newGameButton.setTexture(newGameHighlightedButtonTexture, false);
 				buttonHovered = true;
 			}
 
 			else if (loadGameButton.getGlobalBounds().contains(v))
 			{
 				// Highlight loadGameButton
-				loadGameButtonTexture.update(loadGameHighlightedButtonImg);
+				loadGameButton.setTexture(loadGameHighlightedButtonTexture, false);
 				buttonHovered = true;
 			}
-			else if (optionsButton.getGlobalBounds().contains(v))
-			{
-				// Highlight loadGameButton
-				optionsButtonTexture.update(optionsHighlightedButtonImg);
-				buttonHovered = true;
-			}
-
 
 			else if (exitButton.getGlobalBounds().contains(v))
 			{
 				// Highlight exitButton
-				exitButtonTexture.update(exitHighlightedButtonImg);
+				exitButton.setTexture(exitHighlightedButtonTexture, false);
 				buttonHovered = true;
 			}
 
@@ -113,12 +102,6 @@ int MenuScreen::update(sf::RenderWindow &window)
 				return 2;
 			}
 
-			if (optionsButton.getGlobalBounds().contains(v))
-			{
-				// Start optionsscreen
-				std::cout << "User pressed optionsbutton." << std::endl;
-				return 2;
-			}
 
 			if (exitButton.getGlobalBounds().contains(v))
 			{
@@ -138,17 +121,16 @@ void MenuScreen::draw(sf::RenderWindow &window)
 {
 	window.clear(sf::Color(250,250,250));
 	for (auto element : elements) {
-		window.draw(element);
+		window.draw(*element);
 	}
 	window.display();
 }
 
 void MenuScreen::clearButtonHighlights()
 {
-	newGameButtonTexture.update(newGameButtonImg);
-	loadGameButtonTexture.update(loadGameButtonImg);
-	optionsButtonTexture.update(optionsButtonImg);
-	exitButtonTexture.update(exitButtonImg);
+	newGameButton.setTexture(newGameButtonTexture, false);
+	loadGameButton.setTexture(loadGameButtonTexture, false);
+	exitButton.setTexture(exitButtonTexture, false);
 }
 
 void MenuScreen::loadGame()

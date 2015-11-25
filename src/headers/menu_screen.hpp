@@ -20,28 +20,24 @@ private:
 	sf::Texture backgroundTexture;
 	sf::Sprite background;
 
-	sf::Image newGameButtonImg;
-	sf::Image newGameHighlightedButtonImg;
 	sf::Texture newGameButtonTexture;
+	sf::Texture newGameHighlightedButtonTexture;
 	sf::Sprite newGameButton;
 
-	sf::Image loadGameButtonImg;
-	sf::Image loadGameHighlightedButtonImg;
 	sf::Texture loadGameButtonTexture;
+	sf::Texture loadGameHighlightedButtonTexture;
 	sf::Sprite loadGameButton;
 
-	sf::Image optionsButtonImg;
-	sf::Image optionsHighlightedButtonImg;
 	sf::Texture optionsButtonTexture;
+	sf::Texture optionsHighlightedButtonTexture;
 	sf::Sprite optionsButton;
 
-	sf::Image exitButtonImg;
-	sf::Image exitHighlightedButtonImg;
 	sf::Texture exitButtonTexture;
+	sf::Texture exitHighlightedButtonTexture;
 	sf::Sprite exitButton;
 
 	// Containers for sprite elements so it can be looped
-	std::vector<sf::Sprite> elements;
+	std::vector<sf::Sprite*> elements;
 
 	void clearButtonHighlights();
 
