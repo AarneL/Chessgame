@@ -16,47 +16,50 @@ NewGameScreen::NewGameScreen(GameScreen* g)
 
 void NewGameScreen::loadContent(void)
 {
-	if (!onePlayerButtonTexture.loadFromFile("media/img/one_player.png"))
-		std::cout << "File not found!" << std::endl;
-	onePlayerButton.setTexture(onePlayerButtonTexture);
-	onePlayerButton.setPosition(sf::Vector2f(300, 200));
-	elements.push_back(onePlayerButton);
-
-	if (!twoPlayersButtonTexture.loadFromFile("media/img/two_players.png"))
-		std::cout << "File not found!" << std::endl;
-	twoPlayersButton.setTexture(twoPlayersButtonTexture);
-	twoPlayersButton.setPosition(sf::Vector2f(300, 400));
-	elements.push_back(twoPlayersButton);
-
 	// Player texts
 	int topMargin = 100; // Text top margin
 	int midMargin = 200; // Text mid margin
 	if (!font.loadFromFile("media/img/Calibri.ttf"))
 		std::cout << "File not found!" << std::endl;
 	whitePlayerText.setFont(font);
-	whitePlayerText.setCharacterSize(38);
+	whitePlayerText.setCharacterSize(70);
+	whitePlayerText.setStyle(sf::Text::Bold);
 	whitePlayerText.setString("White");
 	whitePlayerText.setPosition(sf::Vector2f(midMargin, topMargin));
 
 	blackPlayerText.setFont(font);
-	blackPlayerText.setCharacterSize(40);
+	blackPlayerText.setCharacterSize(70);
+	blackPlayerText.setStyle(sf::Text::Bold);
 	blackPlayerText.setString("Black");
 	blackPlayerText.setPosition(sf::Vector2f(600 + midMargin, topMargin));
 
 	// Player buttons
-	if (!humanButton.loadFromFile("media/img/humanButton.png"))
-		std::cout << "File not found!" << std::endl;
 	int buttonTopMargin = 300;
-	int buttonMidMargin = 300;
+	int buttonMidMargin = 100;
 
-	whiteHumanButtonTexture.loadFromImage(humanButton);
-	whiteHumanButton.setTexture(whiteHumanButtonTexture);
+	humanButtonTexture.loadFromFile("media/img/humanButton.png");
+	humanHighlightedButtonTexture.loadFromFile("media/img/humanHighlightedButton.png");
+	humanSelectedButtonTexture.loadFromFile("media/img/humanSelectedButton.png");
+
+	AIButtonTexture.loadFromFile("media/img/computerButton.png");
+	AIHighlightedButtonTexture.loadFromFile("media/img/computerHighlightedButton.png");
+	AISelectedButtonTexture.loadFromFile("media/img/computerSelectedButton.png");
+
+	whiteHumanButton.setTexture(humanButtonTexture);
 	whiteHumanButton.setPosition(sf::Vector2f(buttonMidMargin, buttonTopMargin));
-	elements.push_back(whiteHumanButton);
-/*
-	blackHumanButtonTexture.loadFromImage(humanButton);
-	blackHumanButton.setTexture(blackHumanButtonTexture);
-	blackHumanButtonTexture;*/
+	elements.push_back(&whiteHumanButton);
+
+	blackHumanButton.setTexture(humanButtonTexture);
+	blackHumanButton.setPosition(sf::Vector2f(600 + buttonMidMargin, buttonTopMargin));
+	elements.push_back(&blackHumanButton);
+
+	whiteAIButton.setTexture(AIButtonTexture);
+	whiteAIButton.setPosition(sf::Vector2f(buttonMidMargin + 200, buttonTopMargin));
+	elements.push_back(&whiteAIButton);
+
+	blackAIButton.setTexture(AIButtonTexture);
+	blackAIButton.setPosition(sf::Vector2f(600 + buttonMidMargin + 200, buttonTopMargin));
+	elements.push_back(&blackAIButton);
 }
 
 void NewGameScreen::createGame(int players)
@@ -93,22 +96,33 @@ int NewGameScreen::update(sf::RenderWindow &window)
 {
 	sf::Event event;
 	while(window.pollEvent(event)) {
+		sf::Vector2f v = (sf::Vector2f)sf::Mouse::getPosition(window);
+		if (event.type == sf::Event::MouseMoved)
+		{
+			bool buttonHovered = false;
+			if (whiteHumanButton.getGlobalBounds().contains(v)) {
+				// Highlight whiteHumanButton
+				whiteHumanButton.setTexture(humanHighlightedButtonTexture, true);
+				buttonHovered = true;
+			} else if (blackHumanButton.getGlobalBounds().contains(v)) {
+				// Highlight blackHumanButton
+				blackHumanButton.setTexture(humanHighlightedButtonTexture, true);
+				buttonHovered = true;
+			} else if (whiteAIButton.getGlobalBounds().contains(v)) {
+				// Highlight whiteAIButton
+				whiteAIButton.setTexture(AIHighlightedButtonTexture, true);
+				buttonHovered = true;
+			} else if (blackAIButton.getGlobalBounds().contains(v)) {
+				// Highlight blackAIButton
+				blackAIButton.setTexture(AIHighlightedButtonTexture, true);
+				buttonHovered = true;
+			} else if(!buttonHovered) {
+				// If nothing hovered
+				clearButtonHighlights();
+			}
+		}
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			sf::Vector2i v = sf::Mouse::getPosition(window);
-			if (onePlayerButton.getGlobalBounds().contains((sf::Vector2f)v)) {
-				// createGame(1);
-				// Needs to be replaced by collected information about players
-				gameScreen->initialize("Human", 1, "AI", 4);
-				// Start gamescreen
-				return 2;
-			}
-			else if (twoPlayersButton.getGlobalBounds().contains((sf::Vector2f)v)) {
-				//createGame(2);
-				// Needs to be replaced by collected information about players
-				gameScreen->initialize("Human", 1, "Human", 1);
-				// Start gamescreen
-				return 2;
-			}
+			return 2;
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			return -1;
@@ -117,12 +131,20 @@ int NewGameScreen::update(sf::RenderWindow &window)
 	return 1;
 }
 
+void NewGameScreen::clearButtonHighlights()
+{
+	whiteHumanButton.setTexture(humanButtonTexture);
+	blackHumanButton.setTexture(humanButtonTexture);
+	whiteAIButton.setTexture(AIButtonTexture);
+	blackAIButton.setTexture(AIButtonTexture);
+}
+
 
 void NewGameScreen::draw(sf::RenderWindow &window)
 {
 	window.clear(sf::Color(0, 0, 0, 0));
 	for (auto element : elements) {
-		window.draw(element);
+		window.draw(*element);
 	}
 	window.draw(whitePlayerText);
 	window.draw(blackPlayerText);

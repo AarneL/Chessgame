@@ -16,16 +16,12 @@ public:
 	void loadContent(void);
 	void createGame(int players);
 	int update(sf::RenderWindow &window);
+	void clearButtonHighlights();
     void draw(sf::RenderWindow &window);
+
 private:
-
-	sf::Texture onePlayerButtonTexture;
-	sf::Sprite onePlayerButton;
-	sf::Texture twoPlayersButtonTexture;
-	sf::Sprite twoPlayersButton;
-
 	// Containers for sprite elements so it can be looped
-	std::vector<sf::Sprite> elements;
+	std::vector<sf::Sprite*> elements;
 
 	GameScreen* gameScreen;
 
@@ -35,15 +31,19 @@ private:
 	sf::Text blackPlayerText;
 
 	// Player buttons
-	sf::Image humanButton;
-	sf::Image humanHighlightedButton;
-	sf::Image humanSelectedButton;
+	sf::Texture humanButtonTexture;
+	sf::Texture humanHighlightedButtonTexture;
+	sf::Texture humanSelectedButtonTexture;
 
-	sf::Texture whiteHumanButtonTexture;
-	sf::Texture blackHumanButtonTexture;
+	sf::Texture AIButtonTexture;
+	sf::Texture AIHighlightedButtonTexture;
+	sf::Texture AISelectedButtonTexture;
 
 	sf::Sprite whiteHumanButton;
 	sf::Sprite blackHumanButton;
+
+	sf::Sprite whiteAIButton;
+	sf::Sprite blackAIButton;
 };
 
 #endif
