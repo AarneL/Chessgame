@@ -1,6 +1,7 @@
 #include "../headers/menu_screen.hpp"
 #include "../headers/base_screen.hpp"
 #include <fstream>
+#include "../headers/tinyfiledialogs.h"
 
 MenuScreen::MenuScreen(void)
 {
@@ -138,7 +139,8 @@ void MenuScreen::loadGame()
 	// This should first open a file dialog where the user can choose file to load
 
 	// Using testfile
-	std::ifstream ifs("test.txt", std::ifstream::in);
+	const char* file_loc = tinyfd_openFileDialog("Open load file", "", 0, NULL, NULL, 0);
+	std::ifstream ifs(file_loc, std::ifstream::in);
 	if (!ifs) {
 		std::cout << "File not found" << std::endl;
 	}
