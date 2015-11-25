@@ -2,6 +2,7 @@
 #include "../headers/game_screen.hpp"
 #include "../headers/menu_screen.hpp"
 #include "../headers/ai_algorithm.hpp"
+#include "../headers/tinyfiledialogs.h"
 
 
 // #include "../headers/board.hpp"
@@ -381,8 +382,8 @@ std::pair<int,int> GameScreen::getAiMove(void)
 
 void GameScreen::showSaveGameDialog() {
 	// This should show file dialog for saving file
-
 	// Save the game
+	tinyfd_saveFileDialog("Save game", "", 0, NULL, "text files");
 	board.saveGame(white, black);
 }
 
