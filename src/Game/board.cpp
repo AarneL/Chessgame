@@ -227,11 +227,13 @@ void Board::updateState(int index) //index is the destination of last move
 	//Check for promotion
 	//White first
 	if (board[lastMove.second] == W_PAWN && lastMove.second >= 56 && lastMove.second <= 63)
-		std::cout << "White pawn promoted" << std::endl;
+	{	std::cout << "White pawn promoted" << std::endl;
+		board[lastMove.second] = W_QUEEN; } //TODO
 
 	//Then black
 	if (board[lastMove.second] == B_PAWN && lastMove.second >= 0 && lastMove.second <= 7)
-		std::cout << "Black pawn promoted" << std::endl;
+	{	std::cout << "Black pawn promoted" << std::endl;
+		board[lastMove.second] = B_QUEEN; }	//TODO
 
 	//check for el passant
 	if(moveList.size() > 4) //this needs to be done so we don't try invalid indexes
