@@ -139,7 +139,10 @@ void MenuScreen::loadGame()
 	// This should first open a file dialog where the user can choose file to load
 
 	// Using testfile
-	const char* file_loc = tinyfd_openFileDialog("Open load file", "", 0, NULL, NULL, 0);
+	const char* file_loc = tinyfd_openFileDialog("Open load file", "", 1, NULL, "text files", 0);
+	if (!file_loc) {
+		std::cout << "Error loading file" << std::endl;
+	}
 	std::ifstream ifs(file_loc, std::ifstream::in);
 	if (!ifs) {
 		std::cout << "File not found" << std::endl;
