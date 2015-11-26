@@ -98,9 +98,8 @@ int MenuScreen::update(sf::RenderWindow &window)
 			{
 				// User pressed loadbutton->Open dialog box
 				std::cout << "User pressed loadButton." << std::endl;
-				loadGame();
+				return loadGame();
 				// Start gameScreen
-				return 2;
 			}
 
 
@@ -134,7 +133,7 @@ void MenuScreen::clearButtonHighlights()
 	exitButton.setTexture(exitButtonTexture, false);
 }
 
-void MenuScreen::loadGame()
+int MenuScreen::loadGame()
 {
 	// This should first open a file dialog where the user can choose file to load
 
@@ -142,6 +141,7 @@ void MenuScreen::loadGame()
 	const char* file_loc = tinyfd_openFileDialog("Open load file", "", 0, NULL, "text files", 0);
 	if (!file_loc) {
 		std::cout << "Error loading file" << std::endl;
+		return 0;
 	}
 	std::ifstream ifs(file_loc, std::ifstream::in);
 	if (!ifs) {
@@ -172,4 +172,5 @@ void MenuScreen::loadGame()
 	}
 
 	ifs.close();
+	return 2;
 }

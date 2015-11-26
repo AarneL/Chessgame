@@ -10,7 +10,7 @@ public:
     MenuScreen(void);
     // Menu screen needs to be able to use gameScreens initializer
     MenuScreen(GameScreen* g);
-    void loadGame();
+    int loadGame();
 	virtual void loadContent(void);
 	virtual int update(sf::RenderWindow &window);
     virtual void draw(sf::RenderWindow &window);
