@@ -213,7 +213,7 @@ int GameScreen::update(sf::RenderWindow &window)
 					std::cout << "save clicked" << std::endl;
 					showSaveGameDialog();
 				}
-				else if (saveButton.getGlobalBounds().contains(mousePos)) {
+				else if (mainMenuButton.getGlobalBounds().contains(mousePos)) {
 					return 0;
 				}
 				else {
