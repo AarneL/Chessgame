@@ -99,6 +99,7 @@ private:
 	//sf::Texture mainMenuButtonTexture;
 	//sf::Sprite mainMenuButtonSprite;
 	sf::Texture saveButtonTexture;
+	sf::Texture saveButtonHighlightedTexture;
 	sf::Sprite saveButton;
 
 	// Player names
@@ -115,6 +116,7 @@ public:
     void draw(sf::RenderWindow &window);
 	void highlight(std::vector<int> v);
 	void clearHighlights();
+	void clearButtonHighlights();
 	void initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
 
 	// Game updating and analysis

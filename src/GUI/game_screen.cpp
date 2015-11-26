@@ -189,8 +189,16 @@ int GameScreen::update(sf::RenderWindow &window)
 			}
 
 			// Human turn
+			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
+			if (event.type == sf::Event::MouseMoved) {
+				if (saveButton.getGlobalBounds().contains(mousePos)) {
+					saveButton.setTexture(saveButtonHighlightedTexture,false);
+				}
+				else
+					clearButtonHighlights();
+			}
 			if (event.type == sf::Event::MouseButtonPressed) {
-				sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
+
 				if (saveButton.getGlobalBounds().contains(mousePos)) {
 					std::cout << "save clicked" << std::endl;
 					showSaveGameDialog();
@@ -216,7 +224,6 @@ int GameScreen::update(sf::RenderWindow &window)
 								possibleMoves.clear();
 								clearHighlights();
 							}
-
 							else {
 								activeSquare = -1;
 								possibleMoves.clear();
@@ -283,6 +290,11 @@ void GameScreen::clearHighlights()
 			}
 		}
 	}
+}
+
+void GameScreen::clearButtonHighlights()
+{
+	saveButton.setTexture(saveButtonTexture ,false);
 }
 
 void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
