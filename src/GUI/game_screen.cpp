@@ -233,10 +233,10 @@ int GameScreen::update(sf::RenderWindow &window)
 								movePiece(std::make_pair(activeSquare, i));
 
 								std::cout << playerOnTurn->getName() << " made move." << std::endl;
-								changeTurn();
 								activeSquare = -1;
 								possibleMoves.clear();
 								clearHighlights();
+								return changeTurn();
 							}
 							else {
 								activeSquare = -1;
@@ -258,7 +258,7 @@ int GameScreen::update(sf::RenderWindow &window)
 		}
 		movePiece(aimove);
 		std::cout << playerOnTurn->getName() << " made move. (Level: " << playerOnTurn->getLevel() << ")" << std::endl;
-		changeTurn();
+		return changeTurn();
 	}
 	return 2;
 }
@@ -340,6 +340,13 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 	blackPlayerText.setString("Black: " + black->getName());
 }
 
+void GameScreen::tearDown(void)
+{
+	free(white);
+	free(black);
+	board = Board();
+}
+
 void GameScreen::movePiece(std::pair<int,int> move)
 {
 	// Move in GUI
@@ -351,8 +358,10 @@ void GameScreen::movePiece(std::pair<int,int> move)
 	board.movePiece(move.first, move.second);
 	int index = board.updateState(move.second); // Returns index if update needed
 	if (index != -1) {
+		// If stateword 0-63-> means pawn has reached enemy backline. Pawn is promotee
 		changePiece(index);
 	}
+
 	if((board.getState() >> 6) == 0x01) //01000000 passant made by white
 	{
 		pieces[move.second - 8] = NULL;
@@ -381,16 +390,22 @@ void GameScreen::movePiece(std::pair<int,int> move)
 	}
 }
 
-void GameScreen::changeTurn()
+int GameScreen::changeTurn()
 {
 	//test if it's checkmate
 	if(board.getState() & 0x01)
 	{
+		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
 		std::cout << "Checkmate by " << playerOnTurn->getName() << std::endl;
+		tearDown();
+		return 0;
 	}
 	else if (board.getState() & 0x02)
 	{
+		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
 		std::cout << "Stalemate" << std::endl;
+		tearDown();
+		return 0;
 	}
 
 	// If its black turn
@@ -401,6 +416,7 @@ void GameScreen::changeTurn()
 		playerOnTurn = black;
 	}
 	moveSound.play();
+	return 2;
 }
 
 bool GameScreen::containsPlayerPiece(int i, Player* p)

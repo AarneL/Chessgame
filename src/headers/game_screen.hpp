@@ -122,10 +122,11 @@ public:
 	void clearHighlights();
 	void clearButtonHighlights();
 	void initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
+	void tearDown(void);
 
 	// Game updating and analysis
 	void movePiece(std::pair<int, int> move);
-	void changeTurn();
+	int changeTurn();
 	bool containsPlayerPiece(int i, Player* p);
 	bool belongsToPlayer(int i, Player* p);
 	std::vector<std::pair<int, int> > getMoveList() const;
