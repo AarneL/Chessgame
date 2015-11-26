@@ -460,6 +460,6 @@ void GameScreen::changePiece(int index)
 void GameScreen::showSaveGameDialog() {
 	// This should show file dialog for saving file
 	// Save the game
-	tinyfd_saveFileDialog("Save game", "", 0, NULL, "text files");
-	board.saveGame(white, black);
+	const char* savePath = tinyfd_saveFileDialog("Save game", "", 0, NULL, "text files");
+	board.saveGame(white, black, savePath);
 }

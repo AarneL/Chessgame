@@ -473,9 +473,9 @@ void Board::changePiece(int index, int newpiece) {
 	board[index] = newpiece;
 }
 
-void Board::saveGame(Player* white, Player* black)
+void Board::saveGame(Player* white, Player* black, const char* savePath)
 {
-	std::ofstream ofs ("test.txt", std::ofstream::out);
+	std::ofstream ofs (savePath, std::ofstream::out);
 	ofs << white->getName() << "-" << white->getLevel() << std::endl;
 	ofs << black->getName() << "-" << black->getLevel() << std::endl;
 	for (auto move : moveList) {
