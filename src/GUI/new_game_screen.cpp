@@ -46,6 +46,11 @@ void NewGameScreen::loadContent(void)
 	blackPlayerText.setPosition(sf::Vector2f(600 + midMargin, topMargin));
 	elements.push_back(&blackPlayerText);
 
+	// Line between colors
+	line.setSize(sf::Vector2f(600, 2));
+	line.setPosition(600, 50);
+	line.rotate(90);
+
 	// Player name texts
 	int nameTopMargin = 500;
 	int nameMidMargin = 100;
@@ -106,7 +111,7 @@ void NewGameScreen::loadContent(void)
 
 	// Levels
 	int levelTopMargin = 500;
-	int levelMidMargin = 100;
+	int levelMidMargin = 110;
 	// Normal
 	levelOneTexture.loadFromFile("media/img/level1Button.png");
 	levelTwoTexture.loadFromFile("media/img/level2Button.png");
@@ -163,8 +168,9 @@ void NewGameScreen::loadContent(void)
 
 	// Play button
 	playButtonTexture.loadFromFile("media/img/playButton.png");
+	playHighlightedButtonTexture.loadFromFile("media/img/playHighlightedButton.png");
 	playButton.setTexture(playButtonTexture);
-	playButton.setPosition(sf::Vector2f(600, 700));
+	playButton.setPosition(sf::Vector2f(535, 700));
 	elements.push_back(&playButton);
 }
 
@@ -222,6 +228,9 @@ int NewGameScreen::update(sf::RenderWindow &window)
 				buttonHovered = true;
 			} else if (blackLevelFiveButton.getGlobalBounds().contains(v) && blackLevel != 5) {
 				blackLevelFiveButton.setTexture(levelFiveHighlightedTexture, true);
+				buttonHovered = true;
+			} else if (playButton.getGlobalBounds().contains(v)) {
+				playButton.setTexture(playHighlightedButtonTexture, true);
 				buttonHovered = true;
 			} else if(!buttonHovered) {
 				// If nothing hovered
@@ -404,6 +413,7 @@ void NewGameScreen::clearButtonHighlights()
 		blackLevelFourButton.setTexture(levelFourTexture, true);
 	if (blackLevel != 5)
 		blackLevelFiveButton.setTexture(levelFiveTexture, true);
+	playButton.setTexture(playButtonTexture, true);
 }
 
 
@@ -419,5 +429,6 @@ void NewGameScreen::draw(sf::RenderWindow &window)
 	for (auto element : blackInformationElements) {
 		window.draw(*element);
 	}
+	window.draw(line);
 	window.display();
 }

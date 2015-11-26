@@ -404,27 +404,3 @@ void GameScreen::showSaveGameDialog() {
 	tinyfd_saveFileDialog("Save game", "", 0, NULL, "text files");
 	board.saveGame(white, black);
 }
-
-//TODO: THIS TO AI LVL0
-
-//// A little delay before AI move
-//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-//// This dummy version gets random move from AI's all possible moves
-//std::vector<std::pair<int, int>> allPossibleMoves;
-//for (int i = 0; i < 64; i++) {
-//	if (containsPlayerPiece(i, playerOnTurn)) {
-//		possibleMoves = board.possibleMoves(i);
-//		for (auto j : possibleMoves) {
-//			if (i != j) {
-//				std::pair<int, int> move;
-//				move.first = i;
-//				move.second = j;
-//				allPossibleMoves.push_back(move);
-//			}
-//		}
-//	}
-//}
-//std::srand(std::time(0));
-//auto randMove = std::rand() % allPossibleMoves.size();
-
-//return allPossibleMoves[randMove];

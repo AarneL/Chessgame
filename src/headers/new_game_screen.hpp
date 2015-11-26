@@ -38,6 +38,9 @@ private:
 	sf::Text whitePlayerText;
 	sf::Text blackPlayerText;
 
+	// Line between colors
+	sf::RectangleShape line;
+
 	// Player name texts
 	sf::Text whiteNameText;
 	sf::Text blackNameText;
