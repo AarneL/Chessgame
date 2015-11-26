@@ -102,6 +102,10 @@ private:
 	sf::Texture saveGameHighlightedButtonTexture;
 	sf::Sprite saveButton;
 
+	sf::Texture mainMenuButtonTexture;
+	sf::Texture mainMenuHighlightedButtonTexture;
+	sf::Sprite mainMenuButton;
+	
 	// Player names
 	sf::Font font;
 	sf::Text whitePlayerText;
@@ -116,6 +120,7 @@ public:
     void draw(sf::RenderWindow &window);
 	void highlight(std::vector<int> v);
 	void clearHighlights();
+	void clearButtonHighlights();
 	void initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
 
 	// Game updating and analysis

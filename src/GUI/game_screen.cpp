@@ -173,6 +173,12 @@ void GameScreen::loadContent(void)
 	saveGameHighlightedButtonTexture.loadFromFile("media/img/saveGameHighlightedButton.png");
 	saveButton.setTexture(saveGameButtonTexture);
 	saveButton.setPosition(sf::Vector2f(900, 200));
+
+	// MainMenu button
+	mainMenuButtonTexture.loadFromFile("media/img/mainMenuButton.png");
+	mainMenuHighlightedButtonTexture.loadFromFile("media/img/mainMenuHighlightedButton.png");
+	mainMenuButton.setTexture(mainMenuButtonTexture);
+	mainMenuButton.setPosition(sf::Vector2f(900, 400));
 }
 
 int GameScreen::update(sf::RenderWindow &window)
@@ -190,12 +196,27 @@ int GameScreen::update(sf::RenderWindow &window)
 			}
 
 			// Human turn
+			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
+			if (event.type == sf::Event::MouseMoved) {
+				if (saveButton.getGlobalBounds().contains(mousePos)) {
+					saveButton.setTexture(saveGameHighlightedButtonTexture,false);
+				}
+				else if (mainMenuButton.getGlobalBounds().contains(mousePos)) {
+					mainMenuButton.setTexture(mainMenuHighlightedButtonTexture, false);
+				}
+				else
+					clearButtonHighlights();
+			}
 			if (event.type == sf::Event::MouseButtonPressed) {
-				sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
+
 				if (saveButton.getGlobalBounds().contains(mousePos)) {
 					std::cout << "save clicked" << std::endl;
 					showSaveGameDialog();
-				} else {
+				}
+				else if (saveButton.getGlobalBounds().contains(mousePos)) {
+					return 0;
+				}
+				else {
 					for (int i = 0; i < 64; i++) {
 						if (gameBoard[i].getGlobalBounds().contains(mousePos)) {
 							// If no piece active yet
@@ -217,7 +238,6 @@ int GameScreen::update(sf::RenderWindow &window)
 								possibleMoves.clear();
 								clearHighlights();
 							}
-
 							else {
 								activeSquare = -1;
 								possibleMoves.clear();
@@ -255,6 +275,7 @@ void GameScreen::draw(sf::RenderWindow &window)
 	window.draw(whitePlayerText);
 	window.draw(blackPlayerText);
 	window.draw(saveButton);
+	window.draw(mainMenuButton);
 	window.display();
 }
 
@@ -284,6 +305,13 @@ void GameScreen::clearHighlights()
 			}
 		}
 	}
+}
+
+void GameScreen::clearButtonHighlights()
+{
+	saveButton.setTexture(saveGameButtonTexture ,false);
+	mainMenuButton.setTexture(mainMenuButtonTexture, false);
+
 }
 
 void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
