@@ -276,7 +276,7 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 	activeSquare = -1;
 
 	// White player type
-	if (whiteName == "AI") {
+	if (whiteName == "Computer") {
 		white = new AI(whiteName, ColorType::White, whiteLevel);
 	}
 	else {
@@ -284,7 +284,7 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 	}
 
 	// Black player type
-	if (blackName == "AI") {
+	if (blackName == "Computer") {
 		black = new AI(blackName, ColorType::Black, blackLevel);
 	}
 	else {
