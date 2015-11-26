@@ -212,8 +212,9 @@ std::vector<std::pair<int, int> > Board::getMoveList() const
 /* instead of using different functions for checking for chess, chessmate and stalemate it is
  * more efficient to check for them all in a single loop through the pieces */
 
-void Board::updateState(int index) //index is the destination of last move
+int Board::updateState(int index) //index is the destination of last move
 {
+	int retVal = -1;
 
 	//turn lastmove flags off
 	state = state & 0x3F; //00111111
@@ -225,15 +226,9 @@ void Board::updateState(int index) //index is the destination of last move
 	lastMove = moveList[moveList.size() -1];
 
 	//Check for promotion
-	//White first
-	if (board[lastMove.second] == W_PAWN && lastMove.second >= 56 && lastMove.second <= 63)
-	{	std::cout << "White pawn promoted" << std::endl;
-		board[lastMove.second] = W_QUEEN; } //TODO
-
-	//Then black
-	if (board[lastMove.second] == B_PAWN && lastMove.second >= 0 && lastMove.second <= 7)
-	{	std::cout << "Black pawn promoted" << std::endl;
-		board[lastMove.second] = B_QUEEN; }	//TODO
+	if ( (board[lastMove.second] == W_PAWN && lastMove.second >= 56 && lastMove.second <= 63)
+		|| (board[lastMove.second] == B_PAWN && lastMove.second >= 0 && lastMove.second <= 7) )
+		retVal = lastMove.second;
 
 	//check for el passant
 	if(moveList.size() > 4) //this needs to be done so we don't try invalid indexes
@@ -353,7 +348,7 @@ void Board::updateState(int index) //index is the destination of last move
 		{
 			state = state | 0x1;
 			//do some stuff to end the game
-			return;
+			return retVal;
 		}
 	}
 
@@ -363,11 +358,11 @@ void Board::updateState(int index) //index is the destination of last move
 		{
 			state = state | 0x2;
 			//do some stuff to end the game
-			return;
+			return retVal;
 		}
 	}		
 
-	return;
+	return retVal;
 }
 
 

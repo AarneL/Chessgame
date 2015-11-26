@@ -29,7 +29,7 @@ public:
 	bool movePiece(int origin, int destination);
 	std::vector<int> getBoard() const;
 	std::vector<std::pair<int, int> > getMoveList() const;
-	void updateState(int);
+	int updateState(int);	//Return the index that should be manipulated after update (needed for pawn promotion)
 	bool isCheckMate(int) const; //argument gives turn
 	int isCheck(int) const; //returns position of king if it is checked
 	bool isStaleMate(int) const; //should end the game
