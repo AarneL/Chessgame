@@ -468,6 +468,11 @@ int Board::getState() const
 	return state;
 }
 
+void Board::changePiece(int index, int newpiece) {
+
+	board[index] = newpiece;
+}
+
 void Board::saveGame(Player* white, Player* black)
 {
 	std::ofstream ofs ("test.txt", std::ofstream::out);

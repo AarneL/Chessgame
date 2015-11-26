@@ -35,6 +35,7 @@ public:
 	bool isStaleMate(int) const; //should end the game
 	void saveGame(Player* white, Player* black);
 	int getState() const;
+	void changePiece(int, int);
 
 private:
 	std::vector<int> board; //contains pieces
