@@ -101,6 +101,11 @@ private:
 	sf::Texture saveButtonTexture;
 	sf::Sprite saveButton;
 
+	// Player names
+	sf::Font font;
+	sf::Text whitePlayerText;
+	sf::Text blackPlayerText;
+
 public:
     GameScreen(void);
 

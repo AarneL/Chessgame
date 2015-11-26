@@ -154,10 +154,24 @@ void GameScreen::loadContent(void)
 		moveSound.setBuffer(moveSoundBuffer);
 	}
 
+	// Player names
+	if (!font.loadFromFile("media/img/Calibri.ttf"))
+		std::cout << "File not found!" << std::endl;
+
+	whitePlayerText.setFont(font);
+	whitePlayerText.setCharacterSize(30);
+	whitePlayerText.setStyle(sf::Text::Bold);
+	whitePlayerText.setPosition(sf::Vector2f(900, 10));
+
+	blackPlayerText.setFont(font);
+	blackPlayerText.setCharacterSize(30);
+	blackPlayerText.setStyle(sf::Text::Bold);
+	blackPlayerText.setPosition(sf::Vector2f(900, 50));
+
 	// Save button and file dialog
 	saveButtonTexture.loadFromFile("media/img/save_game_button.png");
 	saveButton.setTexture(saveButtonTexture);
-	saveButton.setPosition(sf::Vector2f(1000, 100));
+	saveButton.setPosition(sf::Vector2f(900, 200));
 }
 
 int GameScreen::update(sf::RenderWindow &window)
@@ -237,6 +251,8 @@ void GameScreen::draw(sf::RenderWindow &window)
 			window.draw(*pieces[i]);
 		}
 	}
+	window.draw(whitePlayerText);
+	window.draw(blackPlayerText);
 	window.draw(saveButton);
 	window.display();
 }
@@ -291,6 +307,8 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 		black = new Human(blackName, ColorType::Black);
 	}
 	playerOnTurn = white;
+	whitePlayerText.setString("White: " + white->getName());
+	blackPlayerText.setString("Black: " + black->getName());
 }
 
 void GameScreen::movePiece(std::pair<int,int> move)
