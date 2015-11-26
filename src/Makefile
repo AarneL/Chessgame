@@ -14,6 +14,7 @@ asd:
 	Game/Player/player.cpp Game/Player/human.cpp Game/Player/ai.cpp \
 	Game/game.cpp Game/board.cpp Game/rules.cpp \
 	Game/ai_algorithm.cpp \
+	GUI/tinyfiledialogs.c \
 	-lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system
 
 clean:
