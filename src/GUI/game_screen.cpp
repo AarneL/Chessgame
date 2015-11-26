@@ -169,8 +169,9 @@ void GameScreen::loadContent(void)
 	blackPlayerText.setPosition(sf::Vector2f(900, 50));
 
 	// Save button and file dialog
-	saveButtonTexture.loadFromFile("media/img/save_game_button.png");
-	saveButton.setTexture(saveButtonTexture);
+	saveGameButtonTexture.loadFromFile("media/img/saveGameButton.png");
+	saveGameHighlightedButtonTexture.loadFromFile("media/img/saveGameHighlightedButton.png");
+	saveButton.setTexture(saveGameButtonTexture);
 	saveButton.setPosition(sf::Vector2f(900, 200));
 }
 
@@ -320,8 +321,10 @@ void GameScreen::movePiece(std::pair<int,int> move)
 
 	// Move in board
 	board.movePiece(move.first, move.second);
-	board.updateState(move.second);
-
+	int index = board.updateState(move.second); // Returns index if update needed
+	if (index != -1) {
+		board.changePiece(index);
+	}
 	if((board.getState() >> 6) == 0x01) //01000000 passant made by white
 	{
 		pieces[move.second - 8] = NULL;
@@ -396,6 +399,18 @@ std::vector<std::pair<int, int> > GameScreen::getMoveList() const
 std::pair<int,int> GameScreen::getAiMove(void)
 {
 	return AiAlgorithm::algorithm(board, playerOnTurn->getLevel(), (playerOnTurn->getColor() == ColorType::White));
+}
+
+void GameScreen::changePiece(int index)
+{
+	if (board.getBoard()[index] % 2 == 0)
+	{
+		board.changePiece(index, W_QUEEN);
+	}
+	else
+	{
+		board.changePiece(index, B_QUEEN);
+	}
 }
 
 void GameScreen::showSaveGameDialog() {

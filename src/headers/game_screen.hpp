@@ -98,7 +98,8 @@ private:
 	// Buttons
 	//sf::Texture mainMenuButtonTexture;
 	//sf::Sprite mainMenuButtonSprite;
-	sf::Texture saveButtonTexture;
+	sf::Texture saveGameButtonTexture;
+	sf::Texture saveGameHighlightedButtonTexture;
 	sf::Sprite saveButton;
 
 	// Player names
@@ -124,7 +125,7 @@ public:
 	bool belongsToPlayer(int i, Player* p);
 	std::vector<std::pair<int, int> > getMoveList() const;
 	std::pair<int, int> getAiMove();
-
+	void changePiece(int index);
 	void showSaveGameDialog();
 
 	// Game interface
