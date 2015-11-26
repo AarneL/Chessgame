@@ -196,7 +196,7 @@ int GameScreen::update(sf::RenderWindow &window)
 							else if (activeSquare != -1 && (std::find(possibleMoves.begin(), possibleMoves.end(), i) != possibleMoves.end()) && i != activeSquare) {
 								movePiece(std::make_pair(activeSquare, i));
 
-								std::cout << playerOnTurn->getName() << "(Human) made move." << std::endl;
+								std::cout << playerOnTurn->getName() << " made move." << std::endl;
 								changeTurn();
 								activeSquare = -1;
 								possibleMoves.clear();
@@ -222,7 +222,7 @@ int GameScreen::update(sf::RenderWindow &window)
 			std::cout << "AI made illegal move!" << std::endl;
 		}
 		movePiece(aimove);
-		std::cout << playerOnTurn->getName()  << "(AI) made move." << std::endl;
+		std::cout << playerOnTurn->getName() << " made move. (Level: " << playerOnTurn->getLevel() << ")" << std::endl;
 		changeTurn();
 	}
 	return 2;

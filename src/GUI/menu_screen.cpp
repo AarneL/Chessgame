@@ -21,7 +21,7 @@ void MenuScreen::loadContent(void)
 	int buttonDivLength = 200;
 	
 	/* All sprites need to be added to "elements" in right order
-	 * so that what is drawn "behind" will be added first
+	 * so that what is drawn "behind" will be added firsts
 	 */
 
 	backgroundTexture.loadFromFile("media/img/background.jpg");
@@ -139,7 +139,7 @@ void MenuScreen::loadGame()
 	// This should first open a file dialog where the user can choose file to load
 
 	// Using testfile
-	const char* file_loc = tinyfd_openFileDialog("Open load file", "", 1, NULL, "text files", 0);
+	const char* file_loc = tinyfd_openFileDialog("Open load file", "", 0, NULL, "text files", 0);
 	if (!file_loc) {
 		std::cout << "Error loading file" << std::endl;
 	}
