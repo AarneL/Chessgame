@@ -323,7 +323,7 @@ void GameScreen::movePiece(std::pair<int,int> move)
 	board.movePiece(move.first, move.second);
 	int index = board.updateState(move.second); // Returns index if update needed
 	if (index != -1) {
-		board.changePiece(index);
+		changePiece(index);
 	}
 	if((board.getState() >> 6) == 0x01) //01000000 passant made by white
 	{
