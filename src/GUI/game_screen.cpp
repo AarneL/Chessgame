@@ -345,6 +345,29 @@ void GameScreen::tearDown(void)
 	free(white);
 	free(black);
 	board = Board();
+	pieces.clear();
+	gameBoard.clear();
+	//Create base board starting from down left corner
+	sf::Sprite square;
+	for (int i = 7; i >= 0; i--) {
+		for (int j = 0; j < 8; j++) {
+			square = sf::Sprite();
+			square.setPosition((j * 96 + BOARD_VERTICAL_OFFSET), (i * 96 + BOARD_HORIZONTAL_OFFSET));
+			square.setTexture(squareTexture);
+			if ((i + j) % 2 == 0) {
+				square.setColor(color_square_dark);
+			}
+			else if ((i + j) % 2 == 1) {
+				square.setColor(color_square_light);
+			}
+			gameBoard.push_back(square);
+			int index = gameBoard.size() - 1;
+			if (pieces[index] != NULL) {
+				pieces[index]->setPosition(gameBoard[index].getPosition());
+			}
+		}
+	}
+
 }
 
 void GameScreen::movePiece(std::pair<int,int> move)
