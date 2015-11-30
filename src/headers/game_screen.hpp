@@ -11,6 +11,7 @@
 #include "button.hpp"
 #include "object.hpp"
 #include "square.hpp"
+#include "chess_piece.hpp"
 
 
 class GameScreen : public BaseScreen
@@ -22,76 +23,53 @@ private:
 	// Container for all elements to draw
 	std::vector<Object*> elements;
 	// White pieces
-	sf::Texture whitePawnTexture;
-	sf::Texture whiteRookTexture;
-	sf::Texture whiteBishopTexture;
-	sf::Texture whiteKnightTexture;
-	sf::Texture whiteQueenTexture;
-	sf::Texture whiteKingTexture;
+	ChessPiece whitePawn1;
+	ChessPiece whitePawn2;
+	ChessPiece whitePawn3;
+	ChessPiece whitePawn4;
+	ChessPiece whitePawn5;
+	ChessPiece whitePawn6;
+	ChessPiece whitePawn7;
+	ChessPiece whitePawn8;
 
-	sf::Sprite whitePawn1;
-	sf::Sprite whitePawn2;
-	sf::Sprite whitePawn3;
-	sf::Sprite whitePawn4;
-	sf::Sprite whitePawn5;
-	sf::Sprite whitePawn6;
-	sf::Sprite whitePawn7;
-	sf::Sprite whitePawn8;
+	ChessPiece whiteRook1;
+	ChessPiece whiteRook2;
 
-	sf::Sprite whiteRook1;
-	sf::Sprite whiteRook2;
+	ChessPiece whiteBishop1;
+	ChessPiece whiteBishop2;
 
-	sf::Sprite whiteBishop1;
-	sf::Sprite whiteBishop2;
+	ChessPiece whiteKnight1;
+	ChessPiece whiteKnight2;
 
-	sf::Sprite whiteKnight1;
-	sf::Sprite whiteKnight2;
-
-	sf::Sprite whiteQueen;
-	sf::Sprite whiteKing;
+	ChessPiece whiteQueen;
+	ChessPiece whiteKing;
 
 	// Black pieces
-	sf::Texture blackPawnTexture;
-	sf::Texture blackRookTexture;
-	sf::Texture blackBishopTexture;
-	sf::Texture blackKnightTexture;
-	sf::Texture blackQueenTexture;
-	sf::Texture blackKingTexture;
+	ChessPiece blackPawn1;
+	ChessPiece blackPawn2;
+	ChessPiece blackPawn3;
+	ChessPiece blackPawn4;
+	ChessPiece blackPawn5;
+	ChessPiece blackPawn6;
+	ChessPiece blackPawn7;
+	ChessPiece blackPawn8;
 
-	sf::Sprite blackPawn1;
-	sf::Sprite blackPawn2;
-	sf::Sprite blackPawn3;
-	sf::Sprite blackPawn4;
-	sf::Sprite blackPawn5;
-	sf::Sprite blackPawn6;
-	sf::Sprite blackPawn7;
-	sf::Sprite blackPawn8;
+	ChessPiece blackRook1;
+	ChessPiece blackRook2;
 
-	sf::Sprite blackRook1;
-	sf::Sprite blackRook2;
+	ChessPiece blackBishop1;
+	ChessPiece blackBishop2;
 
-	sf::Sprite blackBishop1;
-	sf::Sprite blackBishop2;
+	ChessPiece blackKnight1;
+	ChessPiece blackKnight2;
 
-	sf::Sprite blackKnight1;
-	sf::Sprite blackKnight2;
+	ChessPiece blackQueen;
+	ChessPiece blackKing;
 
-	sf::Sprite blackQueen;
-	sf::Sprite blackKing;
-
-	std::vector<sf::Sprite*> pieces;
+	std::vector<ChessPiece*> pieces;
 
 	// Game board
-	sf::Texture squareTexture;
 	std::vector<Square*> gameBoard;
-
-	// Square colors
-	sf::Color color_square_dark;	//"chocolate"
-	sf::Color color_square_light;	//"burntsienna"
-
-	// Square highlight colors
-	sf::Color color_highlight_square_dark;
-	sf::Color color_highlight_square_light;
 
 	std::vector<std::pair<int, int> > moveList;
 

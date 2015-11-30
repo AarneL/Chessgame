@@ -25,54 +25,39 @@ GameScreen::GameScreen(void)
 
 void GameScreen::loadContent(void)
 {
-	// Load textures
-	whitePawnTexture.loadFromFile("media/img/pawn_white.png");
-	whiteRookTexture.loadFromFile("media/img/rook_white.png");
-	whiteBishopTexture.loadFromFile("media/img/bishop_white.png");
-	whiteKnightTexture.loadFromFile("media/img/knight_white.png");
-	whiteQueenTexture.loadFromFile("media/img/queen_white.png");
-	whiteKingTexture.loadFromFile("media/img/king_white.png");
-
-	blackPawnTexture.loadFromFile("media/img/pawn_black.png");
-	blackRookTexture.loadFromFile("media/img/rook_black.png");
-	blackBishopTexture.loadFromFile("media/img/bishop_black.png");
-	blackKnightTexture.loadFromFile("media/img/knight_black.png");
-	blackQueenTexture.loadFromFile("media/img/queen_black.png");
-	blackKingTexture.loadFromFile("media/img/king_black.png");
-
 	// Set textures to pieces and push them to pieces vector in a right order
-	whiteRook1.setTexture(whiteRookTexture);
+	whiteRook1.loadContent("media/img/rook_white.png");
 	pieces.push_back(&whiteRook1);
-	whiteKnight1.setTexture(whiteKnightTexture);
+	whiteKnight1.loadContent("media/img/knight_white.png");
 	pieces.push_back(&whiteKnight1);
-	whiteBishop1.setTexture(whiteBishopTexture);
+	whiteBishop1.loadContent("media/img/bishop_white.png");
 	pieces.push_back(&whiteBishop1);
-	whiteQueen.setTexture(whiteQueenTexture);
+	whiteQueen.loadContent("media/img/queen_white.png");
 	pieces.push_back(&whiteQueen);
-	whiteKing.setTexture(whiteKingTexture);
+	whiteKing.loadContent("media/img/king_white.png");
 	pieces.push_back(&whiteKing);
-	whiteBishop2.setTexture(whiteBishopTexture);
+	whiteBishop2.loadContent("media/img/bishop_white.png");
 	pieces.push_back(&whiteBishop2);
-	whiteKnight2.setTexture(whiteKnightTexture);
+	whiteKnight2.loadContent("media/img/knight_white.png");
 	pieces.push_back(&whiteKnight2);
-	whiteRook2.setTexture(whiteRookTexture);
+	whiteRook2.loadContent("media/img/rook_white.png");
 	pieces.push_back(&whiteRook2);
 
-	whitePawn1.setTexture(whitePawnTexture);
+	whitePawn1.loadContent("media/img/pawn_white.png");
 	pieces.push_back(&whitePawn1);
-	whitePawn2.setTexture(whitePawnTexture);
+	whitePawn2.loadContent("media/img/pawn_white.png");
 	pieces.push_back(&whitePawn2);
-	whitePawn3.setTexture(whitePawnTexture);
+	whitePawn3.loadContent("media/img/pawn_white.png");
 	pieces.push_back(&whitePawn3);
-	whitePawn4.setTexture(whitePawnTexture);
+	whitePawn4.loadContent("media/img/pawn_white.png");
 	pieces.push_back(&whitePawn4);
-	whitePawn5.setTexture(whitePawnTexture);
+	whitePawn5.loadContent("media/img/pawn_white.png");
 	pieces.push_back(&whitePawn5);
-	whitePawn6.setTexture(whitePawnTexture);
+	whitePawn6.loadContent("media/img/pawn_white.png");
 	pieces.push_back(&whitePawn6);
-	whitePawn7.setTexture(whitePawnTexture);
+	whitePawn7.loadContent("media/img/pawn_white.png");
 	pieces.push_back(&whitePawn7);
-	whitePawn8.setTexture(whitePawnTexture);
+	whitePawn8.loadContent("media/img/pawn_white.png");
 	pieces.push_back(&whitePawn8);
 
 	// To keep the pieces list as long as gameboard squares, add null sprites
@@ -81,38 +66,38 @@ void GameScreen::loadContent(void)
 		pieces.push_back(NULL);
 	}
 
-	blackPawn1.setTexture(blackPawnTexture);
+	blackPawn1.loadContent("media/img/pawn_black.png");
 	pieces.push_back(&blackPawn1);
-	blackPawn2.setTexture(blackPawnTexture);
+	blackPawn2.loadContent("media/img/pawn_black.png");
 	pieces.push_back(&blackPawn2);
-	blackPawn3.setTexture(blackPawnTexture);
+	blackPawn3.loadContent("media/img/pawn_black.png");
 	pieces.push_back(&blackPawn3);
-	blackPawn4.setTexture(blackPawnTexture);
+	blackPawn4.loadContent("media/img/pawn_black.png");
 	pieces.push_back(&blackPawn4);
-	blackPawn5.setTexture(blackPawnTexture);
+	blackPawn5.loadContent("media/img/pawn_black.png");
 	pieces.push_back(&blackPawn5);
-	blackPawn6.setTexture(blackPawnTexture);
+	blackPawn6.loadContent("media/img/pawn_black.png");
 	pieces.push_back(&blackPawn6);
-	blackPawn7.setTexture(blackPawnTexture);
+	blackPawn7.loadContent("media/img/pawn_black.png");
 	pieces.push_back(&blackPawn7);
-	blackPawn8.setTexture(blackPawnTexture);
+	blackPawn8.loadContent("media/img/pawn_black.png");
 	pieces.push_back(&blackPawn8);
 
-	blackRook1.setTexture(blackRookTexture);
+	blackRook1.loadContent("media/img/rook_black.png");
 	pieces.push_back(&blackRook1);
-	blackKnight1.setTexture(blackKnightTexture);
+	blackKnight1.loadContent("media/img/knight_black.png");
 	pieces.push_back(&blackKnight1);
-	blackBishop1.setTexture(blackBishopTexture);
+	blackBishop1.loadContent("media/img/bishop_black.png");
 	pieces.push_back(&blackBishop1);
-	blackQueen.setTexture(blackQueenTexture);
+	blackQueen.loadContent("media/img/queen_black.png");
 	pieces.push_back(&blackQueen);
-	blackKing.setTexture(blackKingTexture);
+	blackKing.loadContent("media/img/king_black.png");
 	pieces.push_back(&blackKing);
-	blackBishop2.setTexture(blackBishopTexture);
+	blackBishop2.loadContent("media/img/bishop_black.png");
 	pieces.push_back(&blackBishop2);
-	blackKnight2.setTexture(blackKnightTexture);
+	blackKnight2.loadContent("media/img/knight_black.png");
 	pieces.push_back(&blackKnight2);
-	blackRook2.setTexture(blackRookTexture);
+	blackRook2.loadContent("media/img/rook_black.png");
 	pieces.push_back(&blackRook2);
 
 	//Create base board starting from down left corner
@@ -120,10 +105,10 @@ void GameScreen::loadContent(void)
 		for (int j = 0; j < 8; j++) {
 			Square* square = new Square();
 			if ( (i+j)%2 == 0 ) {
-				square->loadContent("media/img/square_dark.png", "media/img/square_dark_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
+				square->loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
 			}
 			else if ( (i+j)%2 == 1 ) {
-				square->loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
+				square->loadContent("media/img/square_dark.png", "media/img/square_dark_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
 			}
 			gameBoard.push_back(square);
 			int index = gameBoard.size() - 1;
@@ -242,9 +227,9 @@ void GameScreen::draw(sf::RenderWindow &window)
 	for (auto square : gameBoard) {
 		square->draw(window);
 	}
-	for (int i = 0; i < 64; i++) {
-		if (!(pieces[i] == NULL)) {
-			window.draw(*pieces[i]);
+	for (auto piece : pieces) {
+		if (piece != NULL) {
+			piece->draw(window);
 		}
 	}
 	for (auto element : elements) {
@@ -262,7 +247,6 @@ void GameScreen::highlight(std::vector<int> v)
 
 void GameScreen::clearHighlights()
 {
-	std::cout << "clear highlights" << std::endl;
 	for (auto i : gameBoard) {
 		i->setState(Normal);
 	}
@@ -314,10 +298,10 @@ void GameScreen::tearDown(void)
 		for (int j = 0; j < 8; j++) {
 			square = Square();
 			if ((i + j) % 2 == 0) {
-				square.loadContent("media/img/square_dark.png", "media/img/square_dark_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
+				square.loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
 			}
 			else if ((i + j) % 2 == 1) {
-				square.loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
+				square.loadContent("media/img/square_dark.png", "media/img/square_dark_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
 			}
 			gameBoard.push_back(&square);
 			int index = gameBoard.size() - 1;
