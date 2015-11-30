@@ -4,6 +4,10 @@
 #include <SFML/Graphics.hpp>
 #include "base_screen.hpp"
 #include "game_screen.hpp"
+#include "button.hpp"
+#include "text.hpp"
+#include "object.hpp"
+#include "player.hpp"
 
 enum PlayerType {
 	Human = 0,
@@ -20,97 +24,66 @@ public:
 	void loadContent(void);
 	int update(sf::RenderWindow &window);
 	void createGame();
-	void changeWhitePlayerType(PlayerType type);
-	void changeBlackPlayerType(PlayerType type);
+	void selectLevel(Button* button, ColorType color);
+	void changePlayerType(PlayerType type, ColorType color);
 	void clearButtonHighlights();
     void draw(sf::RenderWindow &window);
 
 private:
-	// Containers for sprite elements so it can be looped
-	std::vector<sf::Drawable*> elements;
-	std::vector<sf::Drawable*> whiteInformationElements;
-	std::vector<sf::Drawable*> blackInformationElements;
-
 	GameScreen* gameScreen;
 
+	// Vector for all elements to draw (buttons, texts etc..)
+	std::vector<Object*> elements;
+
 	// Player texts
-	sf::Font font;
-	sf::Text whitePlayerText;
-	sf::Text blackPlayerText;
+	Text whiteText;
+	Text blackText;
 
 	// Line between colors
 	sf::RectangleShape line;
 
 	// Player name texts
-	sf::Text whiteNameText;
-	sf::Text blackNameText;
-
-	bool whiteNameClicked;
-	bool blackNameClicked;
+	Text whiteNameText;
+	Text blackNameText;
+	Text whitePlayerName;
+	Text blackPlayerName;
 
 	sf::String whiteNameString;
 	sf::String blackNameString;
 
-	sf::Text whitePlayerName;
-	sf::Text blackPlayerName;
-
-	// Player buttons
-	sf::Texture humanButtonTexture;
-	sf::Texture humanHighlightedButtonTexture;
-	sf::Texture humanSelectedButtonTexture;
-
-	sf::Texture AIButtonTexture;
-	sf::Texture AIHighlightedButtonTexture;
-	sf::Texture AISelectedButtonTexture;
-
-	sf::Sprite whiteHumanButton;
-	sf::Sprite blackHumanButton;
-
-	sf::Sprite whiteAIButton;
-	sf::Sprite blackAIButton;
-
+	// Player types
 	PlayerType whitePlayerSelected;
 	PlayerType blackPlayerSelected;
 
-	// Levels
-	sf::Texture levelOneTexture;
-	sf::Texture levelTwoTexture;
-	sf::Texture levelThreeTexture;
-	sf::Texture levelFourTexture;
-	sf::Texture levelFiveTexture;
-
-	sf::Texture levelOneHighlightedTexture;
-	sf::Texture levelTwoHighlightedTexture;
-	sf::Texture levelThreeHighlightedTexture;
-	sf::Texture levelFourHighlightedTexture;
-	sf::Texture levelFiveHighlightedTexture;
-
-	sf::Texture levelOneSelectedTexture;
-	sf::Texture levelTwoSelectedTexture;
-	sf::Texture levelThreeSelectedTexture;
-	sf::Texture levelFourSelectedTexture;
-	sf::Texture levelFiveSelectedTexture;
-
-	sf::Sprite whiteLevelOneButton;
-	sf::Sprite whiteLevelTwoButton;
-	sf::Sprite whiteLevelThreeButton;
-	sf::Sprite whiteLevelFourButton;
-	sf::Sprite whiteLevelFiveButton;
-
-	sf::Sprite blackLevelOneButton;
-	sf::Sprite blackLevelTwoButton;
-	sf::Sprite blackLevelThreeButton;
-	sf::Sprite blackLevelFourButton;
-	sf::Sprite blackLevelFiveButton;
-
+	// Player levels
 	int whiteLevel;
 	int blackLevel;
 
-	// Play
-	sf::Texture playButtonTexture;
-	sf::Texture playHighlightedButtonTexture;
+	Button* currentWhiteLevel;
+	Button* currentBlackLevel;
 
-	sf::Sprite playButton;
+	// Player buttons
+	Button whiteHumanButton;
+	Button blackHumanButton;
+
+	Button whiteAIButton;
+	Button blackAIButton;
+
+	// Levels
+	Button whiteLevelOneButton;
+	Button whiteLevelTwoButton;
+	Button whiteLevelThreeButton;
+	Button whiteLevelFourButton;
+	Button whiteLevelFiveButton;
+
+	Button blackLevelOneButton;
+	Button blackLevelTwoButton;
+	Button blackLevelThreeButton;
+	Button blackLevelFourButton;
+	Button blackLevelFiveButton;
+
+	// Play button
+	Button playButton;
 };
 
 #endif

@@ -3,10 +3,14 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "../headers/player.hpp"
-#include "../headers/board.hpp"
-#include "../headers/human.hpp"
-#include "../headers/ai.hpp"
+#include "player.hpp"
+#include "board.hpp"
+#include "human.hpp"
+#include "ai.hpp"
+#include "text.hpp"
+#include "button.hpp"
+#include "object.hpp"
+#include "square.hpp"
 
 
 class GameScreen : public BaseScreen
@@ -15,6 +19,8 @@ private:
 	/* To draw board properly program must have different sprite for each piece
 	 *
 	 */
+	// Container for all elements to draw
+	std::vector<Object*> elements;
 	// White pieces
 	sf::Texture whitePawnTexture;
 	sf::Texture whiteRookTexture;
@@ -77,7 +83,7 @@ private:
 
 	// Game board
 	sf::Texture squareTexture;
-	std::vector<sf::Sprite> gameBoard;
+	std::vector<Square*> gameBoard;
 
 	// Square colors
 	sf::Color color_square_dark;	//"chocolate"
@@ -96,20 +102,12 @@ private:
 	//sf::SoundBuffer gameLoseSoundBuffer;
 
 	// Buttons
-	//sf::Texture mainMenuButtonTexture;
-	//sf::Sprite mainMenuButtonSprite;
-	sf::Texture saveGameButtonTexture;
-	sf::Texture saveGameHighlightedButtonTexture;
-	sf::Sprite saveButton;
+	Button saveButton;
+	Button mainMenuButton;
 
-	sf::Texture mainMenuButtonTexture;
-	sf::Texture mainMenuHighlightedButtonTexture;
-	sf::Sprite mainMenuButton;
-	
 	// Player names
-	sf::Font font;
-	sf::Text whitePlayerText;
-	sf::Text blackPlayerText;
+	Text whitePlayerText;
+	Text blackPlayerText;
 
 public:
     GameScreen(void);

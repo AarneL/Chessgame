@@ -115,33 +115,20 @@ void GameScreen::loadContent(void)
 	blackRook2.setTexture(blackRookTexture);
 	pieces.push_back(&blackRook2);
 
-
-	// Texture for board square
-	squareTexture.loadFromFile("media/img/square_white.png");
-	// Square colors
-	color_square_dark = sf::Color(210, 105,30);	//"chocolate"
-	color_square_light = sf::Color(138,54,15);	//"burntsienna"
-	// Square highlight colors
-	color_highlight_square_dark = sf::Color(0,200,0);
-	color_highlight_square_light = sf::Color(0,255,255);
-
 	//Create base board starting from down left corner
-	sf::Sprite square;
 	for (int i = 7; i >= 0; i--) {
 		for (int j = 0; j < 8; j++) {
-			square = sf::Sprite();
-			square.setPosition((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET));
-			square.setTexture(squareTexture);
+			Square* square = new Square();
 			if ( (i+j)%2 == 0 ) {
-				square.setColor(color_square_dark);
+				square->loadContent("media/img/square_dark.png", "media/img/square_dark_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
 			}
 			else if ( (i+j)%2 == 1 ) {
-				square.setColor(color_square_light);
+				square->loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
 			}
 			gameBoard.push_back(square);
 			int index = gameBoard.size() - 1;
 			if (pieces[index] != NULL) {
-				pieces[index]->setPosition(gameBoard[index].getPosition());
+				pieces[index]->setPosition(gameBoard[index]->getPosition());
 			}
 		}
 	}
@@ -155,30 +142,17 @@ void GameScreen::loadContent(void)
 	}
 
 	// Player names
-	if (!font.loadFromFile("media/img/Calibri.ttf"))
-		std::cout << "File not found!" << std::endl;
+	whitePlayerText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 10), true);
+	elements.push_back(&whitePlayerText);
+	blackPlayerText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 50), true);
+	elements.push_back(&blackPlayerText);
 
-	whitePlayerText.setFont(font);
-	whitePlayerText.setCharacterSize(30);
-	whitePlayerText.setStyle(sf::Text::Bold);
-	whitePlayerText.setPosition(sf::Vector2f(900, 10));
-
-	blackPlayerText.setFont(font);
-	blackPlayerText.setCharacterSize(30);
-	blackPlayerText.setStyle(sf::Text::Bold);
-	blackPlayerText.setPosition(sf::Vector2f(900, 50));
-
-	// Save button and file dialog
-	saveGameButtonTexture.loadFromFile("media/img/saveGameButton.png");
-	saveGameHighlightedButtonTexture.loadFromFile("media/img/saveGameHighlightedButton.png");
-	saveButton.setTexture(saveGameButtonTexture);
-	saveButton.setPosition(sf::Vector2f(900, 200));
-
+	// Save button
+	saveButton.loadContent("media/img/saveGameButton.png", "media/img/saveGameHighlightedButton.png", "", sf::Vector2f(900, 200), true);
+	elements.push_back(&saveButton);
 	// MainMenu button
-	mainMenuButtonTexture.loadFromFile("media/img/mainMenuButton.png");
-	mainMenuHighlightedButtonTexture.loadFromFile("media/img/mainMenuHighlightedButton.png");
-	mainMenuButton.setTexture(mainMenuButtonTexture);
-	mainMenuButton.setPosition(sf::Vector2f(900, 400));
+	mainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(900, 400), true);
+	elements.push_back(&mainMenuButton);
 }
 
 int GameScreen::update(sf::RenderWindow &window)
@@ -198,27 +172,26 @@ int GameScreen::update(sf::RenderWindow &window)
 			// Human turn
 			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
 			if (event.type == sf::Event::MouseMoved) {
-				if (saveButton.getGlobalBounds().contains(mousePos)) {
-					saveButton.setTexture(saveGameHighlightedButtonTexture,false);
+				if (saveButton.containsMousePos(mousePos)) {
+					saveButton.setState(Highlighted);
 				}
-				else if (mainMenuButton.getGlobalBounds().contains(mousePos)) {
-					mainMenuButton.setTexture(mainMenuHighlightedButtonTexture, false);
+				else if (mainMenuButton.containsMousePos(mousePos)) {
+					mainMenuButton.setState(Highlighted);
 				}
 				else
 					clearButtonHighlights();
 			}
 			if (event.type == sf::Event::MouseButtonPressed) {
 
-				if (saveButton.getGlobalBounds().contains(mousePos)) {
-					std::cout << "save clicked" << std::endl;
+				if (saveButton.containsMousePos(mousePos)) {
 					showSaveGameDialog();
 				}
-				else if (mainMenuButton.getGlobalBounds().contains(mousePos)) {
+				else if (mainMenuButton.containsMousePos(mousePos)) {
 					return 0;
 				}
 				else {
 					for (int i = 0; i < 64; i++) {
-						if (gameBoard[i].getGlobalBounds().contains(mousePos)) {
+						if (gameBoard[i]->containsMousePos(mousePos)) {
 							// If no piece active yet
 							if (activeSquare == -1) {
 								if (containsPlayerPiece(i, playerOnTurn))
@@ -266,51 +239,39 @@ int GameScreen::update(sf::RenderWindow &window)
 void GameScreen::draw(sf::RenderWindow &window)
 {
 	window.clear();
+	for (auto square : gameBoard) {
+		square->draw(window);
+	}
 	for (int i = 0; i < 64; i++) {
-		window.draw(gameBoard[i]);
 		if (!(pieces[i] == NULL)) {
 			window.draw(*pieces[i]);
 		}
 	}
-	window.draw(whitePlayerText);
-	window.draw(blackPlayerText);
-	window.draw(saveButton);
-	window.draw(mainMenuButton);
+	for (auto element : elements) {
+		element->draw(window);
+	}
 	window.display();
 }
 
 void GameScreen::highlight(std::vector<int> v)
 {
-	sf::Color color_highlight_square_dark(0, 200, 0);
-	sf::Color color_highlight_square_light(0, 255, 255);
 	for (auto i : v) {
-		if (((i % 8)+(i / 8)) % 2 == 0) {
-			gameBoard[i].setColor(color_highlight_square_dark);
-		}
-		else {
-			gameBoard[i].setColor(color_highlight_square_light);
-		}
+		gameBoard[i]->setState(Highlighted);
 	}
 }
 
 void GameScreen::clearHighlights()
 {
-	for (int i = 7; i >= 0; i--) {
-		for (int j = 0; j < 8; j++) {
-			if ( (i+j)%2 == 0 ) {
-				gameBoard[i*8+j].setColor(color_square_light);
-			}
-			else if ( (i+j)%2 == 1 ) {
-				gameBoard[i*8+j].setColor(color_square_dark);
-			}
-		}
+	std::cout << "clear highlights" << std::endl;
+	for (auto i : gameBoard) {
+		i->setState(Normal);
 	}
 }
 
 void GameScreen::clearButtonHighlights()
 {
-	saveButton.setTexture(saveGameButtonTexture ,false);
-	mainMenuButton.setTexture(mainMenuButtonTexture, false);
+	saveButton.setState(Normal);
+	mainMenuButton.setState(Normal);
 
 }
 
@@ -348,22 +309,20 @@ void GameScreen::tearDown(void)
 	pieces.clear();
 	gameBoard.clear();
 	//Create base board starting from down left corner
-	sf::Sprite square;
+	Square square;
 	for (int i = 7; i >= 0; i--) {
 		for (int j = 0; j < 8; j++) {
-			square = sf::Sprite();
-			square.setPosition((j * 96 + BOARD_VERTICAL_OFFSET), (i * 96 + BOARD_HORIZONTAL_OFFSET));
-			square.setTexture(squareTexture);
+			square = Square();
 			if ((i + j) % 2 == 0) {
-				square.setColor(color_square_dark);
+				square.loadContent("media/img/square_dark.png", "media/img/square_dark_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
 			}
 			else if ((i + j) % 2 == 1) {
-				square.setColor(color_square_light);
+				square.loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
 			}
-			gameBoard.push_back(square);
+			gameBoard.push_back(&square);
 			int index = gameBoard.size() - 1;
 			if (pieces[index] != NULL) {
-				pieces[index]->setPosition(gameBoard[index].getPosition());
+				pieces[index]->setPosition(gameBoard[index]->getPosition());
 			}
 		}
 	}
@@ -375,7 +334,7 @@ void GameScreen::movePiece(std::pair<int,int> move)
 	// Move in GUI
 	pieces[move.second] = pieces[move.first];
 	pieces[move.first] = NULL;
-	pieces[move.second]->setPosition(gameBoard[move.second].getPosition());
+	pieces[move.second]->setPosition(gameBoard[move.second]->getPosition());
 
 	// Move in board
 	board.movePiece(move.first, move.second);
@@ -401,14 +360,14 @@ void GameScreen::movePiece(std::pair<int,int> move)
 		{
 			pieces[move.first + 1] = pieces[move.first + 3]; //move the rook
 			pieces[move.first + 3] = NULL;
-			pieces[move.first + 1]->setPosition(gameBoard[move.first + 1].getPosition());
+			pieces[move.first + 1]->setPosition(gameBoard[move.first + 1]->getPosition());
 		}
 
 		else // castling to left
 		{
 			pieces[move.first - 1] = pieces[move.first - 4]; //move the rook
 			pieces[move.first - 4] = NULL;
-			pieces[move.first - 1]->setPosition(gameBoard[move.first - 1].getPosition());
+			pieces[move.first - 1]->setPosition(gameBoard[move.first - 1]->getPosition());
 		}
 	}
 }

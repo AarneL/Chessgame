@@ -4,6 +4,7 @@
 #include "../headers/human.hpp"
 #include "../headers/ai.hpp"
 #include "../headers/player.hpp"
+#include "../headers/button.hpp"
 
 NewGameScreen::NewGameScreen()
 {
@@ -12,8 +13,6 @@ NewGameScreen::NewGameScreen()
 NewGameScreen::NewGameScreen(GameScreen* g)
 {
 	gameScreen = g;
-	whiteNameClicked = false;
-	blackNameClicked = false;
 	// Default types
 	whitePlayerSelected = Human;
 	blackPlayerSelected = AI;
@@ -23,6 +22,9 @@ NewGameScreen::NewGameScreen(GameScreen* g)
 	// Default levels
 	whiteLevel = 1;
 	blackLevel = 1;
+	// Current level buttons
+	currentWhiteLevel = &whiteLevelOneButton;
+	currentBlackLevel = &blackLevelOneButton;
 }
 
 void NewGameScreen::loadContent(void)
@@ -30,21 +32,14 @@ void NewGameScreen::loadContent(void)
 	// Player texts
 	int topMargin = 100; // Text top margin
 	int midMargin = 200; // Text mid margin
-	if (!font.loadFromFile("media/img/Calibri.ttf"))
-		std::cout << "File not found!" << std::endl;
-	whitePlayerText.setFont(font);
-	whitePlayerText.setCharacterSize(70);
-	whitePlayerText.setStyle(sf::Text::Bold);
-	whitePlayerText.setString("White");
-	whitePlayerText.setPosition(sf::Vector2f(midMargin, topMargin));
-	elements.push_back(&whitePlayerText);
 
-	blackPlayerText.setFont(font);
-	blackPlayerText.setCharacterSize(70);
-	blackPlayerText.setStyle(sf::Text::Bold);
-	blackPlayerText.setString("Black");
-	blackPlayerText.setPosition(sf::Vector2f(600 + midMargin, topMargin));
-	elements.push_back(&blackPlayerText);
+	whiteText.loadContent("media/img/Calibri.ttf", 70, sf::Vector2f(midMargin, topMargin), true);
+	whiteText.setString("White");
+	elements.push_back(&whiteText);
+
+	blackText.loadContent("media/img/Calibri.ttf", 70, sf::Vector2f(600 + midMargin, topMargin), true);
+	blackText.setString("Black");
+	elements.push_back(&blackText);
 
 	// Line between colors
 	line.setSize(sf::Vector2f(600, 2));
@@ -55,122 +50,82 @@ void NewGameScreen::loadContent(void)
 	int nameTopMargin = 500;
 	int nameMidMargin = 100;
 
-	whiteNameText.setFont(font);
-	whiteNameText.setCharacterSize(40);
-	whiteNameText.setStyle(sf::Text::Bold);
+	whiteNameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(nameMidMargin, nameTopMargin), true);
 	whiteNameText.setString("Name:");
-	whiteNameText.setPosition(sf::Vector2f(nameMidMargin, nameTopMargin));
-	whiteInformationElements.push_back(&whiteNameText);
+	elements.push_back(&whiteNameText);
 
-	whitePlayerName.setFont(font);
-	whitePlayerName.setCharacterSize(38);
+	whitePlayerName.loadContent("media/img/Calibri.ttf", 38, sf::Vector2f(nameMidMargin + 150, nameTopMargin), true);
 	whitePlayerName.setString(whiteNameString);
-	whitePlayerName.setPosition(sf::Vector2f(nameMidMargin + 150, nameTopMargin));
-	whiteInformationElements.push_back(&whitePlayerName);
+	elements.push_back(&whitePlayerName);
 
-	blackNameText.setFont(font);
-	blackNameText.setCharacterSize(40);
-	blackNameText.setStyle(sf::Text::Bold);
+	blackNameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(600 + nameMidMargin, nameTopMargin), false);
 	blackNameText.setString("Name:");
-	blackNameText.setPosition(sf::Vector2f(600 + nameMidMargin, nameTopMargin));
+	elements.push_back(&blackNameText);
 
-	blackPlayerName.setFont(font);
-	blackPlayerName.setCharacterSize(38);
+	blackPlayerName.loadContent("media/img/Calibri.ttf", 38, sf::Vector2f(600 + nameMidMargin + 150, nameTopMargin), false);
 	blackPlayerName.setString(blackNameString);
-	blackPlayerName.setPosition(sf::Vector2f(600 + nameMidMargin + 150, nameTopMargin));
+	elements.push_back(&blackPlayerName);
 
 	// Player buttons
 	int buttonTopMargin = 300;
 	int buttonMidMargin = 100;
 
-	humanButtonTexture.loadFromFile("media/img/humanButton.png");
-	humanHighlightedButtonTexture.loadFromFile("media/img/humanHighlightedButton.png");
-	humanSelectedButtonTexture.loadFromFile("media/img/humanSelectedButton.png");
-
-	AIButtonTexture.loadFromFile("media/img/computerButton.png");
-	AIHighlightedButtonTexture.loadFromFile("media/img/computerHighlightedButton.png");
-	AISelectedButtonTexture.loadFromFile("media/img/computerSelectedButton.png");
-
-	// Set white human selected as default
-	whiteHumanButton.setTexture(humanSelectedButtonTexture);
-	whiteHumanButton.setPosition(sf::Vector2f(buttonMidMargin, buttonTopMargin));
+	whiteHumanButton.loadContent("media/img/humanButton.png", "media/img/humanHighlightedButton.png", "media/img/humanSelectedButton.png", sf::Vector2f(buttonMidMargin, buttonTopMargin), true);
 	elements.push_back(&whiteHumanButton);
+	// Set white human selected as default
+	whiteHumanButton.setState(Selected);
 
-	blackHumanButton.setTexture(humanButtonTexture);
-	blackHumanButton.setPosition(sf::Vector2f(600 + buttonMidMargin, buttonTopMargin));
+	blackHumanButton.loadContent("media/img/humanButton.png", "media/img/humanHighlightedButton.png", "media/img/humanSelectedButton.png", sf::Vector2f(600 + buttonMidMargin, buttonTopMargin), true);
 	elements.push_back(&blackHumanButton);
 
-	whiteAIButton.setTexture(AIButtonTexture);
-	whiteAIButton.setPosition(sf::Vector2f(buttonMidMargin + 200, buttonTopMargin));
+	whiteAIButton.loadContent("media/img/computerButton.png", "media/img/computerHighlightedButton.png", "media/img/computerSelectedButton.png", sf::Vector2f(buttonMidMargin + 200, buttonTopMargin), true);
 	elements.push_back(&whiteAIButton);
 
-	// Set black AI selected as default
-	blackAIButton.setTexture(AISelectedButtonTexture);
-	blackAIButton.setPosition(sf::Vector2f(600 + buttonMidMargin + 200, buttonTopMargin));
+	blackAIButton.loadContent("media/img/computerButton.png", "media/img/computerHighlightedButton.png", "media/img/computerSelectedButton.png", sf::Vector2f(600 + buttonMidMargin + 200, buttonTopMargin), true);
 	elements.push_back(&blackAIButton);
+	// Set black AI selected as default
+	blackAIButton.setState(Selected);
 
 	// Levels
 	int levelTopMargin = 500;
 	int levelMidMargin = 110;
-	// Normal
-	levelOneTexture.loadFromFile("media/img/level1Button.png");
-	levelTwoTexture.loadFromFile("media/img/level2Button.png");
-	levelThreeTexture.loadFromFile("media/img/level3Button.png");
-	levelFourTexture.loadFromFile("media/img/level4Button.png");
-	levelFiveTexture.loadFromFile("media/img/level5Button.png");
-	// Highlighted
-	levelOneHighlightedTexture.loadFromFile("media/img/level1HighlightedButton.png");
-	levelTwoHighlightedTexture.loadFromFile("media/img/level2HighlightedButton.png");
-	levelThreeHighlightedTexture.loadFromFile("media/img/level3HighlightedButton.png");
-	levelFourHighlightedTexture.loadFromFile("media/img/level4HighlightedButton.png");
-	levelFiveHighlightedTexture.loadFromFile("media/img/level5HighlightedButton.png");
-	// Selected
-	levelOneSelectedTexture.loadFromFile("media/img/level1SelectedButton.png");
-	levelTwoSelectedTexture.loadFromFile("media/img/level2SelectedButton.png");
-	levelThreeSelectedTexture.loadFromFile("media/img/level3SelectedButton.png");
-	levelFourSelectedTexture.loadFromFile("media/img/level4SelectedButton.png");
-	levelFiveSelectedTexture.loadFromFile("media/img/level5SelectedButton.png");
 
-	whiteLevelOneButton.setTexture(levelOneSelectedTexture);
-	whiteLevelOneButton.setPosition(sf::Vector2f(levelMidMargin, levelTopMargin));
+	whiteLevelOneButton.loadContent("media/img/level1Button.png", "media/img/level1HighlightedButton.png", "media/img/level1SelectedButton.png", sf::Vector2f(levelMidMargin, levelTopMargin), false);
+	elements.push_back(&whiteLevelOneButton);
+	// Set level 1 as default
+	whiteLevelOneButton.setState(Selected);
 
-	whiteLevelTwoButton.setTexture(levelTwoTexture);
-	whiteLevelTwoButton.setPosition(sf::Vector2f(levelMidMargin + 80, levelTopMargin));
+	whiteLevelTwoButton.loadContent("media/img/level2Button.png", "media/img/level2HighlightedButton.png", "media/img/level2SelectedButton.png", sf::Vector2f(levelMidMargin + 80, levelTopMargin), false);
+	elements.push_back(&whiteLevelTwoButton);
 
-	whiteLevelThreeButton.setTexture(levelThreeTexture);
-	whiteLevelThreeButton.setPosition(sf::Vector2f(levelMidMargin + 160, levelTopMargin));
+	whiteLevelThreeButton.loadContent("media/img/level3Button.png", "media/img/level3HighlightedButton.png", "media/img/level3SelectedButton.png", sf::Vector2f(levelMidMargin + 160, levelTopMargin), false);
+	elements.push_back(&whiteLevelThreeButton);
 
-	whiteLevelFourButton.setTexture(levelFourTexture);
-	whiteLevelFourButton.setPosition(sf::Vector2f(levelMidMargin + 240, levelTopMargin));
+	whiteLevelFourButton.loadContent("media/img/level4Button.png", "media/img/level4HighlightedButton.png", "media/img/level4SelectedButton.png", sf::Vector2f(levelMidMargin + 240, levelTopMargin), false);
+	elements.push_back(&whiteLevelFourButton);
 
-	whiteLevelFiveButton.setTexture(levelFiveTexture);
-	whiteLevelFiveButton.setPosition(sf::Vector2f(levelMidMargin + 320, levelTopMargin));
+	whiteLevelFiveButton.loadContent("media/img/level5Button.png", "media/img/level5HighlightedButton.png", "media/img/level5SelectedButton.png", sf::Vector2f(levelMidMargin + 320, levelTopMargin), false);
+	elements.push_back(&whiteLevelFiveButton);
 
-	blackLevelOneButton.setTexture(levelOneSelectedTexture);
-	blackLevelOneButton.setPosition(sf::Vector2f(600 + levelMidMargin, levelTopMargin));
-	blackInformationElements.push_back(&blackLevelOneButton);
+	blackLevelOneButton.loadContent("media/img/level1Button.png", "media/img/level1HighlightedButton.png", "media/img/level1SelectedButton.png", sf::Vector2f(600 + levelMidMargin, levelTopMargin), true);
+	elements.push_back(&blackLevelOneButton);
+	// Set level 1 as default
+	blackLevelOneButton.setState(Selected);
 
-	blackLevelTwoButton.setTexture(levelTwoTexture);
-	blackLevelTwoButton.setPosition(sf::Vector2f(600 + levelMidMargin + 80, levelTopMargin));
-	blackInformationElements.push_back(&blackLevelTwoButton);
+	blackLevelTwoButton.loadContent("media/img/level2Button.png", "media/img/level2HighlightedButton.png", "media/img/level2SelectedButton.png", sf::Vector2f(600 + levelMidMargin + 80, levelTopMargin), true);
+	elements.push_back(&blackLevelTwoButton);
 
-	blackLevelThreeButton.setTexture(levelThreeTexture);
-	blackLevelThreeButton.setPosition(sf::Vector2f(600 + levelMidMargin + 160, levelTopMargin));
-	blackInformationElements.push_back(&blackLevelThreeButton);
+	blackLevelThreeButton.loadContent("media/img/level3Button.png", "media/img/level3HighlightedButton.png", "media/img/level3SelectedButton.png", sf::Vector2f(600 + levelMidMargin + 160, levelTopMargin), true);
+	elements.push_back(&blackLevelThreeButton);
 
-	blackLevelFourButton.setTexture(levelFourTexture);
-	blackLevelFourButton.setPosition(sf::Vector2f(600 + levelMidMargin + 240, levelTopMargin));
-	blackInformationElements.push_back(&blackLevelFourButton);
+	blackLevelFourButton.loadContent("media/img/level4Button.png", "media/img/level4HighlightedButton.png", "media/img/level4SelectedButton.png", sf::Vector2f(600 + levelMidMargin + 240, levelTopMargin), true);
+	elements.push_back(&blackLevelFourButton);
 
-	blackLevelFiveButton.setTexture(levelFiveTexture);
-	blackLevelFiveButton.setPosition(sf::Vector2f(600 + levelMidMargin + 320, levelTopMargin));
-	blackInformationElements.push_back(&blackLevelFiveButton);
+	blackLevelFiveButton.loadContent("media/img/level5Button.png", "media/img/level5HighlightedButton.png", "media/img/level5SelectedButton.png", sf::Vector2f(600 + levelMidMargin + 320, levelTopMargin), true);
+	elements.push_back(&blackLevelFiveButton);
 
 	// Play button
-	playButtonTexture.loadFromFile("media/img/playButton.png");
-	playHighlightedButtonTexture.loadFromFile("media/img/playHighlightedButton.png");
-	playButton.setTexture(playButtonTexture);
-	playButton.setPosition(sf::Vector2f(535, 700));
+	playButton.loadContent("media/img/playButton.png", "media/img/playHighlightedButton.png", "", sf::Vector2f(535, 700), true);
 	elements.push_back(&playButton);
 }
 
@@ -183,54 +138,60 @@ int NewGameScreen::update(sf::RenderWindow &window)
 		if (event.type == sf::Event::MouseMoved)
 		{
 			bool buttonHovered = false;
-			if (whiteHumanButton.getGlobalBounds().contains(v) && whitePlayerSelected != Human) {
+			if (whiteHumanButton.containsMousePos(v) && whitePlayerSelected != Human) {
 				// Highlight whiteHumanButton
-				whiteHumanButton.setTexture(humanHighlightedButtonTexture, true);
+				whiteHumanButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (blackHumanButton.getGlobalBounds().contains(v) && blackPlayerSelected != Human) {
+			} else if (blackHumanButton.containsMousePos(v) && blackPlayerSelected != Human) {
 				// Highlight blackHumanButton
-				blackHumanButton.setTexture(humanHighlightedButtonTexture, true);
+				blackHumanButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (whiteAIButton.getGlobalBounds().contains(v) && whitePlayerSelected != AI) {
+			} else if (whiteAIButton.containsMousePos(v) && whitePlayerSelected != AI) {
 				// Highlight whiteAIButton
-				whiteAIButton.setTexture(AIHighlightedButtonTexture, true);
+				whiteAIButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (blackAIButton.getGlobalBounds().contains(v) && blackPlayerSelected != AI) {
+			} else if (blackAIButton.containsMousePos(v) && blackPlayerSelected != AI) {
 				// Highlight blackAIButton
-				blackAIButton.setTexture(AIHighlightedButtonTexture, true);
+				blackAIButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (whiteLevelOneButton.getGlobalBounds().contains(v) && whiteLevel != 1) {
-				whiteLevelOneButton.setTexture(levelOneHighlightedTexture, true);
+			} else if (whiteLevelOneButton.containsMousePos(v) && whiteLevel != 1) {
+				whiteLevelOneButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (whiteLevelTwoButton.getGlobalBounds().contains(v) && whiteLevel != 2) {
-				whiteLevelTwoButton.setTexture(levelTwoHighlightedTexture, true);
+			} else if (whiteLevelTwoButton.containsMousePos(v) && whiteLevel != 2) {
+				whiteLevelTwoButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (whiteLevelThreeButton.getGlobalBounds().contains(v) && whiteLevel != 3) {
-				whiteLevelThreeButton.setTexture(levelThreeHighlightedTexture, true);
+			} else if (whiteLevelThreeButton.containsMousePos(v) && whiteLevel != 3) {
+				whiteLevelThreeButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (whiteLevelFourButton.getGlobalBounds().contains(v) && whiteLevel != 4) {
-				whiteLevelFourButton.setTexture(levelFourHighlightedTexture, true);
+			} else if (whiteLevelFourButton.containsMousePos(v) && whiteLevel != 4) {
+				whiteLevelFourButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (whiteLevelFiveButton.getGlobalBounds().contains(v) && whiteLevel != 5) {
-				whiteLevelFiveButton.setTexture(levelFiveHighlightedTexture, true);
+			} else if (whiteLevelFiveButton.containsMousePos(v) && whiteLevel != 5) {
+				whiteLevelFiveButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (blackLevelOneButton.getGlobalBounds().contains(v) && blackLevel != 1) {
-				blackLevelOneButton.setTexture(levelOneHighlightedTexture, true);
+			} else if (blackLevelOneButton.containsMousePos(v) && blackLevel != 1) {
+				blackLevelOneButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (blackLevelTwoButton.getGlobalBounds().contains(v) && blackLevel != 2) {
-				blackLevelTwoButton.setTexture(levelTwoHighlightedTexture, true);
+			} else if (blackLevelTwoButton.containsMousePos(v) && blackLevel != 2) {
+				blackLevelTwoButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (blackLevelThreeButton.getGlobalBounds().contains(v) && blackLevel != 3) {
-				blackLevelThreeButton.setTexture(levelThreeHighlightedTexture, true);
+			} else if (blackLevelThreeButton.containsMousePos(v) && blackLevel != 3) {
+				blackLevelThreeButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (blackLevelFourButton.getGlobalBounds().contains(v) && blackLevel != 4) {
-				blackLevelFourButton.setTexture(levelFourHighlightedTexture, true);
+			} else if (blackLevelFourButton.containsMousePos(v) && blackLevel != 4) {
+				blackLevelFourButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (blackLevelFiveButton.getGlobalBounds().contains(v) && blackLevel != 5) {
-				blackLevelFiveButton.setTexture(levelFiveHighlightedTexture, true);
+			} else if (blackLevelFiveButton.containsMousePos(v) && blackLevel != 5) {
+				blackLevelFiveButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (playButton.getGlobalBounds().contains(v)) {
-				playButton.setTexture(playHighlightedButtonTexture, true);
+			} else if (whitePlayerName.containsMousePos(v) && whitePlayerName.getState() != Selected) {
+				whitePlayerName.setState(Highlighted);
+				buttonHovered = true;
+			} else if (blackPlayerName.containsMousePos(v) && blackPlayerName.getState() != Selected) {
+				blackPlayerName.setState(Highlighted);
+				buttonHovered = true;
+			} else if (playButton.containsMousePos(v)) {
+				playButton.setState(Highlighted);
 				buttonHovered = true;
 			} else if(!buttonHovered) {
 				// If nothing hovered
@@ -238,77 +199,85 @@ int NewGameScreen::update(sf::RenderWindow &window)
 			}
 		}
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			whiteNameClicked = false;
-			blackNameClicked = false;
-			if (whiteHumanButton.getGlobalBounds().contains(v) && whitePlayerSelected != Human) {
+			whitePlayerName.setState(Normal);
+			blackPlayerName.setState(Normal);
+			if (whiteHumanButton.containsMousePos(v) && whitePlayerSelected != Human) {
 				// Select white human
-				changeWhitePlayerType(Human);
-			} else if (blackHumanButton.getGlobalBounds().contains(v) && blackPlayerSelected != Human) {
+				changePlayerType(Human, White);
+			} else if (blackHumanButton.containsMousePos(v) && blackPlayerSelected != Human) {
 				// Select black human
-				changeBlackPlayerType(Human);
-			} else if (whiteAIButton.getGlobalBounds().contains(v) && whitePlayerSelected != AI) {
+				changePlayerType(Human, Black);
+			} else if (whiteAIButton.containsMousePos(v) && whitePlayerSelected != AI) {
 				// Select white AI
-				changeWhitePlayerType(AI);
-			} else if (blackAIButton.getGlobalBounds().contains(v) && blackPlayerSelected != AI) {
+				changePlayerType(AI, White);
+			} else if (blackAIButton.containsMousePos(v) && blackPlayerSelected != AI) {
 				// Select black AI
-				changeBlackPlayerType(AI);
-			} else if (whiteNameText.getGlobalBounds().contains(v) || whitePlayerName.getGlobalBounds().contains(v)) {
-				whiteNameClicked = true;
-			} else if (blackNameText.getGlobalBounds().contains(v) || blackPlayerName.getGlobalBounds().contains(v)) {
-				blackNameClicked = true;
-			} else if (whiteLevelOneButton.getGlobalBounds().contains(v)) {
+				changePlayerType(AI, Black);
+			} else if (whiteNameText.containsMousePos(v) || whitePlayerName.containsMousePos(v)) {
+				whitePlayerName.setState(Selected);
+				blackPlayerName.setState(Normal);
+			} else if (blackNameText.containsMousePos(v) || blackPlayerName.containsMousePos(v)) {
+				blackPlayerName.setState(Selected);
+				whitePlayerName.setState(Normal);
+			} else if (whiteLevelOneButton.containsMousePos(v)) {
 				whiteLevel = 1;
-				whiteLevelOneButton.setTexture(levelOneSelectedTexture, true);
-			} else if (whiteLevelTwoButton.getGlobalBounds().contains(v)) {
+				selectLevel(&whiteLevelOneButton, White);
+			} else if (whiteLevelTwoButton.containsMousePos(v)) {
 				whiteLevel = 2;
-				whiteLevelTwoButton.setTexture(levelTwoSelectedTexture, true);
-			} else if (whiteLevelThreeButton.getGlobalBounds().contains(v)) {
+				selectLevel(&whiteLevelTwoButton, White);
+			} else if (whiteLevelThreeButton.containsMousePos(v)) {
 				whiteLevel = 3;
-				whiteLevelThreeButton.setTexture(levelThreeSelectedTexture, true);
-			} else if (whiteLevelFourButton.getGlobalBounds().contains(v)) {
+				selectLevel(&whiteLevelThreeButton, White);
+			} else if (whiteLevelFourButton.containsMousePos(v)) {
 				whiteLevel = 4;
-				whiteLevelFourButton.setTexture(levelFourSelectedTexture, true);
-			} else if (whiteLevelFiveButton.getGlobalBounds().contains(v)) {
+				selectLevel(&whiteLevelFourButton, White);
+			} else if (whiteLevelFiveButton.containsMousePos(v)) {
 				whiteLevel = 5;
-				whiteLevelFiveButton.setTexture(levelFiveSelectedTexture, true);
-			} else if (blackLevelOneButton.getGlobalBounds().contains(v)) {
+				selectLevel(&whiteLevelFiveButton, White);
+			} else if (blackLevelOneButton.containsMousePos(v)) {
 				blackLevel = 1;
-				blackLevelOneButton.setTexture(levelOneSelectedTexture, true);
-			} else if (blackLevelTwoButton.getGlobalBounds().contains(v)) {
+				selectLevel(&blackLevelOneButton, Black);
+			} else if (blackLevelTwoButton.containsMousePos(v)) {
 				blackLevel = 2;
-				blackLevelTwoButton.setTexture(levelTwoSelectedTexture, true);
-			} else if (blackLevelThreeButton.getGlobalBounds().contains(v)) {
+				selectLevel(&blackLevelTwoButton, Black);
+			} else if (blackLevelThreeButton.containsMousePos(v)) {
 				blackLevel = 3;
-				blackLevelThreeButton.setTexture(levelThreeSelectedTexture, true);
-			} else if (blackLevelFourButton.getGlobalBounds().contains(v)) {
+				selectLevel(&blackLevelThreeButton, Black);
+			} else if (blackLevelFourButton.containsMousePos(v)) {
 				blackLevel = 4;
-				blackLevelFourButton.setTexture(levelFourSelectedTexture, true);
-			} else if (blackLevelFiveButton.getGlobalBounds().contains(v)) {
+				selectLevel(&blackLevelFourButton, Black);
+			} else if (blackLevelFiveButton.containsMousePos(v)) {
 				blackLevel = 5;
-				blackLevelFiveButton.setTexture(levelFiveSelectedTexture, true);
-			} else if (playButton.getGlobalBounds().contains(v)) {
+				selectLevel(&blackLevelFiveButton, Black);
+			} else if (playButton.containsMousePos(v)) {
 				createGame();
 				return 2;
 			}
 			return 1;
 		}
 		else if (event.type == sf::Event::TextEntered) {
-			if (whiteNameClicked) {
+			if (whitePlayerName.getState() == Selected) {
 				if (event.key.code == 8) {
 					if (whiteNameString.getSize() > 0) {
 						whiteNameString.erase(whiteNameString.getSize() - 1);
 					}
+				}
+				else if (event.key.code == 10) {
+					whitePlayerName.setState(Normal);
 				}
 				else if (event.text.unicode < 128) {
 					whiteNameString.insert(whiteNameString.getSize(), event.text.unicode);
 				}
 				whitePlayerName.setString(whiteNameString);
 			}
-			else if (blackNameClicked) {
+			else if (blackPlayerName.getState() == Selected) {
 				if (event.key.code == 8) {
 					if (blackNameString.getSize() > 0) {
 						blackNameString.erase(blackNameString.getSize() - 1);
 					}
+				}
+				else if (event.key.code == 10) {
+					blackPlayerName.setState(Normal);
 				}
 				else if (event.text.unicode < 128) {
 					blackNameString.insert(blackNameString.getSize(), event.text.unicode);
@@ -335,85 +304,90 @@ void NewGameScreen::createGame() {
 }
 
 
-void NewGameScreen::changeWhitePlayerType(PlayerType type)
+void NewGameScreen::selectLevel(Button* button, ColorType color)
 {
-	whitePlayerSelected = type;
-	if (type == Human) {
-		whiteHumanButton.setTexture(humanSelectedButtonTexture, true);
-		// Remove levels from whiteInformationElements
-		whiteInformationElements.erase(whiteInformationElements.end() - 5, whiteInformationElements.end());
-		// Add player name element to whiteInformationElements
-		whiteInformationElements.push_back(&whiteNameText);
-		whiteInformationElements.push_back(&whitePlayerName);
-	} else if (type == AI) {
-		whiteAIButton.setTexture(AISelectedButtonTexture, true);
-		// Remove player name elements from whiteInformationElements
-		whiteInformationElements.erase(whiteInformationElements.end() - 2, whiteInformationElements.end());
-		// Add level elements to whiteInformationElements
-		whiteInformationElements.push_back(&whiteLevelOneButton);
-		whiteInformationElements.push_back(&whiteLevelTwoButton);
-		whiteInformationElements.push_back(&whiteLevelThreeButton);
-		whiteInformationElements.push_back(&whiteLevelFourButton);
-		whiteInformationElements.push_back(&whiteLevelFiveButton);
+	button->setState(Selected);
+	if (color == White) {
+		std::cout << currentWhiteLevel << std::endl;
+		currentWhiteLevel->setState(Normal);
+		currentWhiteLevel = button;
+	}
+	else {
+		currentBlackLevel->setState(Normal);
+		currentBlackLevel = button;
 	}
 }
 
-
-void NewGameScreen::changeBlackPlayerType(PlayerType type)
+void NewGameScreen::changePlayerType(PlayerType type, ColorType color)
 {
-	blackPlayerSelected = type;
-	if (type == Human) {
-		blackHumanButton.setTexture(humanSelectedButtonTexture, true);
-		// Remove levels from blackInformationElements
-		blackInformationElements.erase(blackInformationElements.end() - 5, blackInformationElements.end());
-		// Add player name element to blackInformationElements
-		blackInformationElements.push_back(&blackNameText);
-		blackInformationElements.push_back(&blackPlayerName);
-	} else if (type == AI) {
-		blackAIButton.setTexture(AISelectedButtonTexture, true);
-		// Remove player name elements from blackInformationElements
-		blackInformationElements.erase(blackInformationElements.end() - 2, blackInformationElements.end());
-		// Add level elements to blackInformationElements
-		blackInformationElements.push_back(&blackLevelOneButton);
-		blackInformationElements.push_back(&blackLevelTwoButton);
-		blackInformationElements.push_back(&blackLevelThreeButton);
-		blackInformationElements.push_back(&blackLevelFourButton);
-		blackInformationElements.push_back(&blackLevelFiveButton);
+	if (color == White) {
+		whitePlayerSelected = type;
+		if (type == Human) {
+			whiteHumanButton.setState(Selected);
+			whiteAIButton.setState(Normal);
+			// Dont draw level elements
+			whiteLevelOneButton.drawObject = false;
+			whiteLevelTwoButton.drawObject = false;
+			whiteLevelThreeButton.drawObject = false;
+			whiteLevelFourButton.drawObject = false;
+			whiteLevelFiveButton.drawObject = false;
+			// Draw name text elements
+			whiteNameText.drawObject = true;
+			whitePlayerName.drawObject = true;
+
+		} else if (type == AI) {
+			whiteAIButton.setState(Selected);
+			whiteHumanButton.setState(Normal);
+			// Draw level elements
+			whiteLevelOneButton.drawObject = true;
+			whiteLevelTwoButton.drawObject = true;
+			whiteLevelThreeButton.drawObject = true;
+			whiteLevelFourButton.drawObject = true;
+			whiteLevelFiveButton.drawObject = true;
+			// Dont draw name text elements
+			whiteNameText.drawObject = false;
+			whitePlayerName.drawObject = false;
+		}
+	}
+	else {
+		blackPlayerSelected = type;
+		if (type == Human) {
+			blackHumanButton.setState(Selected);
+			blackAIButton.setState(Normal);
+			// Dont draw level elements
+			blackLevelOneButton.drawObject = false;
+			blackLevelTwoButton.drawObject = false;
+			blackLevelThreeButton.drawObject = false;
+			blackLevelFourButton.drawObject = false;
+			blackLevelFiveButton.drawObject = false;
+			// Draw name text elements
+			blackNameText.drawObject = true;
+			blackPlayerName.drawObject = true;
+
+		} else if (type == AI) {
+			blackAIButton.setState(Selected);
+			blackHumanButton.setState(Normal);
+			// Draw level elements
+			blackLevelOneButton.drawObject = true;
+			blackLevelTwoButton.drawObject = true;
+			blackLevelThreeButton.drawObject = true;
+			blackLevelFourButton.drawObject = true;
+			blackLevelFiveButton.drawObject = true;
+			// Dont draw name text elements
+			blackNameText.drawObject = false;
+			blackPlayerName.drawObject = false;
+		}
 	}
 }
 
 
 void NewGameScreen::clearButtonHighlights()
 {
-	if (whitePlayerSelected != Human)
-		whiteHumanButton.setTexture(humanButtonTexture, true);
-	if (blackPlayerSelected != Human)
-		blackHumanButton.setTexture(humanButtonTexture, true);
-	if (whitePlayerSelected != AI)
-		whiteAIButton.setTexture(AIButtonTexture, true);
-	if (blackPlayerSelected != AI)
-		blackAIButton.setTexture(AIButtonTexture, true);
-	if (whiteLevel != 1)
-		whiteLevelOneButton.setTexture(levelOneTexture, true);
-	if (whiteLevel != 2)
-		whiteLevelTwoButton.setTexture(levelTwoTexture, true);
-	if (whiteLevel != 3)
-		whiteLevelThreeButton.setTexture(levelThreeTexture, true);
-	if (whiteLevel != 4)
-		whiteLevelFourButton.setTexture(levelFourTexture, true);
-	if (whiteLevel != 5)
-		whiteLevelFiveButton.setTexture(levelFiveTexture, true);
-	if (blackLevel != 1)
-		blackLevelOneButton.setTexture(levelOneTexture, true);
-	if (blackLevel != 2)
-		blackLevelTwoButton.setTexture(levelTwoTexture, true);
-	if (blackLevel != 3)
-		blackLevelThreeButton.setTexture(levelThreeTexture, true);
-	if (blackLevel != 4)
-		blackLevelFourButton.setTexture(levelFourTexture, true);
-	if (blackLevel != 5)
-		blackLevelFiveButton.setTexture(levelFiveTexture, true);
-	playButton.setTexture(playButtonTexture, true);
+	for (auto element : elements) {
+		if (element->getState() != Selected) {
+			element->setState(Normal);
+		}
+	}
 }
 
 
@@ -421,13 +395,7 @@ void NewGameScreen::draw(sf::RenderWindow &window)
 {
 	window.clear(sf::Color(0, 0, 0, 0));
 	for (auto element : elements) {
-		window.draw(*element);
-	}
-	for (auto element : whiteInformationElements) {
-		window.draw(*element);
-	}
-	for (auto element : blackInformationElements) {
-		window.draw(*element);
+		element->draw(window);
 	}
 	window.draw(line);
 	window.display();
