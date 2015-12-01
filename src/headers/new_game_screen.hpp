@@ -17,19 +17,19 @@ enum PlayerType {
 class NewGameScreen : public BaseScreen
 {
 public:
-	NewGameScreen();
-
 	// New game screen needs to be able to use gameScreens initializer
-    NewGameScreen(GameScreen* g);
+    NewGameScreen(GameScreen* g, sf::RenderWindow &w);
 	void loadContent(void);
-	int update(sf::RenderWindow &window);
+	int update();
 	void createGame();
 	void selectLevel(Button* button, ColorType color);
 	void changePlayerType(PlayerType type, ColorType color);
 	void clearButtonHighlights();
-    void draw(sf::RenderWindow &window);
+    void draw();
 
 private:
+	sf::RenderWindow &window;
+
 	GameScreen* gameScreen;
 
 	// Vector for all elements to draw (buttons, texts etc..)

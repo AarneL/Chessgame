@@ -19,7 +19,8 @@ class GameScreen : public BaseScreen
 private:
 	/* To draw board properly program must have different sprite for each piece
 	 *
-	 */
+	*/
+	sf::RenderWindow &window;
 	// Container for all elements to draw
 	std::vector<Object*> elements;
 	// White pieces
@@ -88,12 +89,12 @@ private:
 	Text blackPlayerText;
 
 public:
-    GameScreen(void);
+    GameScreen(sf::RenderWindow &w);
 
 	// Draw related functions
 	void loadContent(void);
-	int update(sf::RenderWindow &window);
-    void draw(sf::RenderWindow &window);
+	int update();
+    void draw();
 	void highlight(std::vector<int> v);
 	void clearHighlights();
 	void clearButtonHighlights();

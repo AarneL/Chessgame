@@ -3,23 +3,19 @@
 #include <fstream>
 #include "../headers/tinyfiledialogs.h"
 
-MenuScreen::MenuScreen(void)
-{
-}
-
-MenuScreen::MenuScreen(GameScreen* g)
+MenuScreen::MenuScreen(GameScreen* g, sf::RenderWindow &w) : window(w)
 {
 	gameScreen = g;
 }
 
 void MenuScreen::loadContent(void)
 {
-	
+
 	// Button positioning variables
 	int buttonsFromLeftEdge = (int)(1200 / 1.61); // Golden ratio baby
 	int topMargin = 150;
 	int buttonDivLength = 200;
-	
+
 	/* All sprites need to be added to "elements" in right order
 	 * so that what is drawn "behind" will be added firsts
 	 */
@@ -47,7 +43,7 @@ void MenuScreen::loadContent(void)
 	elements.push_back(&exitButton);
 }
 
-int MenuScreen::update(sf::RenderWindow &window)
+int MenuScreen::update()
 {
 	sf::Event event;
 	while(window.pollEvent(event)) {
@@ -117,7 +113,7 @@ int MenuScreen::update(sf::RenderWindow &window)
 }
 
 
-void MenuScreen::draw(sf::RenderWindow &window)
+void MenuScreen::draw()
 {
 	window.clear(sf::Color(250,250,250));
 	for (auto element : elements) {

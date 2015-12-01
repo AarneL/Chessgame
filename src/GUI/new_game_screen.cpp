@@ -6,11 +6,7 @@
 #include "../headers/player.hpp"
 #include "../headers/button.hpp"
 
-NewGameScreen::NewGameScreen()
-{
-}
-
-NewGameScreen::NewGameScreen(GameScreen* g)
+NewGameScreen::NewGameScreen(GameScreen* g, sf::RenderWindow &w) : window(w)
 {
 	gameScreen = g;
 	// Default types
@@ -130,7 +126,7 @@ void NewGameScreen::loadContent(void)
 }
 
 
-int NewGameScreen::update(sf::RenderWindow &window)
+int NewGameScreen::update()
 {
 	sf::Event event;
 	while(window.pollEvent(event)) {
@@ -154,46 +150,58 @@ int NewGameScreen::update(sf::RenderWindow &window)
 				// Highlight blackAIButton
 				blackAIButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (whiteLevelOneButton.containsMousePos(v) && whiteLevel != 1) {
-				whiteLevelOneButton.setState(Highlighted);
-				buttonHovered = true;
-			} else if (whiteLevelTwoButton.containsMousePos(v) && whiteLevel != 2) {
-				whiteLevelTwoButton.setState(Highlighted);
-				buttonHovered = true;
-			} else if (whiteLevelThreeButton.containsMousePos(v) && whiteLevel != 3) {
-				whiteLevelThreeButton.setState(Highlighted);
-				buttonHovered = true;
-			} else if (whiteLevelFourButton.containsMousePos(v) && whiteLevel != 4) {
-				whiteLevelFourButton.setState(Highlighted);
-				buttonHovered = true;
-			} else if (whiteLevelFiveButton.containsMousePos(v) && whiteLevel != 5) {
-				whiteLevelFiveButton.setState(Highlighted);
-				buttonHovered = true;
-			} else if (blackLevelOneButton.containsMousePos(v) && blackLevel != 1) {
-				blackLevelOneButton.setState(Highlighted);
-				buttonHovered = true;
-			} else if (blackLevelTwoButton.containsMousePos(v) && blackLevel != 2) {
-				blackLevelTwoButton.setState(Highlighted);
-				buttonHovered = true;
-			} else if (blackLevelThreeButton.containsMousePos(v) && blackLevel != 3) {
-				blackLevelThreeButton.setState(Highlighted);
-				buttonHovered = true;
-			} else if (blackLevelFourButton.containsMousePos(v) && blackLevel != 4) {
-				blackLevelFourButton.setState(Highlighted);
-				buttonHovered = true;
-			} else if (blackLevelFiveButton.containsMousePos(v) && blackLevel != 5) {
-				blackLevelFiveButton.setState(Highlighted);
-				buttonHovered = true;
-			} else if (whitePlayerName.containsMousePos(v) && whitePlayerName.getState() != Selected) {
-				whitePlayerName.setState(Highlighted);
-				buttonHovered = true;
-			} else if (blackPlayerName.containsMousePos(v) && blackPlayerName.getState() != Selected) {
-				blackPlayerName.setState(Highlighted);
-				buttonHovered = true;
-			} else if (playButton.containsMousePos(v)) {
+			}
+			if (whitePlayerSelected == AI) {
+				if (whiteLevelOneButton.containsMousePos(v) && whiteLevel != 1) {
+					whiteLevelOneButton.setState(Highlighted);
+					buttonHovered = true;
+				} else if (whiteLevelTwoButton.containsMousePos(v) && whiteLevel != 2) {
+					whiteLevelTwoButton.setState(Highlighted);
+					buttonHovered = true;
+				} else if (whiteLevelThreeButton.containsMousePos(v) && whiteLevel != 3) {
+					whiteLevelThreeButton.setState(Highlighted);
+					buttonHovered = true;
+				} else if (whiteLevelFourButton.containsMousePos(v) && whiteLevel != 4) {
+					whiteLevelFourButton.setState(Highlighted);
+					buttonHovered = true;
+				} else if (whiteLevelFiveButton.containsMousePos(v) && whiteLevel != 5) {
+					whiteLevelFiveButton.setState(Highlighted);
+					buttonHovered = true;
+				}
+			} else {
+				if (whitePlayerName.containsMousePos(v) && whitePlayerName.getState() != Selected) {
+					whitePlayerName.setState(Highlighted);
+					buttonHovered = true;
+				}
+			}
+			if (blackPlayerSelected == AI) {
+				if (blackLevelOneButton.containsMousePos(v) && blackLevel != 1) {
+					blackLevelOneButton.setState(Highlighted);
+					buttonHovered = true;
+				} else if (blackLevelTwoButton.containsMousePos(v) && blackLevel != 2) {
+					blackLevelTwoButton.setState(Highlighted);
+					buttonHovered = true;
+				} else if (blackLevelThreeButton.containsMousePos(v) && blackLevel != 3) {
+					blackLevelThreeButton.setState(Highlighted);
+					buttonHovered = true;
+				} else if (blackLevelFourButton.containsMousePos(v) && blackLevel != 4) {
+					blackLevelFourButton.setState(Highlighted);
+					buttonHovered = true;
+				} else if (blackLevelFiveButton.containsMousePos(v) && blackLevel != 5) {
+					blackLevelFiveButton.setState(Highlighted);
+					buttonHovered = true;
+				}
+			} else {
+				if (blackPlayerName.containsMousePos(v) && blackPlayerName.getState() != Selected) {
+					blackPlayerName.setState(Highlighted);
+					buttonHovered = true;
+				}
+			}
+			if (playButton.containsMousePos(v)) {
 				playButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if(!buttonHovered) {
+			}
+			if (!buttonHovered) {
 				// If nothing hovered
 				clearButtonHighlights();
 			}
@@ -213,43 +221,54 @@ int NewGameScreen::update(sf::RenderWindow &window)
 			} else if (blackAIButton.containsMousePos(v) && blackPlayerSelected != AI) {
 				// Select black AI
 				changePlayerType(AI, Black);
-			} else if (whiteNameText.containsMousePos(v) || whitePlayerName.containsMousePos(v)) {
-				whitePlayerName.setState(Selected);
-				blackPlayerName.setState(Normal);
-			} else if (blackNameText.containsMousePos(v) || blackPlayerName.containsMousePos(v)) {
-				blackPlayerName.setState(Selected);
-				whitePlayerName.setState(Normal);
-			} else if (whiteLevelOneButton.containsMousePos(v)) {
-				whiteLevel = 1;
-				selectLevel(&whiteLevelOneButton, White);
-			} else if (whiteLevelTwoButton.containsMousePos(v)) {
-				whiteLevel = 2;
-				selectLevel(&whiteLevelTwoButton, White);
-			} else if (whiteLevelThreeButton.containsMousePos(v)) {
-				whiteLevel = 3;
-				selectLevel(&whiteLevelThreeButton, White);
-			} else if (whiteLevelFourButton.containsMousePos(v)) {
-				whiteLevel = 4;
-				selectLevel(&whiteLevelFourButton, White);
-			} else if (whiteLevelFiveButton.containsMousePos(v)) {
-				whiteLevel = 5;
-				selectLevel(&whiteLevelFiveButton, White);
-			} else if (blackLevelOneButton.containsMousePos(v)) {
-				blackLevel = 1;
-				selectLevel(&blackLevelOneButton, Black);
-			} else if (blackLevelTwoButton.containsMousePos(v)) {
-				blackLevel = 2;
-				selectLevel(&blackLevelTwoButton, Black);
-			} else if (blackLevelThreeButton.containsMousePos(v)) {
-				blackLevel = 3;
-				selectLevel(&blackLevelThreeButton, Black);
-			} else if (blackLevelFourButton.containsMousePos(v)) {
-				blackLevel = 4;
-				selectLevel(&blackLevelFourButton, Black);
-			} else if (blackLevelFiveButton.containsMousePos(v)) {
-				blackLevel = 5;
-				selectLevel(&blackLevelFiveButton, Black);
-			} else if (playButton.containsMousePos(v)) {
+			}
+			if (whitePlayerSelected == AI) {
+				if (whiteLevelOneButton.containsMousePos(v) && whiteLevel != 1) {
+					whiteLevel = 1;
+					selectLevel(&whiteLevelOneButton, White);
+				} else if (whiteLevelTwoButton.containsMousePos(v) && whiteLevel != 2) {
+					whiteLevel = 2;
+					selectLevel(&whiteLevelTwoButton, White);
+				} else if (whiteLevelThreeButton.containsMousePos(v) && whiteLevel != 3) {
+					whiteLevel = 3;
+					selectLevel(&whiteLevelThreeButton, White);
+				} else if (whiteLevelFourButton.containsMousePos(v) && whiteLevel != 4) {
+					whiteLevel = 4;
+					selectLevel(&whiteLevelFourButton, White);
+				} else if (whiteLevelFiveButton.containsMousePos(v) && whiteLevel != 5) {
+					whiteLevel = 5;
+					selectLevel(&whiteLevelFiveButton, White);
+				}
+			} else {
+				if (whiteNameText.containsMousePos(v) || whitePlayerName.containsMousePos(v)) {
+					whitePlayerName.setState(Selected);
+					blackPlayerName.setState(Normal);
+				}
+			}
+			if (blackPlayerSelected == AI) {
+				if (blackLevelOneButton.containsMousePos(v) && blackLevel != 1) {
+					blackLevel = 1;
+					selectLevel(&blackLevelOneButton, Black);
+				} else if (blackLevelTwoButton.containsMousePos(v) && blackLevel != 2) {
+					blackLevel = 2;
+					selectLevel(&blackLevelTwoButton, Black);
+				} else if (blackLevelThreeButton.containsMousePos(v) && blackLevel != 3) {
+					blackLevel = 3;
+					selectLevel(&blackLevelThreeButton, Black);
+				} else if (blackLevelFourButton.containsMousePos(v) && blackLevel != 4) {
+					blackLevel = 4;
+					selectLevel(&blackLevelFourButton, Black);
+				} else if (blackLevelFiveButton.containsMousePos(v) && blackLevel != 5) {
+					blackLevel = 5;
+					selectLevel(&blackLevelFiveButton, Black);
+				}
+			} else {
+				if (blackNameText.containsMousePos(v) || blackPlayerName.containsMousePos(v)) {
+					blackPlayerName.setState(Selected);
+					whitePlayerName.setState(Normal);
+				}
+			}
+			if (playButton.containsMousePos(v)) {
 				createGame();
 				return 2;
 			}
@@ -308,7 +327,6 @@ void NewGameScreen::selectLevel(Button* button, ColorType color)
 {
 	button->setState(Selected);
 	if (color == White) {
-		std::cout << currentWhiteLevel << std::endl;
 		currentWhiteLevel->setState(Normal);
 		currentWhiteLevel = button;
 	}
@@ -391,7 +409,7 @@ void NewGameScreen::clearButtonHighlights()
 }
 
 
-void NewGameScreen::draw(sf::RenderWindow &window)
+void NewGameScreen::draw()
 {
 	window.clear(sf::Color(0, 0, 0, 0));
 	for (auto element : elements) {

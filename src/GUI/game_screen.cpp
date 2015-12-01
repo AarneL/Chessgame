@@ -14,9 +14,8 @@
 #include <thread>
 
 
-GameScreen::GameScreen(void)
+GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 {
-
 	// Graphical design constants
 	BOARD_HORIZONTAL_OFFSET = 0;
 	BOARD_VERTICAL_OFFSET = 100;
@@ -140,7 +139,7 @@ void GameScreen::loadContent(void)
 	elements.push_back(&mainMenuButton);
 }
 
-int GameScreen::update(sf::RenderWindow &window)
+int GameScreen::update()
 {
 	if (playerOnTurn->getType() == std::string("Human")) {
 		sf::Event event;
@@ -221,7 +220,7 @@ int GameScreen::update(sf::RenderWindow &window)
 	return 2;
 }
 
-void GameScreen::draw(sf::RenderWindow &window)
+void GameScreen::draw()
 {
 	window.clear();
 	for (auto square : gameBoard) {

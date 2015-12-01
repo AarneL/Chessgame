@@ -5,10 +5,10 @@
 
 class BaseScreen
 {
-public :
+public:
 	virtual void loadContent(void) = 0;
-	virtual int update(sf::RenderWindow &window) = 0;
-    virtual void draw(sf::RenderWindow &window) = 0;
+	virtual int update() = 0;
+    virtual void draw() = 0;
 };
 
 #endif
