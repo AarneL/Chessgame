@@ -2,53 +2,101 @@
 #include <map>
 #include <string>
 #include <algorithm>
+#include <thread>
+#include <future>
 
 #include "./../headers/ai_algorithm.hpp"
 #include "./../headers/board.hpp"
 
 #define MAX 1000000
 #define MIN -1000000
+#define THREADS 4
 //black pieces have negative value so black player is always minimizing
 //needs to use board merhods
+
+
+
 
 
 namespace AiAlgorithm
 {
 
+
+
+
+	std::vector<int> aithread(const Board& board, int depth, int a, int b, bool maximizingPlayer, int limit, int counter, std::vector<int> locations)
+	{
+	std::vector<int> v = {0, 0, 0};
+	for(; counter < limit; counter++)//iterate through the moves assigned for this thread
+		{
+			for(auto j:board.possibleMoves(locations[counter]))
+			{
+				Board newboard = board;
+				newboard.movePiece(locations[counter], j);//supposing possibleMoves doesn't return origin
+				int temp = alphaBeta(newboard, depth-1, a, b, !maximizingPlayer);
+				if(v[0] < temp)
+				{
+					v[0] = temp;
+					v[1] = locations[counter];
+					v[2] = j;
+				}
+				a = std::max(a, v[0]);
+				if (b <= a)
+				{
+					break; //cut off
+				}
+			}
+		counter++;
+		}
+		return v;
+	}
+
 	std::pair<int, int> algorithm(const Board& board, int depth, bool maximizingPlayer)
 	{
-		std::vector<int> v = {0, 0, 0}; //container for best value and the move to get there
-		
+		std::vector<int> v = {0, 0, 0};  //container for best value and the move to get there
+
 		int a = MIN; //alpha
 		int b = MAX; //beta
-
+		int limit = 0;
+		std::vector<int> locations;
+		std::vector<std::future<std::vector<int>>> threads;
 		if (maximizingPlayer)//White players turn
 		{
-
-			v[0] = MIN; //smallest int
-			for(int i = 0; i < 64; i++)//iterate through the board
+			for(int i = 0; i < THREADS*3; i = i + 3)
+			{
+				v[0] = MIN; //smallest int
+			}
+			
+			for(int i = 0; i < 64; i++)
 			{
 				if(board.getBoard()[i]%2 == 1)//if piece is white
 				{
-					for(auto j:board.possibleMoves(i))
-					{
-						Board newboard = board;
-						newboard.movePiece(i, j);//supposing possibleMoves doesn't return origin
-						int temp = alphaBeta(newboard, depth-1, a, b, false);
-						if(v[0] < temp)
-						{
-							v[0] = temp;
-							v[1] = i;
-							v[2] = j;
-						}
-						a = std::max(a, v[0]);
-						if (b <= a)
-						{
-							break; //cut off
-						}
-					}
+					limit++;//calculate the amount of white pieces
+					locations.push_back(i);
 				}
 			}
+			//check whether there are 
+			for(int i = 0;i < limit; i = i + limit/THREADS)//make the threads
+			{
+				std::future<std::vector<int>> temp = std::async (&aithread, board, depth, a, b, maximizingPlayer, i+limit/THREADS, i, locations);
+				threads.push_back(std::move(temp));
+				if((i + limit/THREADS) >= limit)// if this is last time the loop is excecuted push rest of the moves in a thread
+				{
+					std::future<std::vector<int>> temp = std::async (&aithread, board, depth, a, b, maximizingPlayer, limit, i, locations);
+					threads.push_back(std::move(temp));
+				}
+			}
+
+			for(std::vector<std::future<std::vector<int>>>::iterator a = threads.begin(); a!=threads.end(); a++)
+			{
+				std::vector<int> temp = a->get();
+				if(temp[0] > v[0])
+				{
+					v = temp;
+				}
+			}
+			
+			
 		}
 
 		else //Black players turn
