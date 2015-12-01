@@ -212,7 +212,7 @@ std::vector<std::pair<int, int> > Board::getMoveList() const
 /* instead of using different functions for checking for chess, chessmate and stalemate it is
  * more efficient to check for them all in a single loop through the pieces */
 
-int Board::updateState(int index) //index is the destination of last move
+int Board::updateState(int index, int caller) //index is the destination of last move
 {
 	int retVal = -1;
 
@@ -266,7 +266,7 @@ int Board::updateState(int index) //index is the destination of last move
 		}
 	}
 
-	//check for castling
+	//check for castling flags
 	if ((board[lastMove.second] == 11 || board[lastMove.second] == 12)
 		&& ((lastMove.second-lastMove.first) == 2 || (lastMove.first - lastMove.second ==2)))
 	{
@@ -331,34 +331,50 @@ int Board::updateState(int index) //index is the destination of last move
 	else
 		turn = 1;
 
-
-	int king_location = 0;
-	for(int i=0;i<64;i++)
+//lightweight update function for the ai
+	if(caller)
 	{
-		if(board[i] == (12 - turn))
+		if(isCheck(turn))
 		{
-			king_location = i;
+			if(isStaleMate(turn))
+				{
+					state = state | 0x2;
+					//do some stuff to end the game
+					return retVal;
+				}
 		}
 	}
-
-	//see if it's check
-	if(isCheck(turn))
-	{
-		if(isCheckMate(king_location))
-		{
-			state = state | 0x1;
-			//do some stuff to end the game
-			return retVal;
-		}
-	}
-
+	//this is omited when the caller is ai_algorithm in order to speed it up.	
 	else
 	{
-		if(isStaleMate(turn))
+		int king_location = 0;
+		for(int i=0;i<64;i++)
 		{
-			state = state | 0x2;
-			//do some stuff to end the game
-			return retVal;
+			if(board[i] == (12 - turn))
+			{
+				king_location = i;
+			}
+		}
+
+		//see if it's check
+		if(isCheck(turn))
+		{
+			if(isCheckMate(king_location))
+			{
+				state = state | 0x1;
+				//do some stuff to end the game
+				return retVal;
+			}
+		}
+
+		else
+		{
+			if(isStaleMate(turn))
+			{
+				state = state | 0x2;
+				//do some stuff to end the game
+				return retVal;
+			}
 		}
 	}		
 
