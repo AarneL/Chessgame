@@ -415,11 +415,11 @@ void GameScreen::changePiece(int index)
 {
 	if (board.getBoard()[index] % 2 == 0)
 	{
-		board.changePiece(index, W_QUEEN);
+		board.changePiece(index, B_QUEEN);
 	}
 	else
 	{
-		board.changePiece(index, B_QUEEN);
+		board.changePiece(index, W_QUEEN);
 	}
 }
 
