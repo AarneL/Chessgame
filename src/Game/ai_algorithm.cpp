@@ -122,7 +122,7 @@ namespace AiAlgorithm
 					{
 						Board newboard = board;
 						newboard.movePiece(i, j);//supposing possibleMoves doesn't return origin
-						newboard.updateState(j);
+						newboard.updateState(j, 1);
 						v = std::max(v, alphaBeta(newboard, depth-1, a, b, false)); //call alphabeta for black player
 						a = std::max(a, v);
 						if (b <= a)
@@ -146,7 +146,7 @@ namespace AiAlgorithm
 					{
 						Board newboard = board;
 						newboard.movePiece(i, j);
-						newboard.updateState(j);
+						newboard.updateState(j, 1);
 						v = std::min(v, alphaBeta(newboard, depth-1, a, b, true));
 						b = std::min(b,v);
 						if(b<=a)
@@ -219,6 +219,14 @@ namespace AiAlgorithm
 
 			case B_QUEEN:
 				return -850;
+				break;
+				
+			case W_KING:
+				return 100000;
+				break;
+
+			case B_KING:
+				return 100000;
 				break;
 			
 			default:

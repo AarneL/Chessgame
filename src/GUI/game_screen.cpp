@@ -321,7 +321,7 @@ void GameScreen::movePiece(std::pair<int,int> move)
 
 	// Move in board
 	board.movePiece(move.first, move.second);
-	int index = board.updateState(move.second); // Returns index if update needed
+	int index = board.updateState(move.second, 0); // Returns index if update needed
 	if (index != -1) {
 		// If stateword 0-63-> means pawn has reached enemy backline. Pawn is promotee
 		changePiece(index);
@@ -414,11 +414,11 @@ void GameScreen::changePiece(int index)
 {
 	if (board.getBoard()[index] % 2 == 0)
 	{
-		board.changePiece(index, W_QUEEN);
+		board.changePiece(index, B_QUEEN);
 	}
 	else
 	{
-		board.changePiece(index, B_QUEEN);
+		board.changePiece(index, W_QUEEN);
 	}
 }
 
