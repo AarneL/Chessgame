@@ -69,6 +69,25 @@ private:
 
 	std::vector<ChessPiece*> pieces;
 
+	// Pawn promotion
+	sf::RectangleShape rectangle;
+	Text promotionText;
+
+	std::vector<Square*> promotionSquares;
+
+	ChessPiece whitePromotionQueen;
+	ChessPiece whitePromotionRook;
+	ChessPiece whitePromotionBishop;
+	ChessPiece whitePromotionKnight;
+
+	ChessPiece blackPromotionQueen;
+	ChessPiece blackPromotionRook;
+	ChessPiece blackPromotionBishop;
+	ChessPiece blackPromotionKnight;
+
+	std::vector<ChessPiece*> whitePromotionPieces;
+	std::vector<ChessPiece*> blackPromotionPieces;
+
 	// Game board
 	std::vector<Square*> gameBoard;
 
@@ -96,7 +115,7 @@ public:
 	int update();
     void draw();
 	void highlight(std::vector<int> v);
-	void clearHighlights();
+	void clearHighlights(std::vector<Square*> v);
 	void clearButtonHighlights();
 	void initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
 	void tearDown(void);
@@ -108,8 +127,12 @@ public:
 	bool belongsToPlayer(int i, Player* p);
 	std::vector<std::pair<int, int> > getMoveList() const;
 	std::pair<int, int> getAiMove();
-	void changePiece(int index);
 	void showSaveGameDialog();
+
+	// Pawn promotion
+	void changePiece(int index);
+	int choosePromotion(int index);
+	void drawPromotion();
 
 	// Game interface
 	Board board;

@@ -11,6 +11,9 @@ public:
 	void loadContent(const std::string& texturePath);
 	sf::Vector2f getPosition() const;
 	void setPosition(sf::Vector2f pos);
+	bool containsMousePos(sf::Vector2f v);
+	void changeTexture(const sf::Texture* newTexture);
+	const sf::Texture* getTexture() const;
 	void setState(ObjectState state);
 	void draw(sf::RenderWindow &window);
 private:

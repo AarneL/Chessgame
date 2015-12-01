@@ -23,6 +23,21 @@ void ChessPiece::setPosition(sf::Vector2f pos)
 	sprite.setPosition(pos);
 }
 
+bool ChessPiece::containsMousePos(sf::Vector2f v)
+{
+	return sprite.getGlobalBounds().contains(v);
+}
+
+void ChessPiece::changeTexture(const sf::Texture* newTexture)
+{
+	sprite.setTexture(*newTexture, true);
+}
+
+const sf::Texture* ChessPiece::getTexture() const
+{
+	return sprite.getTexture();
+}
+
 void ChessPiece::setState(ObjectState state)
 {
 	state = Normal;

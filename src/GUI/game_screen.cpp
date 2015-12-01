@@ -137,6 +137,48 @@ void GameScreen::loadContent(void)
 	// MainMenu button
 	mainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(900, 400), true);
 	elements.push_back(&mainMenuButton);
+
+	// Pawn promotion
+	rectangle.setSize(sf::Vector2f(530, 250));
+	rectangle.setFillColor(sf::Color::Black);
+	rectangle.setPosition(230, 300);
+
+	promotionText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
+	promotionText.setString("Choose a piece:");
+
+	for (int i = 0; i < 4; i++) {
+		Square* square = new Square();
+		square->loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((260 + i*96 + i*25), 420));
+		promotionSquares.push_back(square);
+	}
+
+	std::cout << promotionSquares.size() << std::endl;
+
+	whitePromotionQueen.loadContent("media/img/queen_white.png");
+	whitePromotionQueen.setPosition(promotionSquares[0]->getPosition());
+	whitePromotionPieces.push_back(&whitePromotionQueen);
+	whitePromotionRook.loadContent("media/img/rook_white.png");
+	whitePromotionRook.setPosition(promotionSquares[1]->getPosition());
+	whitePromotionPieces.push_back(&whitePromotionRook);
+	whitePromotionBishop.loadContent("media/img/bishop_white.png");
+	whitePromotionBishop.setPosition(promotionSquares[2]->getPosition());
+	whitePromotionPieces.push_back(&whitePromotionBishop);
+	whitePromotionKnight.loadContent("media/img/knight_white.png");
+	whitePromotionKnight.setPosition(promotionSquares[3]->getPosition());
+	whitePromotionPieces.push_back(&whitePromotionKnight);
+
+	blackPromotionQueen.loadContent("media/img/queen_black.png");
+	blackPromotionQueen.setPosition(promotionSquares[0]->getPosition());
+	blackPromotionPieces.push_back(&blackPromotionQueen);
+	blackPromotionRook.loadContent("media/img/rook_black.png");
+	blackPromotionRook.setPosition(promotionSquares[1]->getPosition());
+	blackPromotionPieces.push_back(&blackPromotionRook);
+	blackPromotionBishop.loadContent("media/img/bishop_black.png");
+	blackPromotionBishop.setPosition(promotionSquares[2]->getPosition());
+	blackPromotionPieces.push_back(&blackPromotionBishop);
+	blackPromotionKnight.loadContent("media/img/knight_black.png");
+	blackPromotionKnight.setPosition(promotionSquares[3]->getPosition());
+	blackPromotionPieces.push_back(&blackPromotionKnight);
 }
 
 int GameScreen::update()
@@ -192,13 +234,13 @@ int GameScreen::update()
 								std::cout << playerOnTurn->getName() << " made move." << std::endl;
 								activeSquare = -1;
 								possibleMoves.clear();
-								clearHighlights();
+								clearHighlights(gameBoard);
 								return changeTurn();
 							}
 							else {
 								activeSquare = -1;
 								possibleMoves.clear();
-								clearHighlights();
+								clearHighlights(gameBoard);
 							}
 						}
 					}
@@ -244,9 +286,9 @@ void GameScreen::highlight(std::vector<int> v)
 	}
 }
 
-void GameScreen::clearHighlights()
+void GameScreen::clearHighlights(std::vector<Square*> v)
 {
-	for (auto i : gameBoard) {
+	for (auto i : v) {
 		i->setState(Normal);
 	}
 }
@@ -412,14 +454,93 @@ std::pair<int,int> GameScreen::getAiMove(void)
 
 void GameScreen::changePiece(int index)
 {
-	if (board.getBoard()[index] % 2 == 0)
-	{
-		board.changePiece(index, B_QUEEN);
+	std::cout << "changePiece" << std::endl;
+	int newPiece = -1;
+	if (playerOnTurn->getType() == std::string("Human")) {
+		while (newPiece == -1) {
+			newPiece = choosePromotion(index);
+			if (newPiece == -1) {
+				drawPromotion();
+			}
+		}
 	}
-	else
-	{
-		board.changePiece(index, W_QUEEN);
+	else {
+		if (playerOnTurn == white) {
+			pieces[index]->changeTexture(whitePromotionQueen.getTexture());
+			newPiece = W_QUEEN;
+		} else {
+			pieces[index]->changeTexture(blackPromotionQueen.getTexture());
+			newPiece = B_QUEEN;
+		}
 	}
+	board.changePiece(index, newPiece);
+}
+
+int GameScreen::choosePromotion(int index)
+{
+	sf::Event event;
+	while (window.pollEvent(event)) {
+		sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
+		if (event.type == sf::Event::MouseMoved) {
+			for (auto square : promotionSquares) {
+				if (square->containsMousePos(mousePos)) {
+					square->setState(Highlighted);
+				} else {
+					clearHighlights(promotionSquares);
+				}
+			}
+		} else if (event.type == sf::Event::MouseButtonPressed) {
+			if (playerOnTurn == white) {
+				if (whitePromotionQueen.containsMousePos(mousePos)) {
+					pieces[index]->changeTexture(whitePromotionQueen.getTexture());
+					return W_QUEEN;
+				} else if (whitePromotionKnight.containsMousePos(mousePos)) {
+					pieces[index]->changeTexture(whitePromotionKnight.getTexture());
+					return W_KNIGHT;
+				} else if (whitePromotionBishop.containsMousePos(mousePos)) {
+					pieces[index]->changeTexture(whitePromotionBishop.getTexture());
+					return W_BISHOP;
+				} else if (whitePromotionRook.containsMousePos(mousePos)) {
+					pieces[index]->changeTexture(whitePromotionRook.getTexture());
+					return W_ROOK;
+				}
+			} else {
+				if (blackPromotionQueen.containsMousePos(mousePos)) {
+					pieces[index]->changeTexture(blackPromotionQueen.getTexture());
+					return B_QUEEN;
+				} else if (blackPromotionKnight.containsMousePos(mousePos)) {
+					pieces[index]->changeTexture(blackPromotionKnight.getTexture());
+					return B_KNIGHT;
+				} else if (blackPromotionBishop.containsMousePos(mousePos)) {
+					pieces[index]->changeTexture(blackPromotionBishop.getTexture());
+					return B_BISHOP;
+				} else if (blackPromotionRook.containsMousePos(mousePos)) {
+					pieces[index]->changeTexture(blackPromotionRook.getTexture());
+					return B_ROOK;
+				}
+			}
+		}
+	}
+	return -1;
+}
+
+void GameScreen::drawPromotion()
+{
+	window.draw(rectangle);
+	promotionText.draw(window);
+	for (auto square : promotionSquares) {
+		square->draw(window);
+	}
+	if (playerOnTurn == white) {
+		for (auto piece : whitePromotionPieces) {
+			piece->draw(window);
+		}
+	} else {
+		for (auto piece : blackPromotionPieces) {
+			piece->draw(window);
+		}
+	}
+	window.display();
 }
 
 void GameScreen::showSaveGameDialog() {

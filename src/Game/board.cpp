@@ -92,7 +92,7 @@ std::vector<int> Board::possibleMoves(int index) const
 	int turn = board[index] % 2;
 	for(int i = 0 ; i < (int) moves.size() ; i++)
 	{
-		Board test_board = *this;		
+		Board test_board = *this;
 		test_board.movePiece(index, moves[i]); //simulate move
 		if(test_board.isCheck(turn)) //see if it leads to check from player on turns point of view
 		{
@@ -157,7 +157,7 @@ std::vector<int> Board::allPossibleMoves(int index) const
 				moves = join(moves, Rules::leftCastlingMove(board, index));
 			}
 			if(state & 0x8)
-			{				
+			{
 				moves = join(moves, Rules::rightCastlingMove(board, index));
 			}
 			break;
@@ -234,7 +234,7 @@ int Board::updateState(int index, int caller) //index is the destination of last
 	if(moveList.size() > 4) //this needs to be done so we don't try invalid indexes
 	{
 		//test for white pawns
-		if (board[lastMove.second] == 1 
+		if (board[lastMove.second] == 1
 			&& ((lastMove.second % 2) != (lastMove.first % 2)))
 		{
 			std::pair<int, int> secondLastMove;
@@ -250,7 +250,7 @@ int Board::updateState(int index, int caller) //index is the destination of last
 		}
 
 		//test for black pawns
-		else if (board[lastMove.second] == 2 
+		else if (board[lastMove.second] == 2
 			&& ((lastMove.second % 2) != (lastMove.first % 2)))
 		{
 			std::pair<int, int> secondLastMove;
@@ -296,14 +296,14 @@ int Board::updateState(int index, int caller) //index is the destination of last
 			if((board[4] != 11) || (board[7] != 7))
 			{
 				state = state & 0xF7; //11110111
-			} 
+			}
 		}
 		if((state >> 2) & 0x1)//left castling for white
 		{
 			if((board[4] != 11) || (board[0] != 7))
 			{
 				state = state & 0xFB; //11111011
-			} 
+			}
 		}
 	}
 
@@ -314,14 +314,14 @@ int Board::updateState(int index, int caller) //index is the destination of last
 			if((board[60] != 12) || (board[63] != 8))
 			{
 				state = state & 0xDF; //11011111
-			} 
+			}
 		}
 		if((state >> 4) & 0x1)//left castling for black
 		{
 			if((board[60] != 12) || (board[56] != 8))
 			{
 				state = state & 0xEF; //11101111
-			} 
+			}
 		}
 	}
 
@@ -344,7 +344,7 @@ int Board::updateState(int index, int caller) //index is the destination of last
 				}
 		}
 	}
-	//this is omited when the caller is ai_algorithm in order to speed it up.	
+	//this is omited when the caller is ai_algorithm in order to speed it up.
 	else
 	{
 		int king_location = 0;
@@ -376,7 +376,7 @@ int Board::updateState(int index, int caller) //index is the destination of last
 				return retVal;
 			}
 		}
-	}		
+	}
 
 	return retVal;
 }
@@ -408,7 +408,7 @@ int Board::isCheck(int turn) const //0 test if black is checked
 	//check moves for rook
 	moves = Rules::rookMove(board, king_location);
 	for(auto a:moves)
-	{	
+	{
 		if(board[a] == (7+turn) || board[a] == (9+turn))//check for enemys rook and queen
 		{
 			return king_location;
@@ -462,7 +462,7 @@ int Board::isCheck(int turn) const //0 test if black is checked
 				return king_location;
 			}
 		}
-	}		
+	}
 
 	return 0;
 }
