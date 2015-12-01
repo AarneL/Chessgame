@@ -106,6 +106,9 @@ private:
 	// Player names
 	Text whitePlayerText;
 	Text blackPlayerText;
+	
+	// InformationBar
+	Text infoText;
 
 public:
     GameScreen(sf::RenderWindow &w);

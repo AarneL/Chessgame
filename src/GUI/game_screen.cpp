@@ -130,12 +130,17 @@ void GameScreen::loadContent(void)
 	elements.push_back(&whitePlayerText);
 	blackPlayerText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 50), true);
 	elements.push_back(&blackPlayerText);
+	// Informaton text
+	infoText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 100), true);
+	infoText.setString("White player turn");
+	elements.push_back(&infoText);
 
+	// Buttons
 	// Save button
-	saveButton.loadContent("media/img/saveGameButton.png", "media/img/saveGameHighlightedButton.png", "", sf::Vector2f(900, 200), true);
+	saveButton.loadContent("media/img/saveGameButton.png", "media/img/saveGameHighlightedButton.png", "", sf::Vector2f(900, 400), true);
 	elements.push_back(&saveButton);
 	// MainMenu button
-	mainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(900, 400), true);
+	mainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(900, 600), true);
 	elements.push_back(&mainMenuButton);
 
 	// Pawn promotion
@@ -403,6 +408,7 @@ int GameScreen::changeTurn()
 	if(board.getState() & 0x01)
 	{
 		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
+		infoText.setString("Checkmate");
 		std::cout << "Checkmate by " << playerOnTurn->getName() << std::endl;
 		tearDown();
 		return 0;
@@ -417,9 +423,11 @@ int GameScreen::changeTurn()
 
 	// If its black turn
 	if (playerOnTurn == black) {
+		infoText.setString("Black player moved <move>\nWhite player turn");
 		playerOnTurn = white;
 	}
 	else if(playerOnTurn == white){
+		infoText.setString("White player moved <move>\nBlack player turn");
 		playerOnTurn = black;
 	}
 	moveSound.play();
