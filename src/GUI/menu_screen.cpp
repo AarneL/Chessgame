@@ -43,35 +43,31 @@ int MenuScreen::update()
 		// Hovering button highlights the sprite
 		if (event.type == sf::Event::MouseMoved)
 		{
-			bool buttonHovered = false;
 			if (newGameButton.containsMousePos(v))
 			{
 				// Highlight newGameButton
 				newGameButton.setState(Highlighted);
-				buttonHovered = true;
 			}
 
 			else if (loadGameButton.containsMousePos(v))
 			{
 				// Highlight loadGameButton
 				loadGameButton.setState(Highlighted);
-				buttonHovered = true;
 			}
 
 			else if (exitButton.containsMousePos(v))
 			{
 				// Highlight exitButton
 				exitButton.setState(Highlighted);
-				buttonHovered = true;
 			}
 
-			else if(!buttonHovered) {
+			else {
 				// If nothing hovered
 				clearButtonHighlights();
 			}
 		}
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			if (newGameButton.containsMousePos(v))
 			{
@@ -80,7 +76,7 @@ int MenuScreen::update()
 				return 1; // NOTE: For now new game will start game immeaditely
 			}
 
-			if (loadGameButton.containsMousePos(v))
+			else if (loadGameButton.containsMousePos(v))
 			{
 				// User pressed loadbutton->Open dialog box
 				std::cout << "User pressed loadButton." << std::endl;
@@ -88,7 +84,7 @@ int MenuScreen::update()
 				// Start gameScreen
 			}
 
-			if (exitButton.containsMousePos(v))
+			else if (exitButton.containsMousePos(v))
 			{
 				// Exit program
 				std::cout << "User pressed exitbutton." << std::endl;
