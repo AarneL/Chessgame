@@ -15,7 +15,7 @@ namespace AiAlgorithm {
 
 	int evaluate(Board&);
 
-	int getValue(int);
+	int getValue(int,int);
 
 }
 

@@ -167,7 +167,7 @@ namespace AiAlgorithm
 		int value = 0;
 		for(int i = 0; i < 64; i++)
 		{
-			value = value + getValue(b[i]);
+			value = value + getValue(b[i], i);
 		}
 
 		//evaluate
@@ -177,16 +177,16 @@ namespace AiAlgorithm
 		return value;
 	}
 
-	int getValue(int piece)
+	int getValue(int piece, int index)
 	{
 		switch(piece)
 		{
 			case W_PAWN:
-				return 100;
+				return 100 + (((index - 1) / 8) * 10); // Pawns value increases the more it has moved 
 				break;
 
 			case B_PAWN:
-				return -100;
+				return -100 - (((63 - index - 1) / 8) * 10); // Same for black
 				break;
 
 			case W_KNIGHT:
