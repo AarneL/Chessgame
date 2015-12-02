@@ -12,7 +12,9 @@ void MenuScreen::loadContent(void)
 {
 
 	// Button positioning variables
-	int buttonsFromLeftEdge = (int)(1200 / 1.61); // Golden ratio baby
+	sf::Vector2u size = window.getSize();
+	int width = size.x;
+	int buttonsFromLeftEdge = (int)(width / 1.61); // Golden ratio baby
 	int topMargin = 150;
 	int buttonDivLength = 200;
 

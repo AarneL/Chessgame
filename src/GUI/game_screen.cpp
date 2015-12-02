@@ -157,8 +157,6 @@ void GameScreen::loadContent(void)
 		promotionSquares.push_back(square);
 	}
 
-	std::cout << promotionSquares.size() << std::endl;
-
 	whitePromotionQueen.loadContent("media/img/queen_white.png");
 	whitePromotionQueen.setPosition(promotionSquares[0]->getPosition());
 	whitePromotionPieces.push_back(&whitePromotionQueen);

@@ -25,103 +25,109 @@ NewGameScreen::NewGameScreen(GameScreen* g, sf::RenderWindow &w) : window(w)
 
 void NewGameScreen::loadContent(void)
 {
-	// Player texts
-	int topMargin = 100; // Text top margin
-	int midMargin = 200; // Text mid margin
+	sf::Vector2u size = window.getSize();
+	// Half of the window width
+	int half = size.x / 2;
+	// Third of half
+	int thirdOfHalf = half / 3;
+	// Fifth of half
+	int fifthOfHalf = half / 5;
+	// Eighth of height
+	int eighthOfHeight = size.y / 8;
 
-	whiteText.loadContent("media/img/Calibri.ttf", 70, sf::Vector2f(midMargin, topMargin), true);
+	// Player texts
+	int topMargin = eighthOfHeight; // Text top margin
+
+	whiteText.loadContent("media/img/Calibri.ttf", 70, sf::Vector2f(thirdOfHalf, topMargin), true);
 	whiteText.setString("White");
 	elements.push_back(&whiteText);
 
-	blackText.loadContent("media/img/Calibri.ttf", 70, sf::Vector2f(600 + midMargin, topMargin), true);
+	blackText.loadContent("media/img/Calibri.ttf", 70, sf::Vector2f(half + thirdOfHalf, topMargin), true);
 	blackText.setString("Black");
 	elements.push_back(&blackText);
 
 	// Line between colors
-	line.setSize(sf::Vector2f(600, 2));
-	line.setPosition(600, 50);
+	line.setSize(sf::Vector2f(eighthOfHeight * 6, 2));
+	line.setPosition(half, 50);
 	line.rotate(90);
 
 	// Player name texts
-	int nameTopMargin = 500;
-	int nameMidMargin = 100;
+	int nameTopMargin = eighthOfHeight * 5;
 
-	whiteNameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(nameMidMargin, nameTopMargin), true);
+	whiteNameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(fifthOfHalf, nameTopMargin), true);
 	whiteNameText.setString("Name:");
 	elements.push_back(&whiteNameText);
 
-	whitePlayerName.loadContent("media/img/Calibri.ttf", 38, sf::Vector2f(nameMidMargin + 150, nameTopMargin), true);
+	whitePlayerName.loadContent("media/img/Calibri.ttf", 38, sf::Vector2f(fifthOfHalf + 150, nameTopMargin), true);
 	whitePlayerName.setString(whiteNameString);
 	elements.push_back(&whitePlayerName);
 
-	blackNameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(600 + nameMidMargin, nameTopMargin), false);
+	blackNameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(half + fifthOfHalf, nameTopMargin), false);
 	blackNameText.setString("Name:");
 	elements.push_back(&blackNameText);
 
-	blackPlayerName.loadContent("media/img/Calibri.ttf", 38, sf::Vector2f(600 + nameMidMargin + 150, nameTopMargin), false);
+	blackPlayerName.loadContent("media/img/Calibri.ttf", 38, sf::Vector2f(half + fifthOfHalf + 150, nameTopMargin), false);
 	blackPlayerName.setString(blackNameString);
 	elements.push_back(&blackPlayerName);
 
 	// Player buttons
-	int buttonTopMargin = 300;
-	int buttonMidMargin = 100;
+	int buttonTopMargin = eighthOfHeight * 3;
 
-	whiteHumanButton.loadContent("media/img/humanButton.png", "media/img/humanHighlightedButton.png", "media/img/humanSelectedButton.png", sf::Vector2f(buttonMidMargin, buttonTopMargin), true);
+	whiteHumanButton.loadContent("media/img/humanButton.png", "media/img/humanHighlightedButton.png", "media/img/humanSelectedButton.png", sf::Vector2f(fifthOfHalf, buttonTopMargin), true);
 	elements.push_back(&whiteHumanButton);
 	// Set white human selected as default
 	whiteHumanButton.setState(Selected);
 
-	blackHumanButton.loadContent("media/img/humanButton.png", "media/img/humanHighlightedButton.png", "media/img/humanSelectedButton.png", sf::Vector2f(600 + buttonMidMargin, buttonTopMargin), true);
+	blackHumanButton.loadContent("media/img/humanButton.png", "media/img/humanHighlightedButton.png", "media/img/humanSelectedButton.png", sf::Vector2f(half + fifthOfHalf, buttonTopMargin), true);
 	elements.push_back(&blackHumanButton);
 
-	whiteAIButton.loadContent("media/img/computerButton.png", "media/img/computerHighlightedButton.png", "media/img/computerSelectedButton.png", sf::Vector2f(buttonMidMargin + 200, buttonTopMargin), true);
+	whiteAIButton.loadContent("media/img/computerButton.png", "media/img/computerHighlightedButton.png", "media/img/computerSelectedButton.png", sf::Vector2f(fifthOfHalf + 200, buttonTopMargin), true);
 	elements.push_back(&whiteAIButton);
 
-	blackAIButton.loadContent("media/img/computerButton.png", "media/img/computerHighlightedButton.png", "media/img/computerSelectedButton.png", sf::Vector2f(600 + buttonMidMargin + 200, buttonTopMargin), true);
+	blackAIButton.loadContent("media/img/computerButton.png", "media/img/computerHighlightedButton.png", "media/img/computerSelectedButton.png", sf::Vector2f(half + fifthOfHalf + 200, buttonTopMargin), true);
 	elements.push_back(&blackAIButton);
 	// Set black AI selected as default
 	blackAIButton.setState(Selected);
 
 	// Levels
-	int levelTopMargin = 500;
-	int levelMidMargin = 110;
+	int levelTopMargin = eighthOfHeight * 5;
 
-	whiteLevelOneButton.loadContent("media/img/level1Button.png", "media/img/level1HighlightedButton.png", "media/img/level1SelectedButton.png", sf::Vector2f(levelMidMargin, levelTopMargin), false);
+	whiteLevelOneButton.loadContent("media/img/level1Button.png", "media/img/level1HighlightedButton.png", "media/img/level1SelectedButton.png", sf::Vector2f(fifthOfHalf, levelTopMargin), false);
 	elements.push_back(&whiteLevelOneButton);
 	// Set level 1 as default
 	whiteLevelOneButton.setState(Selected);
 
-	whiteLevelTwoButton.loadContent("media/img/level2Button.png", "media/img/level2HighlightedButton.png", "media/img/level2SelectedButton.png", sf::Vector2f(levelMidMargin + 80, levelTopMargin), false);
+	whiteLevelTwoButton.loadContent("media/img/level2Button.png", "media/img/level2HighlightedButton.png", "media/img/level2SelectedButton.png", sf::Vector2f(fifthOfHalf + 85, levelTopMargin), false);
 	elements.push_back(&whiteLevelTwoButton);
 
-	whiteLevelThreeButton.loadContent("media/img/level3Button.png", "media/img/level3HighlightedButton.png", "media/img/level3SelectedButton.png", sf::Vector2f(levelMidMargin + 160, levelTopMargin), false);
+	whiteLevelThreeButton.loadContent("media/img/level3Button.png", "media/img/level3HighlightedButton.png", "media/img/level3SelectedButton.png", sf::Vector2f(fifthOfHalf + 170, levelTopMargin), false);
 	elements.push_back(&whiteLevelThreeButton);
 
-	whiteLevelFourButton.loadContent("media/img/level4Button.png", "media/img/level4HighlightedButton.png", "media/img/level4SelectedButton.png", sf::Vector2f(levelMidMargin + 240, levelTopMargin), false);
+	whiteLevelFourButton.loadContent("media/img/level4Button.png", "media/img/level4HighlightedButton.png", "media/img/level4SelectedButton.png", sf::Vector2f(fifthOfHalf + 255, levelTopMargin), false);
 	elements.push_back(&whiteLevelFourButton);
 
-	whiteLevelFiveButton.loadContent("media/img/level5Button.png", "media/img/level5HighlightedButton.png", "media/img/level5SelectedButton.png", sf::Vector2f(levelMidMargin + 320, levelTopMargin), false);
+	whiteLevelFiveButton.loadContent("media/img/level5Button.png", "media/img/level5HighlightedButton.png", "media/img/level5SelectedButton.png", sf::Vector2f(fifthOfHalf + 345, levelTopMargin), false);
 	elements.push_back(&whiteLevelFiveButton);
 
-	blackLevelOneButton.loadContent("media/img/level1Button.png", "media/img/level1HighlightedButton.png", "media/img/level1SelectedButton.png", sf::Vector2f(600 + levelMidMargin, levelTopMargin), true);
+	blackLevelOneButton.loadContent("media/img/level1Button.png", "media/img/level1HighlightedButton.png", "media/img/level1SelectedButton.png", sf::Vector2f(half + fifthOfHalf, levelTopMargin), true);
 	elements.push_back(&blackLevelOneButton);
 	// Set level 1 as default
 	blackLevelOneButton.setState(Selected);
 
-	blackLevelTwoButton.loadContent("media/img/level2Button.png", "media/img/level2HighlightedButton.png", "media/img/level2SelectedButton.png", sf::Vector2f(600 + levelMidMargin + 80, levelTopMargin), true);
+	blackLevelTwoButton.loadContent("media/img/level2Button.png", "media/img/level2HighlightedButton.png", "media/img/level2SelectedButton.png", sf::Vector2f(half + fifthOfHalf + 85, levelTopMargin), true);
 	elements.push_back(&blackLevelTwoButton);
 
-	blackLevelThreeButton.loadContent("media/img/level3Button.png", "media/img/level3HighlightedButton.png", "media/img/level3SelectedButton.png", sf::Vector2f(600 + levelMidMargin + 160, levelTopMargin), true);
+	blackLevelThreeButton.loadContent("media/img/level3Button.png", "media/img/level3HighlightedButton.png", "media/img/level3SelectedButton.png", sf::Vector2f(half + fifthOfHalf + 170, levelTopMargin), true);
 	elements.push_back(&blackLevelThreeButton);
 
-	blackLevelFourButton.loadContent("media/img/level4Button.png", "media/img/level4HighlightedButton.png", "media/img/level4SelectedButton.png", sf::Vector2f(600 + levelMidMargin + 240, levelTopMargin), true);
+	blackLevelFourButton.loadContent("media/img/level4Button.png", "media/img/level4HighlightedButton.png", "media/img/level4SelectedButton.png", sf::Vector2f(half + fifthOfHalf + 255, levelTopMargin), true);
 	elements.push_back(&blackLevelFourButton);
 
-	blackLevelFiveButton.loadContent("media/img/level5Button.png", "media/img/level5HighlightedButton.png", "media/img/level5SelectedButton.png", sf::Vector2f(600 + levelMidMargin + 320, levelTopMargin), true);
+	blackLevelFiveButton.loadContent("media/img/level5Button.png", "media/img/level5HighlightedButton.png", "media/img/level5SelectedButton.png", sf::Vector2f(half + fifthOfHalf + 345, levelTopMargin), true);
 	elements.push_back(&blackLevelFiveButton);
 
 	// Play button
-	playButton.loadContent("media/img/playButton.png", "media/img/playHighlightedButton.png", "", sf::Vector2f(535, 700), true);
+	playButton.loadContent("media/img/playButton.png", "media/img/playHighlightedButton.png", "", sf::Vector2f(half - 63, eighthOfHeight * 7), true);
 	elements.push_back(&playButton);
 }
 
