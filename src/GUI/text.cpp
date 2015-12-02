@@ -35,6 +35,11 @@ void Text::setString(const std::string& str)
 	text.setString(str);
 }
 
+void Text::setColor(sf::Color c)
+{
+	text.setColor(c);
+}
+
 bool Text::containsMousePos(sf::Vector2f v)
 {
 	return text.getGlobalBounds().contains(v);

@@ -151,6 +151,8 @@ public:
 	int BOARD_HORIZONTAL_OFFSET;
 	int BOARD_VERTICAL_OFFSET;
 
+	// Utilities
+	std::string getMoveStr(std::pair<int, int> m);
 };
 
 #endif

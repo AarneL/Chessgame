@@ -12,6 +12,8 @@
 #include <typeinfo>
 #include <chrono>
 #include <thread>
+#include <string>
+#include <vector>
 
 
 GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
@@ -130,9 +132,9 @@ void GameScreen::loadContent(void)
 	elements.push_back(&whitePlayerText);
 	blackPlayerText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 50), true);
 	elements.push_back(&blackPlayerText);
-	// Informaton text
+	// Information text
 	infoText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 100), true);
-	infoText.setString("White player turn");
+	infoText.setColor(sf::Color::Yellow);
 	elements.push_back(&infoText);
 
 	// Buttons
@@ -327,6 +329,9 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 	playerOnTurn = white;
 	whitePlayerText.setString("White: " + white->getName());
 	blackPlayerText.setString("Black: " + black->getName());
+	
+	// To format info text
+	infoText.setString("Game started!\n" +  playerOnTurn->getName() + "'s turn.");
 }
 
 void GameScreen::tearDown(void)
@@ -402,14 +407,15 @@ void GameScreen::movePiece(std::pair<int,int> move)
 
 int GameScreen::changeTurn()
 {
+	std::string s;
 	//test if it's checkmate
 	if(board.getState() & 0x01)
 	{
 		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
-		infoText.setString("Checkmate");
+		infoText.setString("Checkmate by " + playerOnTurn->getName() + "!");
 		std::cout << "Checkmate by " << playerOnTurn->getName() << std::endl;
 		tearDown();
-		return 0;
+		return 2;
 	}
 	else if (board.getState() & 0x02)
 	{
@@ -421,12 +427,19 @@ int GameScreen::changeTurn()
 
 	// If its black turn
 	if (playerOnTurn == black) {
-		infoText.setString("Black player moved <move>\nWhite player turn");
+		// Format infoText
+		s = playerOnTurn->getName() + " moved " + getMoveStr(getMoveList().back()) + "\n";
 		playerOnTurn = white;
+		s += playerOnTurn->getName() + "'s turn.";
+		infoText.setString(s);
+		s.clear();
 	}
 	else if(playerOnTurn == white){
-		infoText.setString("White player moved <move>\nBlack player turn");
+		s = playerOnTurn->getName() + " moved " + getMoveStr(getMoveList().back()) + "\n";
 		playerOnTurn = black;
+		s += playerOnTurn->getName() + "'s turn.";
+		infoText.setString(s);
+		s.clear();
 	}
 	moveSound.play();
 	return 2;
@@ -547,6 +560,22 @@ void GameScreen::drawPromotion()
 		}
 	}
 	window.display();
+}
+
+std::string GameScreen::getMoveStr(std::pair<int,int> m)
+{
+	std::vector<std::string> letters;
+	letters.push_back("a");
+	letters.push_back("b");
+	letters.push_back("c");
+	letters.push_back("d");
+	letters.push_back("e");
+	letters.push_back("f");
+	letters.push_back("g");
+	letters.push_back("h");
+
+	std::string ret = letters[m.first % 8] + std::to_string((m.first / 8) + 1) + "->" + letters[m.second % 8] + std::to_string((m.second / 8) + 1);
+	return ret;
 }
 
 void GameScreen::showSaveGameDialog() {
