@@ -16,28 +16,17 @@ public:
 
 private:
 	sf::RenderWindow &window;
-	// Temporary containers for elements
+
 	sf::Texture backgroundTexture;
 	sf::Sprite background;
 
-	sf::Texture newGameButtonTexture;
-	sf::Texture newGameHighlightedButtonTexture;
-	sf::Sprite newGameButton;
+	Button newGameButton;
+	Button loadGameButton;
+	Button optionsButton;
+	Button exitButton;
 
-	sf::Texture loadGameButtonTexture;
-	sf::Texture loadGameHighlightedButtonTexture;
-	sf::Sprite loadGameButton;
-
-	sf::Texture optionsButtonTexture;
-	sf::Texture optionsHighlightedButtonTexture;
-	sf::Sprite optionsButton;
-
-	sf::Texture exitButtonTexture;
-	sf::Texture exitHighlightedButtonTexture;
-	sf::Sprite exitButton;
-
-	// Containers for sprite elements so it can be looped
-	std::vector<sf::Sprite*> elements;
+	// Containers for Button elements so it can be looped
+	std::vector<Button*> elements;
 
 	void clearButtonHighlights();
 

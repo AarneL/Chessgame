@@ -22,24 +22,14 @@ void MenuScreen::loadContent(void)
 
 	backgroundTexture.loadFromFile("media/img/background.jpg");
 	background.setTexture(backgroundTexture);
-	elements.push_back(&background);
 
-	newGameButtonTexture.loadFromFile("media/img/new_game_button.png");
-	newGameHighlightedButtonTexture.loadFromFile("media/img/new_game_highlighted_button.png");
-	newGameButton.setTexture(newGameButtonTexture);
-	newGameButton.setPosition(sf::Vector2f(buttonsFromLeftEdge, topMargin));
+	newGameButton.loadContent("media/img/new_game_button.png", "media/img/new_game_highlighted_button.png", "", sf::Vector2f(buttonsFromLeftEdge, topMargin), true);
 	elements.push_back(&newGameButton);
 
-	loadGameButtonTexture.loadFromFile("media/img/load_game_button.png");
-	loadGameHighlightedButtonTexture.loadFromFile("media/img/load_game_highlighted_button.png");
-	loadGameButton.setTexture(loadGameButtonTexture);
-	loadGameButton.setPosition(sf::Vector2f(buttonsFromLeftEdge, topMargin+buttonDivLength));
+	loadGameButton.loadContent("media/img/load_game_button.png", "media/img/load_game_highlighted_button.png", "", sf::Vector2f(buttonsFromLeftEdge, topMargin+buttonDivLength), true);
 	elements.push_back(&loadGameButton);
 
-	exitButtonTexture.loadFromFile("media/img/exit_button.png");
-	exitHighlightedButtonTexture.loadFromFile("media/img/exit_highlighted_button.png");
-	exitButton.setTexture(exitButtonTexture);
-	exitButton.setPosition(sf::Vector2f(buttonsFromLeftEdge, topMargin+2*buttonDivLength));
+	exitButton.loadContent("media/img/exit_button.png", "media/img/exit_highlighted_button.png", "", sf::Vector2f(buttonsFromLeftEdge, topMargin+2*buttonDivLength), true);
 	elements.push_back(&exitButton);
 }
 
@@ -54,24 +44,24 @@ int MenuScreen::update()
 		if (event.type == sf::Event::MouseMoved)
 		{
 			bool buttonHovered = false;
-			if (newGameButton.getGlobalBounds().contains(v))
+			if (newGameButton.containsMousePos(v))
 			{
 				// Highlight newGameButton
-				newGameButton.setTexture(newGameHighlightedButtonTexture, false);
+				newGameButton.setState(Highlighted);
 				buttonHovered = true;
 			}
 
-			else if (loadGameButton.getGlobalBounds().contains(v))
+			else if (loadGameButton.containsMousePos(v))
 			{
 				// Highlight loadGameButton
-				loadGameButton.setTexture(loadGameHighlightedButtonTexture, false);
+				loadGameButton.setState(Highlighted);
 				buttonHovered = true;
 			}
 
-			else if (exitButton.getGlobalBounds().contains(v))
+			else if (exitButton.containsMousePos(v))
 			{
 				// Highlight exitButton
-				exitButton.setTexture(exitHighlightedButtonTexture, false);
+				exitButton.setState(Highlighted);
 				buttonHovered = true;
 			}
 
@@ -83,14 +73,14 @@ int MenuScreen::update()
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			if (newGameButton.getGlobalBounds().contains(v))
+			if (newGameButton.containsMousePos(v))
 			{
 				// Start newgamescreen
 				std::cout << "User pressed newGameButton." << std::endl;
 				return 1; // NOTE: For now new game will start game immeaditely
 			}
 
-			if (loadGameButton.getGlobalBounds().contains(v))
+			if (loadGameButton.containsMousePos(v))
 			{
 				// User pressed loadbutton->Open dialog box
 				std::cout << "User pressed loadButton." << std::endl;
@@ -98,8 +88,7 @@ int MenuScreen::update()
 				// Start gameScreen
 			}
 
-
-			if (exitButton.getGlobalBounds().contains(v))
+			if (exitButton.containsMousePos(v))
 			{
 				// Exit program
 				std::cout << "User pressed exitbutton." << std::endl;
@@ -116,17 +105,18 @@ int MenuScreen::update()
 void MenuScreen::draw()
 {
 	window.clear(sf::Color(250,250,250));
+	window.draw(background);
 	for (auto element : elements) {
-		window.draw(*element);
+		element->draw(window);
 	}
 	window.display();
 }
 
 void MenuScreen::clearButtonHighlights()
 {
-	newGameButton.setTexture(newGameButtonTexture, false);
-	loadGameButton.setTexture(loadGameButtonTexture, false);
-	exitButton.setTexture(exitButtonTexture, false);
+	for (auto element : elements) {
+		element->setState(Normal);
+	}
 }
 
 int MenuScreen::loadGame()
