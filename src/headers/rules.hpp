@@ -32,6 +32,7 @@ namespace Rules {
 
 	bool isThreatenedAfter(const std::vector<int>&, int, int);
 
+	bool fiftyMoveRule(const std::vector<std::vector<int>>& boardHistory, const std::vector<std::pair<int,int>>& moveHistory);
 
 }
 

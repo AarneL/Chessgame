@@ -505,5 +505,35 @@ namespace Rules
 	}
 
 
+	//Check whether draw can be claimed under the fifty-move rule, return true if so
+	//NOTE: "move" = both players have completed a move
+	bool fiftyMoveRule(const std::vector<std::vector<int>>& boardHistory, const std::vector<std::pair<int,int>>& moveHistory){
+
+		bool ret = true;
+
+		//Less than 50 moves (move pairs) made, return immediately
+		if (boardHistory.size() < 100)
+			return false;
+
+		//Start from end and check until 100 moves (50 "moves") have been checked, no need to check further
+		for (int i=boardHistory.size()-1; i>( (int)boardHistory.size()-1-100); i--) {
+
+			//Pawn moved
+			//Break immediately, draw cannot be claimed
+			if (boardHistory[i][moveHistory[i].first] == W_PAWN || boardHistory[i][moveHistory[i].first] == B_PAWN ) {
+				ret = false;
+				break;
+			}
+
+			//Capture made, no need to check color when the move history is assumed to contain valid moves only
+			if (boardHistory[i][moveHistory[i].second] != NONE) {
+				ret = false;
+				break;
+			}
+
+		}
+
+		return ret;
+	}
 
 }
