@@ -33,6 +33,13 @@ void MenuScreen::loadContent(void)
 
 	exitButton.loadContent("media/img/exit_button.png", "media/img/exit_highlighted_button.png", "", sf::Vector2f(buttonsFromLeftEdge, topMargin+2*buttonDivLength), true);
 	elements.push_back(&exitButton);
+
+	// Music :D
+	backgroundMusicBuffer.loadFromFile("media/sound/chess.wav");
+	backgroundMusic.setBuffer(backgroundMusicBuffer);
+	backgroundMusic.setVolume(2);
+	backgroundMusic.play();
+
 }
 
 int MenuScreen::update()
@@ -75,6 +82,7 @@ int MenuScreen::update()
 			{
 				// Start newgamescreen
 				std::cout << "User pressed newGameButton." << std::endl;
+				backgroundMusic.stop();
 				return 1; // NOTE: For now new game will start game immeaditely
 			}
 
@@ -82,8 +90,9 @@ int MenuScreen::update()
 			{
 				// User pressed loadbutton->Open dialog box
 				std::cout << "User pressed loadButton." << std::endl;
-				return loadGame();
 				// Start gameScreen
+				backgroundMusic.stop();
+				return loadGame();
 			}
 
 			else if (exitButton.containsMousePos(v))

@@ -25,6 +25,9 @@ private:
 	Button optionsButton;
 	Button exitButton;
 
+	// Background music
+	sf::SoundBuffer backgroundMusicBuffer;
+	sf::Sound backgroundMusic;
 	// Containers for Button elements so it can be looped
 	std::vector<Button*> elements;
 
