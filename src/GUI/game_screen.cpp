@@ -275,7 +275,9 @@ void GameScreen::clearButtonHighlights(std::vector<Button*> v)
 
 void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
 {
-	tearDown();
+	if (white != NULL) {
+		tearDown();
+	}
 	// Game starts with white players turn
 	board = Board();
 	activeSquare = -1;

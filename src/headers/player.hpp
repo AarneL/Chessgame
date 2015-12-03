@@ -12,7 +12,7 @@ class Player
 {
 public:
 	Player() {};
-	~Player() {};
+	virtual ~Player() {};
 	std::string getName() const;
 	ColorType getColor() const;
 	virtual void getMove() = 0;
