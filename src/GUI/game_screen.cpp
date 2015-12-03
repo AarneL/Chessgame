@@ -293,10 +293,10 @@ void GameScreen::tearDown(void)
 {
 	//Create base board starting from down left corner
 	if (white != NULL) {
-		free(white);
+		delete white;
 	}
 	if (black != NULL) {
-		free(black);
+		delete black;
 	}
 	pieces.clear();
 	initPieces();
