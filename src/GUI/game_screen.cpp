@@ -279,9 +279,7 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 	// Game starts with white players turn
 	board = Board();
 	activeSquare = -1;
-	if (white == NULL && black == NULL) {
-		initPlayers(whiteName, whiteLevel, blackName, blackLevel);
-	}
+	initPlayers(whiteName, whiteLevel, blackName, blackLevel);
 
 	playerOnTurn = white;
 	whitePlayerText.setString("White: " + white->getName());
@@ -294,6 +292,12 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 void GameScreen::tearDown(void)
 {
 	//Create base board starting from down left corner
+	if (white != NULL) {
+		free(white);
+	}
+	if (black != NULL) {
+		free(black);
+	}
 	pieces.clear();
 	initPieces();
 	setPieceInitialPositions();
