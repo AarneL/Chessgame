@@ -162,6 +162,7 @@ int MenuScreen::loadGame()
 		move.first = atoi((line.substr(0, line.find('-'))).c_str());
 		move.second = atoi((line.substr(line.find('-')+1)).c_str());
 		gameScreen->movePiece(move);
+		gameScreen->changeTurn();
 	}
 
 	ifs.close();
