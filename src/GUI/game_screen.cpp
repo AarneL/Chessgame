@@ -28,78 +28,40 @@ void GameScreen::loadContent(void)
 {
 	// Set textures to pieces and push them to pieces vector in a right order
 	whiteRook1.loadContent("media/img/rook_white.png");
-	pieces.push_back(&whiteRook1);
 	whiteKnight1.loadContent("media/img/knight_white.png");
-	pieces.push_back(&whiteKnight1);
 	whiteBishop1.loadContent("media/img/bishop_white.png");
-	pieces.push_back(&whiteBishop1);
 	whiteQueen.loadContent("media/img/queen_white.png");
-	pieces.push_back(&whiteQueen);
 	whiteKing.loadContent("media/img/king_white.png");
-	pieces.push_back(&whiteKing);
 	whiteBishop2.loadContent("media/img/bishop_white.png");
-	pieces.push_back(&whiteBishop2);
 	whiteKnight2.loadContent("media/img/knight_white.png");
-	pieces.push_back(&whiteKnight2);
 	whiteRook2.loadContent("media/img/rook_white.png");
-	pieces.push_back(&whiteRook2);
 
 	whitePawn1.loadContent("media/img/pawn_white.png");
-	pieces.push_back(&whitePawn1);
 	whitePawn2.loadContent("media/img/pawn_white.png");
-	pieces.push_back(&whitePawn2);
 	whitePawn3.loadContent("media/img/pawn_white.png");
-	pieces.push_back(&whitePawn3);
 	whitePawn4.loadContent("media/img/pawn_white.png");
-	pieces.push_back(&whitePawn4);
 	whitePawn5.loadContent("media/img/pawn_white.png");
-	pieces.push_back(&whitePawn5);
 	whitePawn6.loadContent("media/img/pawn_white.png");
-	pieces.push_back(&whitePawn6);
 	whitePawn7.loadContent("media/img/pawn_white.png");
-	pieces.push_back(&whitePawn7);
 	whitePawn8.loadContent("media/img/pawn_white.png");
-	pieces.push_back(&whitePawn8);
-
-	// To keep the pieces list as long as gameboard squares, add null sprites
-	// to the indexes where we have no pieces
-	for (int i = 0; i < 32; i++) {
-		pieces.push_back(NULL);
-	}
-
 	blackPawn1.loadContent("media/img/pawn_black.png");
-	pieces.push_back(&blackPawn1);
 	blackPawn2.loadContent("media/img/pawn_black.png");
-	pieces.push_back(&blackPawn2);
 	blackPawn3.loadContent("media/img/pawn_black.png");
-	pieces.push_back(&blackPawn3);
 	blackPawn4.loadContent("media/img/pawn_black.png");
-	pieces.push_back(&blackPawn4);
 	blackPawn5.loadContent("media/img/pawn_black.png");
-	pieces.push_back(&blackPawn5);
 	blackPawn6.loadContent("media/img/pawn_black.png");
-	pieces.push_back(&blackPawn6);
 	blackPawn7.loadContent("media/img/pawn_black.png");
-	pieces.push_back(&blackPawn7);
 	blackPawn8.loadContent("media/img/pawn_black.png");
-	pieces.push_back(&blackPawn8);
-
 	blackRook1.loadContent("media/img/rook_black.png");
-	pieces.push_back(&blackRook1);
 	blackKnight1.loadContent("media/img/knight_black.png");
-	pieces.push_back(&blackKnight1);
 	blackBishop1.loadContent("media/img/bishop_black.png");
-	pieces.push_back(&blackBishop1);
 	blackQueen.loadContent("media/img/queen_black.png");
-	pieces.push_back(&blackQueen);
 	blackKing.loadContent("media/img/king_black.png");
-	pieces.push_back(&blackKing);
 	blackBishop2.loadContent("media/img/bishop_black.png");
-	pieces.push_back(&blackBishop2);
 	blackKnight2.loadContent("media/img/knight_black.png");
-	pieces.push_back(&blackKnight2);
 	blackRook2.loadContent("media/img/rook_black.png");
-	pieces.push_back(&blackRook2);
+	
+	initPieces(); // Put piece pointers to their initial locations
 
 	//Create base board starting from down left corner
 	for (int i = 7; i >= 0; i--) {
@@ -112,12 +74,10 @@ void GameScreen::loadContent(void)
 				square->loadContent("media/img/square_dark.png", "media/img/square_dark_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
 			}
 			gameBoard.push_back(square);
-			int index = gameBoard.size() - 1;
-			if (pieces[index] != NULL) {
-				pieces[index]->setPosition(gameBoard[index]->getPosition());
-			}
 		}
 	}
+
+	setPieceInitialPositions(); // Put piece sprites to their right initial locations
 
 	// Load game sounds
 	if (!moveSoundBuffer.loadFromFile("media/sound/movePiece.wav")) {
@@ -313,25 +273,14 @@ void GameScreen::clearButtonHighlights()
 
 void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
 {
+	tearDown();
 	// Game starts with white players turn
 	board = Board();
 	activeSquare = -1;
-
-	// White player type
-	if (whiteName == "Computer") {
-		white = new AI(whiteName, ColorType::White, whiteLevel);
-	}
-	else {
-		white = new Human(whiteName, ColorType::White);
+	if (white == NULL && black == NULL) {
+		initPlayers(whiteName, whiteLevel, blackName, blackLevel);
 	}
 
-	// Black player type
-	if (blackName == "Computer") {
-		black = new AI(blackName, ColorType::Black, blackLevel);
-	}
-	else {
-		black = new Human(blackName, ColorType::Black);
-	}
 	playerOnTurn = white;
 	whitePlayerText.setString("White: " + white->getName());
 	blackPlayerText.setString("Black: " + black->getName());
@@ -342,30 +291,10 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 
 void GameScreen::tearDown(void)
 {
-	free(white);
-	free(black);
-	board = Board();
-	pieces.clear();
-	gameBoard.clear();
 	//Create base board starting from down left corner
-	Square square;
-	for (int i = 7; i >= 0; i--) {
-		for (int j = 0; j < 8; j++) {
-			square = Square();
-			if ((i + j) % 2 == 0) {
-				square.loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
-			}
-			else if ((i + j) % 2 == 1) {
-				square.loadContent("media/img/square_dark.png", "media/img/square_dark_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
-			}
-			gameBoard.push_back(&square);
-			int index = gameBoard.size() - 1;
-			if (pieces[index] != NULL) {
-				pieces[index]->setPosition(gameBoard[index]->getPosition());
-			}
-		}
-	}
-
+	pieces.clear();
+	initPieces();
+	setPieceInitialPositions();
 }
 
 void GameScreen::movePiece(std::pair<int,int> move)
@@ -415,20 +344,6 @@ int GameScreen::changeTurn()
 {
 	std::string s;
 	//test if it's checkmate
-	if(board.getState() & 0x01)
-	{
-		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
-		infoText.setString("Checkmate by " + playerOnTurn->getName() + "!");
-		endGameText.setString("Game ended!\n" + playerOnTurn->getName() + " wins!");
-		return endGame();
-	}
-	else if (board.getState() & 0x02)
-	{
-		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
-		std::cout << "Stalemate" << std::endl;
-		endGameText.setString("Game ended!");
-		return endGame();
-	}
 
 	// If its black turn
 	if (playerOnTurn == black) {
@@ -446,7 +361,22 @@ int GameScreen::changeTurn()
 		infoText.setString(s);
 		s.clear();
 	}
-	moveSound.play();
+
+	moveSound.play(); // SWWIP
+	if(board.getState() & 0x01)
+	{
+		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
+		infoText.setString("Checkmate by " + playerOnTurn->getName() + "!");
+		endGameText.setString("Game ended!\n" + playerOnTurn->getName() + " wins!");
+		return endGame();
+	}
+	else if (board.getState() & 0x02)
+	{
+		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
+		std::cout << "Stalemate" << std::endl;
+		endGameText.setString("Game ended!");
+		return endGame();
+	}
 	return 2;
 }
 
@@ -583,6 +513,18 @@ int GameScreen::endGame()
 
 void GameScreen::drawEndGame()
 {
+	window.clear();
+	for (auto square : gameBoard) {
+		square->draw(window);
+	}
+	for (auto piece : pieces) {
+		if (piece != NULL) {
+			piece->draw(window);
+		}
+	}
+	for (auto element : elements) {
+		element->draw(window);
+	}
 	window.draw(rectangle);
 	for (auto button : endGameButtons) {
 		button->draw(window);
@@ -617,8 +559,8 @@ int GameScreen::endGameOptions()
 				return 0;
 			}
 			else if (endGamePlayAgainButton.containsMousePos(mousePos)) {
-				tearDown();
-				return 0;
+				initialize(white->getName(), white->getLevel(), black->getName(), black->getLevel());
+				return 2;
 			}
 		}
 	}
@@ -639,6 +581,85 @@ std::string GameScreen::getMoveStr(std::pair<int,int> m)
 
 	std::string ret = letters[m.first % 8] + std::to_string((m.first / 8) + 1) + "->" + letters[m.second % 8] + std::to_string((m.second / 8) + 1);
 	return ret;
+}
+
+void GameScreen::initPieces()
+{
+	// This method initialises pieces vector with right starting positions
+	pieces.push_back(&whiteRook1);
+	pieces.push_back(&whiteKnight1);
+	pieces.push_back(&whiteBishop1);
+	pieces.push_back(&whiteQueen);
+	pieces.push_back(&whiteKing);
+	pieces.push_back(&whiteBishop2);
+	pieces.push_back(&whiteKnight2);
+	pieces.push_back(&whiteRook2);
+	pieces.push_back(&whitePawn1);
+	pieces.push_back(&whitePawn2);
+	pieces.push_back(&whitePawn3);
+	pieces.push_back(&whitePawn4);
+	pieces.push_back(&whitePawn5);
+	pieces.push_back(&whitePawn6);
+	pieces.push_back(&whitePawn7);
+	pieces.push_back(&whitePawn8);
+
+	// To keep the pieces list as long as gameboard squares, add null sprites
+	// to the indexes where we have no pieces
+	for (int i = 0; i < 32; i++) {
+		pieces.push_back(NULL);
+	}
+
+	pieces.push_back(&blackPawn1);
+	pieces.push_back(&blackPawn2);
+	pieces.push_back(&blackPawn3);
+	pieces.push_back(&blackPawn4);
+	pieces.push_back(&blackPawn5);
+	pieces.push_back(&blackPawn6);
+	pieces.push_back(&blackPawn7);
+	pieces.push_back(&blackPawn8);
+
+	pieces.push_back(&blackRook1);
+	pieces.push_back(&blackKnight1);
+	pieces.push_back(&blackBishop1);
+	pieces.push_back(&blackQueen);
+	pieces.push_back(&blackKing);
+	pieces.push_back(&blackBishop2);
+	pieces.push_back(&blackKnight2);
+	pieces.push_back(&blackRook2);
+
+}
+
+void GameScreen::setPieceInitialPositions()
+{
+	for (int i = 0; i < 64; i++) {
+		if (pieces[i] != NULL) {
+			pieces[i]->setPosition(gameBoard[i]->getPosition());
+		}
+	}
+}
+
+void GameScreen::playAgainInit()
+{
+	initialize(white->getName(), white->getLevel(), black->getName(), black->getLevel());
+}
+
+void GameScreen::initPlayers(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
+{
+	// White player type
+	if (whiteName == "Computer") {
+		white = new AI(whiteName, ColorType::White, whiteLevel);
+	}
+	else {
+		white = new Human(whiteName, ColorType::White);
+	}
+
+	// Black player type
+	if (blackName == "Computer") {
+		black = new AI(blackName, ColorType::Black, blackLevel);
+	}
+	else {
+		black = new Human(blackName, ColorType::Black);
+	}
 }
 
 void GameScreen::showSaveGameDialog() {
