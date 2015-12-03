@@ -509,6 +509,7 @@ int GameScreen::choosePromotion(int index)
 			for (auto square : promotionSquares) {
 				if (square->containsMousePos(mousePos)) {
 					square->setState(Highlighted);
+					break;
 				} else {
 					clearHighlights(promotionSquares);
 				}
