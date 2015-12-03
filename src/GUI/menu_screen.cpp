@@ -22,7 +22,7 @@ void MenuScreen::loadContent(void)
 	 * so that what is drawn "behind" will be added firsts
 	 */
 
-	backgroundTexture.loadFromFile("media/img/background.jpg");
+	backgroundTexture.loadFromFile("media/img/background.png");
 	background.setTexture(backgroundTexture);
 
 	newGameButton.loadContent("media/img/new_game_button.png", "media/img/new_game_highlighted_button.png", "", sf::Vector2f(buttonsFromLeftEdge, topMargin), true);
