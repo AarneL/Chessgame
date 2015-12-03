@@ -103,6 +103,11 @@ int MenuScreen::update()
 			}
 		}
 
+		else if (event.type == sf::Event::Closed) {
+			window.close();
+			return -1;
+		}
+
 	}
 	// Continue using same screen
 	return 0;

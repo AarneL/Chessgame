@@ -195,19 +195,13 @@ void GameScreen::loadContent(void)
 
 int GameScreen::update()
 {
+	// Human turn
 	if (playerOnTurn->getType() == std::string("Human")) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 				return 0;
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-				free(white);
-				free(black);
-				return -1;
-			}
-
-			// Human turn
 			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
 			if (event.type == sf::Event::MouseMoved) {
 				if (saveButton.containsMousePos(mousePos)) {
@@ -257,6 +251,10 @@ int GameScreen::update()
 						}
 					}
 				}
+			}
+			else if (event.type == sf::Event::Closed) {
+			   window.close();
+			   return -1;
 			}
 		}
 	}
@@ -548,6 +546,9 @@ int GameScreen::choosePromotion(int index)
 					return B_ROOK;
 				}
 			}
+		} else if (event.type == sf::Event::Closed) {
+			window.close();
+			return -1;
 		}
 	}
 	return -1;
@@ -597,10 +598,10 @@ void GameScreen::drawEndGame()
 
 int GameScreen::endGameOptions()
 {
-	sf::Event evt;
-	while (window.pollEvent(evt)) {
+	sf::Event event;
+	while (window.pollEvent(event)) {
 		sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
-		if (evt.type == sf::Event::MouseMoved) {
+		if (event.type == sf::Event::MouseMoved) {
 			bool highlight = false;
 			for (auto button : endGameButtons) {
 				if (button->containsMousePos(mousePos)) {
@@ -609,13 +610,11 @@ int GameScreen::endGameOptions()
 				}
 			}
 			if (!highlight) {
-				for (auto button : endGameButtons) {
-					button->setState(Normal);
-				}
+				clearButtonHighlights(endGameButtons);
 			}
 
 		}
-		if (evt.type == sf::Event::MouseButtonPressed) {
+		else if (event.type == sf::Event::MouseButtonPressed) {
 			if (endGameMainMenuButton.containsMousePos(mousePos)) {
 				tearDown();
 				return 0;
@@ -624,6 +623,10 @@ int GameScreen::endGameOptions()
 				tearDown();
 				return 0;
 			}
+		}
+		else if (event.type == sf::Event::Closed) {
+			window.close();
+			return -1;
 		}
 	}
 	return -1;

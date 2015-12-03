@@ -310,7 +310,8 @@ int NewGameScreen::update()
 				blackPlayerName.setString(blackNameString);
 			}
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+		else if (event.type == sf::Event::Closed) {
+			window.close();
 			return -1;
 		}
 	}
