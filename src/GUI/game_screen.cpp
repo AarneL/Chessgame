@@ -184,6 +184,13 @@ void GameScreen::loadContent(void)
 	blackPromotionKnight.loadContent("media/img/knight_black.png");
 	blackPromotionKnight.setPosition(promotionSquares[3]->getPosition());
 	blackPromotionPieces.push_back(&blackPromotionKnight);
+	
+	// Game ending
+	endGameMainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(250, 450), true);
+	endGamePlayAgainButton.loadContent("media/img/playAgainButton.png", "media/img/playAgainHighlightedButton.png" , "", sf::Vector2f(500, 450), true);
+	endGameButtons.push_back(&endGameMainMenuButton);
+	endGameButtons.push_back(&endGamePlayAgainButton);
+	endGameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
 }
 
 int GameScreen::update()
@@ -302,7 +309,6 @@ void GameScreen::clearButtonHighlights()
 {
 	saveButton.setState(Normal);
 	mainMenuButton.setState(Normal);
-
 }
 
 void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
@@ -413,16 +419,15 @@ int GameScreen::changeTurn()
 	{
 		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
 		infoText.setString("Checkmate by " + playerOnTurn->getName() + "!");
-		std::cout << "Checkmate by " << playerOnTurn->getName() << std::endl;
-		tearDown();
-		return 2;
+		endGameText.setString("Game ended!\n" + playerOnTurn->getName() + " wins!");
+		return endGame();
 	}
 	else if (board.getState() & 0x02)
 	{
 		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
 		std::cout << "Stalemate" << std::endl;
-		tearDown();
-		return 0;
+		endGameText.setString("Game ended!");
+		return endGame();
 	}
 
 	// If its black turn
@@ -560,6 +565,63 @@ void GameScreen::drawPromotion()
 		}
 	}
 	window.display();
+}
+
+int GameScreen::endGame()
+{
+	// This is called always when game ends
+	int status = -1;
+	while (status == -1) {
+		status = endGameOptions();
+		drawEndGame();
+	}
+	// This needs to empty the game and if necessary start new game
+
+	return status;
+}
+
+void GameScreen::drawEndGame()
+{
+	window.draw(rectangle);
+	for (auto button : endGameButtons) {
+		button->draw(window);
+	}
+	endGameText.draw(window);
+	window.display();
+}
+
+int GameScreen::endGameOptions()
+{
+	sf::Event evt;
+	while (window.pollEvent(evt)) {
+		sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
+		if (evt.type == sf::Event::MouseMoved) {
+			bool highlight = false;
+			for (auto button : endGameButtons) {
+				if (button->containsMousePos(mousePos)) {
+					button->setState(Highlighted);
+					highlight = true;
+				}
+			}
+			if (!highlight) {
+				for (auto button : endGameButtons) {
+					button->setState(Normal);
+				}
+			}
+
+		}
+		if (evt.type == sf::Event::MouseButtonPressed) {
+			if (endGameMainMenuButton.containsMousePos(mousePos)) {
+				tearDown();
+				return 0;
+			}
+			else if (endGamePlayAgainButton.containsMousePos(mousePos)) {
+				tearDown();
+				return 0;
+			}
+		}
+	}
+	return -1;
 }
 
 std::string GameScreen::getMoveStr(std::pair<int,int> m)

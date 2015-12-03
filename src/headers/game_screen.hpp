@@ -150,6 +150,16 @@ public:
 	// Parameters for graphical design
 	int BOARD_HORIZONTAL_OFFSET;
 	int BOARD_VERTICAL_OFFSET;
+	
+	// End game functions
+	int endGame();
+	void drawEndGame();
+	int endGameOptions();
+
+	Button endGameMainMenuButton;
+	Button endGamePlayAgainButton;
+	std::vector<Button*> endGameButtons;
+	Text endGameText;
 
 	// Utilities
 	std::string getMoveStr(std::pair<int, int> m);
