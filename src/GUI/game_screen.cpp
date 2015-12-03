@@ -89,21 +89,21 @@ void GameScreen::loadContent(void)
 
 	// Player names
 	whitePlayerText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 10), true);
-	elements.push_back(&whitePlayerText);
+	texts.push_back(&whitePlayerText);
 	blackPlayerText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 50), true);
-	elements.push_back(&blackPlayerText);
+	texts.push_back(&blackPlayerText);
 	// Information text
 	infoText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 100), true);
 	infoText.setColor(sf::Color::Yellow);
-	elements.push_back(&infoText);
+	texts.push_back(&infoText);
 
 	// Buttons
 	// Save button
 	saveButton.loadContent("media/img/saveGameButton.png", "media/img/saveGameHighlightedButton.png", "", sf::Vector2f(900, 400), true);
-	elements.push_back(&saveButton);
+	buttons.push_back(&saveButton);
 	// MainMenu button
 	mainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(900, 600), true);
-	elements.push_back(&mainMenuButton);
+	buttons.push_back(&mainMenuButton);
 
 	// Pawn promotion
 	rectangle.setSize(sf::Vector2f(530, 250));
@@ -144,7 +144,7 @@ void GameScreen::loadContent(void)
 	blackPromotionKnight.loadContent("media/img/knight_black.png");
 	blackPromotionKnight.setPosition(promotionSquares[3]->getPosition());
 	blackPromotionPieces.push_back(&blackPromotionKnight);
-	
+
 	// Game ending
 	endGameMainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(250, 450), true);
 	endGamePlayAgainButton.loadContent("media/img/playAgainButton.png", "media/img/playAgainHighlightedButton.png" , "", sf::Vector2f(500, 450), true);
@@ -155,19 +155,13 @@ void GameScreen::loadContent(void)
 
 int GameScreen::update()
 {
+	// Human turn
 	if (playerOnTurn->getType() == std::string("Human")) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 				return 0;
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-				free(white);
-				free(black);
-				return -1;
-			}
-
-			// Human turn
 			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
 			if (event.type == sf::Event::MouseMoved) {
 				if (saveButton.containsMousePos(mousePos)) {
@@ -177,7 +171,7 @@ int GameScreen::update()
 					mainMenuButton.setState(Highlighted);
 				}
 				else
-					clearButtonHighlights();
+					clearButtonHighlights(buttons);
 			}
 			if (event.type == sf::Event::MouseButtonPressed) {
 
@@ -218,6 +212,10 @@ int GameScreen::update()
 					}
 				}
 			}
+			else if (event.type == sf::Event::Closed) {
+			   window.close();
+			   return -1;
+			}
 		}
 	}
 	// AI Turn
@@ -245,8 +243,11 @@ void GameScreen::draw()
 			piece->draw(window);
 		}
 	}
-	for (auto element : elements) {
-		element->draw(window);
+	for (auto text : texts) {
+		text->draw(window);
+	}
+	for (auto button : buttons) {
+		button->draw(window);
 	}
 	window.display();
 }
@@ -265,10 +266,11 @@ void GameScreen::clearHighlights(std::vector<Square*> v)
 	}
 }
 
-void GameScreen::clearButtonHighlights()
+void GameScreen::clearButtonHighlights(std::vector<Button*> v)
 {
-	saveButton.setState(Normal);
-	mainMenuButton.setState(Normal);
+	for (auto i : v) {
+		i->setState(Normal);
+	}
 }
 
 void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
@@ -284,7 +286,7 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 	playerOnTurn = white;
 	whitePlayerText.setString("White: " + white->getName());
 	blackPlayerText.setString("Black: " + black->getName());
-	
+
 	// To format info text
 	infoText.setString("Game started!\n" +  playerOnTurn->getName() + "'s turn.");
 }
@@ -474,6 +476,9 @@ int GameScreen::choosePromotion(int index)
 					return B_ROOK;
 				}
 			}
+		} else if (event.type == sf::Event::Closed) {
+			window.close();
+			return -1;
 		}
 	}
 	return -1;
@@ -535,10 +540,10 @@ void GameScreen::drawEndGame()
 
 int GameScreen::endGameOptions()
 {
-	sf::Event evt;
-	while (window.pollEvent(evt)) {
+	sf::Event event;
+	while (window.pollEvent(event)) {
 		sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
-		if (evt.type == sf::Event::MouseMoved) {
+		if (event.type == sf::Event::MouseMoved) {
 			bool highlight = false;
 			for (auto button : endGameButtons) {
 				if (button->containsMousePos(mousePos)) {
@@ -547,13 +552,11 @@ int GameScreen::endGameOptions()
 				}
 			}
 			if (!highlight) {
-				for (auto button : endGameButtons) {
-					button->setState(Normal);
-				}
+				clearButtonHighlights(endGameButtons);
 			}
 
 		}
-		if (evt.type == sf::Event::MouseButtonPressed) {
+		else if (event.type == sf::Event::MouseButtonPressed) {
 			if (endGameMainMenuButton.containsMousePos(mousePos)) {
 				tearDown();
 				return 0;
@@ -562,6 +565,10 @@ int GameScreen::endGameOptions()
 				initialize(white->getName(), white->getLevel(), black->getName(), black->getLevel());
 				return 2;
 			}
+		}
+		else if (event.type == sf::Event::Closed) {
+			window.close();
+			return -1;
 		}
 	}
 	return -1;

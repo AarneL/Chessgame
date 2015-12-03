@@ -29,11 +29,8 @@ int OptionsScreen::update(sf::RenderWindow &window)
 				return 0;
 			}
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-			return -1;
-
 	}
-		return 2;
+	return 2;
 }
 
 void OptionsScreen::draw(sf::RenderWindow &window)
