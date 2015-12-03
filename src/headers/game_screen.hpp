@@ -103,12 +103,14 @@ private:
 	Button saveButton;
 	Button mainMenuButton;
 
+	std::vector<Button*> buttons;
+
 	// Player names
 	Text whitePlayerText;
 	Text blackPlayerText;
-	
 	// InformationBar
 	Text infoText;
+	std::vector<Text*> texts;
 
 public:
     GameScreen(sf::RenderWindow &w);
@@ -119,7 +121,7 @@ public:
     void draw();
 	void highlight(std::vector<int> v);
 	void clearHighlights(std::vector<Square*> v);
-	void clearButtonHighlights();
+	void clearButtonHighlights(std::vector<Button*> v);
 	void initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
 	void tearDown(void);
 
