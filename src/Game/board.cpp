@@ -228,7 +228,19 @@ int Board::updateState(int index, int caller) //index is the destination of last
 	//Check for promotion
 	if ( (board[lastMove.second] == W_PAWN && lastMove.second >= 56 && lastMove.second <= 63)
 		|| (board[lastMove.second] == B_PAWN && lastMove.second >= 0 && lastMove.second <= 7) )
-		retVal = lastMove.second;
+	{
+		if(caller) //for ai algorithm the update must be made immediately and not depending on the retval
+		{
+			if(turn)
+				this->changePiece(index, W_QUEEN);
+			else
+				this->changePiece(index, B_QUEEN);
+		}
+		else
+		{
+			retVal = lastMove.second;
+		}
+	}
 
 	//check for el passant
 	if(moveList.size() > 4) //this needs to be done so we don't try invalid indexes
