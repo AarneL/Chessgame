@@ -331,7 +331,8 @@ int Board::updateState(int index, int caller) //index is the destination of last
 	else
 		turn = 1;
 
-//ai optimization removed for now but will be returned when bugs are fixed
+	if(!caller)
+	{
 		if(isStaleMate(turn))
 		{
 			//do some stuff to end the game
@@ -345,7 +346,7 @@ int Board::updateState(int index, int caller) //index is the destination of last
 			}
 			//return retVal;
 		}
-
+	}
 	return retVal;
 }
 

@@ -36,7 +36,7 @@ namespace AiAlgorithm
 						newboard.movePiece(i, j);//supposing possibleMoves doesn't return origin
 						newboard.updateState(j, 1);
 						int temp = alphaBeta(newboard, depth-1, a, b, false);
-						if(v[0] < temp)
+						if(v[0] < temp) //make sure a proper move is chosen
 						{
 							v[0] = temp;
 							v[1] = i;
@@ -65,7 +65,7 @@ namespace AiAlgorithm
 						newboard.movePiece(i, j);
 						newboard.updateState(j, 1);
 						int temp = alphaBeta(newboard, depth-1, a, b, true);
-						if(temp < v[0])
+						if(temp < v[0]) //make sure a proper move is chosen
 						{
 							v[0] = temp;
 							v[1] = i;
@@ -86,26 +86,6 @@ namespace AiAlgorithm
 
 	int alphaBeta(Board& board, int depth, int a, int b, bool maximizingPlayer)
 	{
-		//staleMate
-
-		//check if the board is in chessmate
-
-		if(board.getState() & 0x01)
-		{
-			if(maximizingPlayer)
-			{
-				return MIN+1;	//if it's white players turn the result is good for black player
-			}
-			else
-			{
-				return MAX-1; // has to be +1 and -1 so that the ai would rather choose to lose than to make no move at all
-			}
-		}
-		else if (board.getState() & 0x02)
-		{
-			return 0;
-		}
-
 		//check if the algorithm has reached it's depth
 		
 		if( depth == 0 )
@@ -134,6 +114,17 @@ namespace AiAlgorithm
 					}
 				}
 			}
+			if(v == MIN) //has not chosen a move -> possiblemoves must be empty
+			{
+				if(board.isCheck(maximizingPlayer))
+				{
+					return (MIN+1);	//if it's check it's also checkmate
+				}
+				else //otherwise it must be stalemate
+				{
+					return 0;
+				}
+			}
 			return v;
 		}
 
@@ -156,6 +147,17 @@ namespace AiAlgorithm
 							break; //cut off
 						}
 					}
+				}
+			}
+			if(v == MAX) //has not chosen a move -> possiblemoves must be empty
+			{
+				if(board.isCheck(maximizingPlayer)) //if it's check it's also checkmate
+				{
+					return (MAX-1);
+				}
+				else //otherwise it must be stalemate
+				{
+					return 0;
 				}
 			}
 			return v;
