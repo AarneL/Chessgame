@@ -12,9 +12,11 @@
 #include <typeinfo>
 #include <chrono>
 #include <thread>
+#include <mutex>
 #include <string>
 #include <vector>
 
+std::mutex ai_algorithm_mutex;
 
 GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 {
@@ -153,6 +155,8 @@ void GameScreen::loadContent(void)
 	endGameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
 }
 
+static volatile std::pair<int, int> aimove = std::make_pair(0, 0);
+
 int GameScreen::update()
 {
 	// Human turn
@@ -221,13 +225,51 @@ int GameScreen::update()
 	// AI Turn
 	else if (playerOnTurn->getType() == std::string("AI")) {
 
-		std::pair<int, int> aimove = getAiMove();
-		if(aimove.first==aimove.second) {
-			std::cout << "AI made illegal move!" << std::endl;
-		}
-		movePiece(aimove);
-		std::cout << playerOnTurn->getName() << " made move. (Level: " << playerOnTurn->getLevel() << ")" << std::endl;
-		return changeTurn();
+		std::thread aithread (&GameScreen::getAiMove);
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+				return 0;
+			}
+			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
+			if (event.type == sf::Event::MouseMoved) {
+				if (saveButton.containsMousePos(mousePos)) {
+					saveButton.setState(Highlighted);
+				}
+				else if (mainMenuButton.containsMousePos(mousePos)) {
+					mainMenuButton.setState(Highlighted);
+				}
+				else
+					clearButtonHighlights(buttons);
+			}
+			if (event.type == sf::Event::MouseButtonPressed) 
+			{
+
+				if (saveButton.containsMousePos(mousePos)) 
+				{
+					showSaveGameDialog();
+				}
+				else if (mainMenuButton.containsMousePos(mousePos)) {
+					return 0;
+				}
+			}
+			if(aimove.first != aimove.second) //means that getaimove thread is almost ready
+			{
+				aithread.join();
+				std::pair<int, int> test;
+				ai_algorithm_mutex.lock();
+				test.first = aimove.first;
+				test.second = aimove.second;
+				ai_algorithm_mutex.unlock();
+				movePiece(test);
+				ai_algorithm_mutex.lock();
+				aimove.first = 0;
+				aimove.second = 0;
+				ai_algorithm_mutex.unlock();
+				std::cout << playerOnTurn->getName() << " made move. (Level: " << playerOnTurn->getLevel() << ")" << std::endl;
+				return changeTurn();
+			}
+			}
 	}
 	return 2;
 }
@@ -409,9 +451,14 @@ std::vector<std::pair<int, int> > GameScreen::getMoveList() const
 	return board.getMoveList();
 }
 
-std::pair<int,int> GameScreen::getAiMove(void)
+void GameScreen::getAiMove(void)
 {
-	return AiAlgorithm::algorithm(board, playerOnTurn->getLevel(), (playerOnTurn->getColor() == ColorType::White));
+	std::pair<int, int> test2 = AiAlgorithm::algorithm(board, playerOnTurn->getLevel(), (playerOnTurn->getColor() == ColorType::White));
+	// will fail because the thread will be stopped when the first is written
+	ai_algorithm_mutex.lock();
+	aimove.first = test2.first;
+	aimove.second = test2.second;
+	ai_algorithm_mutex.unlock();
 }
 
 void GameScreen::changePiece(int index)

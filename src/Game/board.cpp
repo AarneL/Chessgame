@@ -232,9 +232,13 @@ int Board::updateState(int index, int caller) //index is the destination of last
 		if(caller) //for ai algorithm the update must be made immediately and not depending on the retval
 		{
 			if(turn)
+			{
 				this->changePiece(index, W_QUEEN);
+			}
 			else
+			{
 				this->changePiece(index, B_QUEEN);
+			}
 		}
 		else
 		{

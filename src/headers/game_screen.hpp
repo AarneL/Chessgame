@@ -131,7 +131,7 @@ public:
 	bool containsPlayerPiece(int i, Player* p);
 	bool belongsToPlayer(int i, Player* p);
 	std::vector<std::pair<int, int> > getMoveList() const;
-	std::pair<int, int> getAiMove();
+	void getAiMove();
 	void showSaveGameDialog();
 
 	// Pawn promotion
