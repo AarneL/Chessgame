@@ -536,4 +536,49 @@ namespace Rules
 		return ret;
 	}
 
+	//Check threefold repetition (= current (!) position has occurred 3 or more times)
+	//Return true if draw can be claimed
+	bool threefoldRepetition(const std::vector<std::vector<int>>& boardHistory, const std::vector<std::pair<int,int>>& moveHistory){
+
+		//Return immediately if not enough moves
+		if (boardHistory.size() < 3)
+			return false;
+
+		//Get current position
+		std::vector<int> currentBoard = boardHistory.back();
+
+		size_t posCount = 1;
+		size_t posNum = boardHistory.size()-1;
+		bool ret = false;
+
+		//Find equal positions
+		for (size_t i=0; i<boardHistory.size(); i++){
+
+			//Same turn (fast check, skip every 2nd position)
+			if (posNum%2 == i%2) {
+
+				//Same piece positions (slow check?)
+				if (boardHistory[i] == currentBoard) {
+
+					//Same rights to castle
+					//TODO
+
+						//Same rights to capture en passant
+						//TODO
+
+						posCount++;
+						if (posCount >= 3){
+							ret = true;
+							break;
+						}
+
+				}
+			}
+		}
+
+		return ret;
+	}
+
+
+
 }
