@@ -2,6 +2,8 @@
 #include <map>
 #include <string>
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
 
 #include "./../headers/ai_algorithm.hpp"
 #include "./../headers/board.hpp"
@@ -21,6 +23,7 @@ namespace AiAlgorithm
 		
 		int a = MIN; //alpha
 		int b = MAX; //beta
+		std::srand(std::time(0)); //use current time as a seed for random
 
 		if (maximizingPlayer)//White players turn
 		{
@@ -41,6 +44,12 @@ namespace AiAlgorithm
 							v[0] = temp;
 							v[1] = i;
 							v[2] = j;
+						}
+						else if(v[0] == temp && (rand()%8 == 1))
+						{
+								v[0] = temp;
+								v[1] = i;
+								v[2] = j;
 						}
 						a = std::max(a, v[0]);
 						if (b <= a)
@@ -70,6 +79,12 @@ namespace AiAlgorithm
 							v[0] = temp;
 							v[1] = i;
 							v[2] = j;
+						}
+						else if(v[0] == temp && (rand()%8 == 1))
+						{
+								v[0] = temp;
+								v[1] = i;
+								v[2] = j;
 						}
 						b = std::min(b,v[0]);
 						if(b<=a)
