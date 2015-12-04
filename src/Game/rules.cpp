@@ -544,8 +544,24 @@ namespace Rules
 		if (boardHistory.size() < 3)
 			return false;
 
-		//Get current position
+		//Get current position and last move
 		std::vector<int> currentBoard = boardHistory.back();
+		std::pair<int,int> lastMove = moveHistory.back();
+
+		//Get pawn moves, they're needed for en passant check
+		std::vector<int> pawnMoves;
+		for (int a=0; a<64; a++){
+			if (currentBoard[a] == W_PAWN){
+				pawnMoves = join(pawnMoves, whitePawnMoveForwardLeft(currentBoard, a, lastMove));
+				pawnMoves = join(pawnMoves, whitePawnMoveForwardRight(currentBoard, a, lastMove));
+			}
+			else if (currentBoard[a] == B_PAWN){
+				pawnMoves = join(pawnMoves, blackPawnMoveForwardLeft(currentBoard, a, lastMove));
+				pawnMoves = join(pawnMoves, blackPawnMoveForwardRight(currentBoard, a, lastMove));
+			}
+		}
+
+		std::vector<int> pawnMovesTemp;
 
 		size_t posCount = 1;
 		size_t posNum = boardHistory.size()-1;
@@ -561,15 +577,29 @@ namespace Rules
 				if (boardHistory[i] == currentBoard) {
 
 					//Same rights to castle
-					//TODO
+					//TODO use state history?
 
 						//Same rights to capture en passant
-						//TODO
-
-						posCount++;
-						if (posCount >= 3){
-							ret = true;
-							break;
+						//Collect all pawn moves
+						pawnMovesTemp = std::vector<int>();
+						for (int a=0; a<64; a++){
+							if (boardHistory[i][a] == W_PAWN){
+								pawnMovesTemp = join(pawnMovesTemp, whitePawnMoveForwardLeft(boardHistory[i], a, moveHistory[i]));
+								pawnMovesTemp = join(pawnMovesTemp, whitePawnMoveForwardRight(boardHistory[i], a, moveHistory[i]));
+							}
+							else if (boardHistory[i][a] == B_PAWN){
+								pawnMovesTemp = join(pawnMovesTemp, blackPawnMoveForwardLeft(boardHistory[i], a, moveHistory[i]));
+								pawnMovesTemp = join(pawnMovesTemp, blackPawnMoveForwardRight(boardHistory[i], a, moveHistory[i]));
+							}
+						}
+						//If the pawns have the same possible moves, then en passant rights are equal
+						//Now also the positions are equal
+						if (pawnMovesTemp == pawnMoves){
+							posCount++;
+							if (posCount >= 3){
+								ret = true;
+								break;
+							}
 						}
 
 				}
