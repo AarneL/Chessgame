@@ -318,6 +318,7 @@ void GameScreen::movePiece(std::pair<int,int> move)
 	if (index != -1) {
 		// If stateword 0-63-> means pawn has reached enemy backline. Pawn is promotee
 		changePiece(index);
+		board.updateState(move.second, 0);
 	}
 
 	if((board.getState() >> 6) == 0x01) //01000000 passant made by white
