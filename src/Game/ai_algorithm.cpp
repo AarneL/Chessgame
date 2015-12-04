@@ -34,6 +34,7 @@ namespace AiAlgorithm
 					{
 						Board newboard = board;
 						newboard.movePiece(i, j);//supposing possibleMoves doesn't return origin
+						newboard.updateState(j, 1);
 						int temp = alphaBeta(newboard, depth-1, a, b, false);
 						if(v[0] < temp)
 						{
@@ -62,6 +63,7 @@ namespace AiAlgorithm
 					{
 						Board newboard = board;
 						newboard.movePiece(i, j);
+						newboard.updateState(j, 1);
 						int temp = alphaBeta(newboard, depth-1, a, b, true);
 						if(temp < v[0])
 						{
@@ -92,11 +94,11 @@ namespace AiAlgorithm
 		{
 			if(maximizingPlayer)
 			{
-				return MIN;	//if it's white players turn the result is good for black player
+				return MIN+1;	//if it's white players turn the result is good for black player
 			}
 			else
 			{
-				return MAX;
+				return MAX-1; // has to be +1 and -1 so that the ai would rather choose to lose than to make no move at all
 			}
 		}
 		else if (board.getState() & 0x02)

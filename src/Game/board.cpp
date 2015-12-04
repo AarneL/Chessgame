@@ -331,52 +331,20 @@ int Board::updateState(int index, int caller) //index is the destination of last
 	else
 		turn = 1;
 
-//lightweight update function for the ai
-	if(caller)
-	{
-		if(isCheck(turn))
+//ai optimization removed for now but will be returned when bugs are fixed
+		if(isStaleMate(turn))
 		{
-			if(isStaleMate(turn))
-				{
-					state = state | 0x2;
-					//do some stuff to end the game
-					return retVal;
-				}
-		}
-	}
-	//this is omited when the caller is ai_algorithm in order to speed it up.
-	else
-	{
-		int king_location = 0;
-		for(int i=0;i<64;i++)
-		{
-			if(board[i] == (12 - turn))
+			//do some stuff to end the game
+			if(isCheck(turn))
 			{
-				king_location = i;
+				state = state | 0x1; //checkmate
 			}
-		}
-
-		//see if it's check
-		if(isCheck(turn))
-		{
-			if(isCheckMate(king_location))
+			else
 			{
-				state = state | 0x1;
-				//do some stuff to end the game
-				return retVal;
+				state = state | 0x2; //slatemate
 			}
+			//return retVal;
 		}
-
-		else
-		{
-			if(isStaleMate(turn))
-			{
-				state = state | 0x2;
-				//do some stuff to end the game
-				return retVal;
-			}
-		}
-	}
 
 	return retVal;
 }
