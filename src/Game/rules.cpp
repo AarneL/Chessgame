@@ -538,15 +538,16 @@ namespace Rules
 
 	//Check threefold repetition (= current (!) position has occurred 3 or more times)
 	//Return true if draw can be claimed
-	bool threefoldRepetition(const std::vector<std::vector<int>>& boardHistory, const std::vector<std::pair<int,int>>& moveHistory){
+	bool threefoldRepetition(const std::vector<std::vector<int>>& boardHistory, const std::vector<std::pair<int,int>>& moveHistory, const std::vector<unsigned char>& stateHistory){
 
 		//Return immediately if not enough moves
 		if (boardHistory.size() < 3)
 			return false;
 
-		//Get current position and last move
+		//Get current board status
 		std::vector<int> currentBoard = boardHistory.back();
 		std::pair<int,int> lastMove = moveHistory.back();
+		unsigned char currentState = stateHistory.back();
 
 		//Get pawn moves, they're needed for en passant check
 		std::vector<int> pawnMoves;
@@ -576,8 +577,8 @@ namespace Rules
 				//Same piece positions (slow check?)
 				if (boardHistory[i] == currentBoard) {
 
-					//Same rights to castle
-					//TODO use state history?
+					//Same rights to castle, check flags
+					if ( (currentState & 60) && (stateHistory[i] & 60) ) {
 
 						//Same rights to capture en passant
 						//Collect all pawn moves
@@ -601,7 +602,7 @@ namespace Rules
 								break;
 							}
 						}
-
+					}
 				}
 			}
 		}
