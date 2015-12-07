@@ -133,7 +133,7 @@ namespace AiAlgorithm
 			{
 				if(board.isCheck(maximizingPlayer))
 				{
-					return (MIN+1);	//if it's check it's also checkmate
+					return (MIN+100-depth);	//if it's check it's also checkmate
 				}
 				else //otherwise it must be stalemate
 				{
@@ -168,7 +168,7 @@ namespace AiAlgorithm
 			{
 				if(board.isCheck(maximizingPlayer)) //if it's check it's also checkmate
 				{
-					return (MAX-1);
+					return (MAX-100+depth);
 				}
 				else //otherwise it must be stalemate
 				{

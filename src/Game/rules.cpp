@@ -536,4 +536,80 @@ namespace Rules
 		return ret;
 	}
 
+	//Check threefold repetition (= current (!) position has occurred 3 or more times)
+	//Return true if draw can be claimed
+	bool threefoldRepetition(const std::vector<std::vector<int>>& boardHistory, const std::vector<std::pair<int,int>>& moveHistory, const std::vector<unsigned char>& stateHistory){
+
+		//Return immediately if not enough moves
+		if (boardHistory.size() < 3)
+			return false;
+
+		//Get current board status
+		std::vector<int> currentBoard = boardHistory.back();
+		std::pair<int,int> lastMove = moveHistory.back();
+		unsigned char currentState = stateHistory.back();
+
+		//Get pawn moves, they're needed for en passant check
+		std::vector<int> pawnMoves;
+		for (int a=0; a<64; a++){
+			if (currentBoard[a] == W_PAWN){
+				pawnMoves = join(pawnMoves, whitePawnMoveForwardLeft(currentBoard, a, lastMove));
+				pawnMoves = join(pawnMoves, whitePawnMoveForwardRight(currentBoard, a, lastMove));
+			}
+			else if (currentBoard[a] == B_PAWN){
+				pawnMoves = join(pawnMoves, blackPawnMoveForwardLeft(currentBoard, a, lastMove));
+				pawnMoves = join(pawnMoves, blackPawnMoveForwardRight(currentBoard, a, lastMove));
+			}
+		}
+
+		std::vector<int> pawnMovesTemp;
+
+		size_t posCount = 1;
+		size_t posNum = boardHistory.size()-1;
+		bool ret = false;
+
+		//Find equal positions
+		for (size_t i=0; i<boardHistory.size(); i++){
+
+			//Same turn (fast check, skip every 2nd position)
+			if (posNum%2 == i%2) {
+
+				//Same piece positions (slow check?)
+				if (boardHistory[i] == currentBoard) {
+
+					//Same rights to castle, check flags
+					if ( (currentState & 60) && (stateHistory[i] & 60) ) {
+
+						//Same rights to capture en passant
+						//Collect all pawn moves
+						pawnMovesTemp = std::vector<int>();
+						for (int a=0; a<64; a++){
+							if (boardHistory[i][a] == W_PAWN){
+								pawnMovesTemp = join(pawnMovesTemp, whitePawnMoveForwardLeft(boardHistory[i], a, moveHistory[i]));
+								pawnMovesTemp = join(pawnMovesTemp, whitePawnMoveForwardRight(boardHistory[i], a, moveHistory[i]));
+							}
+							else if (boardHistory[i][a] == B_PAWN){
+								pawnMovesTemp = join(pawnMovesTemp, blackPawnMoveForwardLeft(boardHistory[i], a, moveHistory[i]));
+								pawnMovesTemp = join(pawnMovesTemp, blackPawnMoveForwardRight(boardHistory[i], a, moveHistory[i]));
+							}
+						}
+						//If the pawns have the same possible moves, then en passant rights are equal
+						//Now also the positions are equal
+						if (pawnMovesTemp == pawnMoves){
+							posCount++;
+							if (posCount >= 3){
+								ret = true;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return ret;
+	}
+
+
+
 }
