@@ -26,40 +26,7 @@ GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 
 void GameScreen::loadContent(void)
 {
-	// Set textures to pieces and push them to pieces vector in a right order
-	whiteRook1.loadContent("media/img/rook_white.png");
-	whiteKnight1.loadContent("media/img/knight_white.png");
-	whiteBishop1.loadContent("media/img/bishop_white.png");
-	whiteQueen.loadContent("media/img/queen_white.png");
-	whiteKing.loadContent("media/img/king_white.png");
-	whiteBishop2.loadContent("media/img/bishop_white.png");
-	whiteKnight2.loadContent("media/img/knight_white.png");
-	whiteRook2.loadContent("media/img/rook_white.png");
 
-	whitePawn1.loadContent("media/img/pawn_white.png");
-	whitePawn2.loadContent("media/img/pawn_white.png");
-	whitePawn3.loadContent("media/img/pawn_white.png");
-	whitePawn4.loadContent("media/img/pawn_white.png");
-	whitePawn5.loadContent("media/img/pawn_white.png");
-	whitePawn6.loadContent("media/img/pawn_white.png");
-	whitePawn7.loadContent("media/img/pawn_white.png");
-	whitePawn8.loadContent("media/img/pawn_white.png");
-	blackPawn1.loadContent("media/img/pawn_black.png");
-	blackPawn2.loadContent("media/img/pawn_black.png");
-	blackPawn3.loadContent("media/img/pawn_black.png");
-	blackPawn4.loadContent("media/img/pawn_black.png");
-	blackPawn5.loadContent("media/img/pawn_black.png");
-	blackPawn6.loadContent("media/img/pawn_black.png");
-	blackPawn7.loadContent("media/img/pawn_black.png");
-	blackPawn8.loadContent("media/img/pawn_black.png");
-	blackRook1.loadContent("media/img/rook_black.png");
-	blackKnight1.loadContent("media/img/knight_black.png");
-	blackBishop1.loadContent("media/img/bishop_black.png");
-	blackQueen.loadContent("media/img/queen_black.png");
-	blackKing.loadContent("media/img/king_black.png");
-	blackBishop2.loadContent("media/img/bishop_black.png");
-	blackKnight2.loadContent("media/img/knight_black.png");
-	blackRook2.loadContent("media/img/rook_black.png");
 	
 	initPieces(); // Put piece pointers to their initial locations
 
@@ -275,9 +242,7 @@ void GameScreen::clearButtonHighlights(std::vector<Button*> v)
 
 void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
 {
-	/*if (white != NULL) {
-		tearDown();
-	}*/
+	tearDown();
 	// Game starts with white players turn
 	board = Board();
 	activeSquare = -1;
@@ -599,6 +564,40 @@ std::string GameScreen::getMoveStr(std::pair<int,int> m)
 
 void GameScreen::initPieces()
 {
+	// Set textures to pieces and push them to pieces vector in a right order
+	whiteRook1.loadContent("media/img/rook_white.png");
+	whiteKnight1.loadContent("media/img/knight_white.png");
+	whiteBishop1.loadContent("media/img/bishop_white.png");
+	whiteQueen.loadContent("media/img/queen_white.png");
+	whiteKing.loadContent("media/img/king_white.png");
+	whiteBishop2.loadContent("media/img/bishop_white.png");
+	whiteKnight2.loadContent("media/img/knight_white.png");
+	whiteRook2.loadContent("media/img/rook_white.png");
+
+	whitePawn1.loadContent("media/img/pawn_white.png");
+	whitePawn2.loadContent("media/img/pawn_white.png");
+	whitePawn3.loadContent("media/img/pawn_white.png");
+	whitePawn4.loadContent("media/img/pawn_white.png");
+	whitePawn5.loadContent("media/img/pawn_white.png");
+	whitePawn6.loadContent("media/img/pawn_white.png");
+	whitePawn7.loadContent("media/img/pawn_white.png");
+	whitePawn8.loadContent("media/img/pawn_white.png");
+	blackPawn1.loadContent("media/img/pawn_black.png");
+	blackPawn2.loadContent("media/img/pawn_black.png");
+	blackPawn3.loadContent("media/img/pawn_black.png");
+	blackPawn4.loadContent("media/img/pawn_black.png");
+	blackPawn5.loadContent("media/img/pawn_black.png");
+	blackPawn6.loadContent("media/img/pawn_black.png");
+	blackPawn7.loadContent("media/img/pawn_black.png");
+	blackPawn8.loadContent("media/img/pawn_black.png");
+	blackRook1.loadContent("media/img/rook_black.png");
+	blackKnight1.loadContent("media/img/knight_black.png");
+	blackBishop1.loadContent("media/img/bishop_black.png");
+	blackQueen.loadContent("media/img/queen_black.png");
+	blackKing.loadContent("media/img/king_black.png");
+	blackBishop2.loadContent("media/img/bishop_black.png");
+	blackKnight2.loadContent("media/img/knight_black.png");
+	blackRook2.loadContent("media/img/rook_black.png");
 	// This method initialises pieces vector with right starting positions
 	pieces.push_back(&whiteRook1);
 	pieces.push_back(&whiteKnight1);

@@ -321,10 +321,10 @@ int NewGameScreen::update()
 
 void NewGameScreen::createGame() {
 	if (whitePlayerSelected == AI) {
-		whiteNameString = "Computer";
+		whiteNameString = "Skynet";
 	}
 	if (blackPlayerSelected == AI) {
-		blackNameString = "Computer";
+		blackNameString = "Deep thought";
 	}
 	gameScreen->initialize(whiteNameString, whiteLevel, blackNameString, blackLevel);
 }
