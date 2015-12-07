@@ -225,7 +225,7 @@ int GameScreen::update()
 	// AI Turn
 	else if (playerOnTurn->getType() == std::string("AI")) {
 
-		std::thread aithread (&GameScreen::getAiMove);
+		std::thread aithread (&GameScreen::getAiMove, this);
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {

@@ -5,7 +5,7 @@ all:
 	Game/board.cpp Game/rules.cpp Game/ai_algorithm.cpp \
 	GUI/object.cpp GUI/button.cpp GUI/square.cpp GUI/text.cpp GUI/chess_piece.cpp \
 	GUI/tinyfiledialogs.c \
-	-lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system
+	-lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system -lpthread
 
 clean:
 	rm Chessgame.bin
