@@ -35,6 +35,7 @@ public:
 	bool isStaleMate(int) const; //should end the game
 	void saveGame(Player* white, Player* black, const char* savePath);
 	int getState() const;
+	void setState(int st);
 	void changePiece(int, int);
 
 private:

@@ -125,8 +125,14 @@ public:
 	void initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
 	void tearDown(void);
 
+	// Load game from file
+	int loadGame();
+
+	void changeTexture(int index, int newType);
+
 	// Game updating and analysis
 	void movePiece(std::pair<int, int> move);
+	void changePlayerOnTurn();
 	int changeTurn();
 	bool containsPlayerPiece(int i, Player* p);
 	bool belongsToPlayer(int i, Player* p);
@@ -152,7 +158,7 @@ public:
 	// Parameters for graphical design
 	int BOARD_HORIZONTAL_OFFSET;
 	int BOARD_VERTICAL_OFFSET;
-	
+
 	// End game functions
 	int endGame();
 	void drawEndGame();

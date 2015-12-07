@@ -1,6 +1,5 @@
 #include "../headers/menu_screen.hpp"
 #include "../headers/base_screen.hpp"
-#include <fstream>
 #include "../headers/tinyfiledialogs.h"
 
 MenuScreen::MenuScreen(GameScreen* g, sf::RenderWindow &w) : window(w)
@@ -92,7 +91,7 @@ int MenuScreen::update()
 				std::cout << "User pressed loadButton." << std::endl;
 				// Start gameScreen
 				backgroundMusic.stop();
-				return loadGame();
+				return gameScreen->loadGame();
 			}
 
 			else if (exitButton.containsMousePos(v))
@@ -131,45 +130,7 @@ void MenuScreen::clearButtonHighlights()
 	}
 }
 
-int MenuScreen::loadGame()
-{
-	// This should first open a file dialog where the user can choose file to load
+// int MenuScreen::loadGame()
+// {
 
-	// Using testfile
-	const char* file_loc = tinyfd_openFileDialog("Open load file", "", 0, NULL, "text files", 0);
-	if (!file_loc) {
-		std::cout << "Error loading file" << std::endl;
-		return 0;
-	}
-	std::ifstream ifs(file_loc, std::ifstream::in);
-	if (!ifs) {
-		std::cout << "File not found" << std::endl;
-	}
-
-	// Collect information about players
-	std::string white;
-	std::getline(ifs, white);
-	std::string black;
-	std::getline(ifs, black);
-
-	std::string whiteName = white.substr(0, white.find('-'));
-	std::string blackName = black.substr(0, black.find('-'));
-	int whiteLevel = atoi((white.substr(white.find('-')+1)).c_str());
-	int blackLevel = atoi((black.substr(black.find('-')+1)).c_str());
-
-	// Initialize the game screen with the players from file
-	gameScreen->initialize(whiteName, whiteLevel, blackName, blackLevel);
-
-	for (std::string line; std::getline(ifs, line); )
-	{
-		std::cout << line << std::endl;
-		std::pair<int, int> move;
-		move.first = atoi((line.substr(0, line.find('-'))).c_str());
-		move.second = atoi((line.substr(line.find('-')+1)).c_str());
-		gameScreen->movePiece(move);
-		gameScreen->changeTurn();
-	}
-
-	ifs.close();
-	return 2;
-}
+// }

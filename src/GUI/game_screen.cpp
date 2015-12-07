@@ -14,6 +14,7 @@
 #include <thread>
 #include <string>
 #include <vector>
+#include <fstream>
 
 
 GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
@@ -26,9 +27,7 @@ GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 
 void GameScreen::loadContent(void)
 {
-
-	
-	initPieces(); // Put piece pointers to their initial locations
+	initPieces(); // Load piece contents and put piece pointers to pieces vector
 
 	//Create base board starting from down left corner
 	for (int i = 7; i >= 0; i--) {
@@ -42,6 +41,19 @@ void GameScreen::loadContent(void)
 			}
 			gameBoard.push_back(square);
 		}
+	}
+	// Pawn promotion window
+	rectangle.setSize(sf::Vector2f(530, 250));
+	rectangle.setFillColor(sf::Color::Black);
+	rectangle.setPosition(230, 300);
+
+	promotionText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
+	promotionText.setString("Choose a piece:");
+
+	for (int i = 0; i < 4; i++) {
+		Square* square = new Square();
+		square->loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((260 + i*96 + i*25), 420));
+		promotionSquares.push_back(square);
 	}
 
 	setPieceInitialPositions(); // Put piece sprites to their right initial locations
@@ -71,46 +83,6 @@ void GameScreen::loadContent(void)
 	// MainMenu button
 	mainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(900, 600), true);
 	buttons.push_back(&mainMenuButton);
-
-	// Pawn promotion
-	rectangle.setSize(sf::Vector2f(530, 250));
-	rectangle.setFillColor(sf::Color::Black);
-	rectangle.setPosition(230, 300);
-
-	promotionText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
-	promotionText.setString("Choose a piece:");
-
-	for (int i = 0; i < 4; i++) {
-		Square* square = new Square();
-		square->loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((260 + i*96 + i*25), 420));
-		promotionSquares.push_back(square);
-	}
-
-	whitePromotionQueen.loadContent("media/img/queen_white.png");
-	whitePromotionQueen.setPosition(promotionSquares[0]->getPosition());
-	whitePromotionPieces.push_back(&whitePromotionQueen);
-	whitePromotionRook.loadContent("media/img/rook_white.png");
-	whitePromotionRook.setPosition(promotionSquares[1]->getPosition());
-	whitePromotionPieces.push_back(&whitePromotionRook);
-	whitePromotionBishop.loadContent("media/img/bishop_white.png");
-	whitePromotionBishop.setPosition(promotionSquares[2]->getPosition());
-	whitePromotionPieces.push_back(&whitePromotionBishop);
-	whitePromotionKnight.loadContent("media/img/knight_white.png");
-	whitePromotionKnight.setPosition(promotionSquares[3]->getPosition());
-	whitePromotionPieces.push_back(&whitePromotionKnight);
-
-	blackPromotionQueen.loadContent("media/img/queen_black.png");
-	blackPromotionQueen.setPosition(promotionSquares[0]->getPosition());
-	blackPromotionPieces.push_back(&blackPromotionQueen);
-	blackPromotionRook.loadContent("media/img/rook_black.png");
-	blackPromotionRook.setPosition(promotionSquares[1]->getPosition());
-	blackPromotionPieces.push_back(&blackPromotionRook);
-	blackPromotionBishop.loadContent("media/img/bishop_black.png");
-	blackPromotionBishop.setPosition(promotionSquares[2]->getPosition());
-	blackPromotionPieces.push_back(&blackPromotionBishop);
-	blackPromotionKnight.loadContent("media/img/knight_black.png");
-	blackPromotionKnight.setPosition(promotionSquares[3]->getPosition());
-	blackPromotionPieces.push_back(&blackPromotionKnight);
 
 	// Game ending
 	endGameMainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(250, 450), true);
@@ -270,6 +242,106 @@ void GameScreen::tearDown(void)
 	setPieceInitialPositions();
 }
 
+int GameScreen::loadGame()
+{
+	// Open file dialog
+	const char* file_loc = tinyfd_openFileDialog("Open load file", "", 0, NULL, "text files", 0);
+	if (!file_loc) {
+		std::cout << "Error loading file" << std::endl;
+		return 0;
+	}
+	std::ifstream ifs(file_loc, std::ifstream::in);
+	if (!ifs) {
+		std::cout << "File not found" << std::endl;
+	}
+
+	// Collect information about players
+	std::string white;
+	std::getline(ifs, white);
+	std::string black;
+	std::getline(ifs, black);
+
+	std::string whiteName = white.substr(0, white.find('-'));
+	std::string blackName = black.substr(0, black.find('-'));
+	int whiteLevel = atoi((white.substr(white.find('-')+1)).c_str());
+	int blackLevel = atoi((black.substr(black.find('-')+1)).c_str());
+
+	std::cout << whiteName << std::endl;
+	std::cout << blackName << std::endl;
+
+	// Initialize the game screen with the players from file
+	initialize(whiteName, whiteLevel, blackName, blackLevel);
+
+	for (std::string line; std::getline(ifs, line); ) {
+		if (line == "BOARD") {
+			break;
+		}
+		int origin = atoi((line.substr(0, line.find('-'))).c_str());
+		int destination = atoi((line.substr(line.find('-')+1)).c_str());
+		std::cout << "move: " << origin << "->" << destination << std::endl;
+		// Move in board
+		board.movePiece(origin, destination);
+		std::cout << "piece moved in board" << std::endl;
+		// Move in GUI
+		pieces[destination] = pieces[origin];
+		pieces[origin] = NULL;
+		pieces[destination]->setPosition(gameBoard[destination]->getPosition());
+		std::cout << "piece moved in GUI" << std::endl;
+		// Change turn
+		changePlayerOnTurn();
+	}
+
+	int piece;
+	for (int i = 0; i < 64; i++) {
+		ifs >> piece;
+		std::cout << "piece is " << piece << std::endl;
+		if (pieces[i] != NULL) {
+			std::cout << "pieces[i]->getType is " << pieces[i]->getType() << std::endl;
+			if (pieces[i]->getType() != piece) {
+				changeTexture(i, piece);
+			}
+		}
+	}
+
+	// std::string state;
+	// std::getline(ifs, state);
+	// std::cout << "State: " << state << std::endl;
+	// board.setState(atoi(state).c_str());
+
+	// Format infoText
+	std::string s;
+
+	s = "Game continues!\n";
+	s += playerOnTurn->getName() + "'s turn.";
+	infoText.setString(s);
+	s.clear();
+
+	ifs.close();
+	return 2;
+}
+
+void GameScreen::changeTexture(int index, int newType)
+{
+	std::cout << "came to change texture" << std::endl;
+	if (newType == W_QUEEN) {
+		pieces[index]->changeTexture(whiteQueen.getTexture());
+	} else if (newType == W_ROOK) {
+		pieces[index]->changeTexture(whiteRook1.getTexture());
+	} else if (newType == W_KNIGHT) {
+		pieces[index]->changeTexture(whiteKnight1.getTexture());
+	} else if (newType == W_BISHOP) {
+		pieces[index]->changeTexture(whiteBishop1.getTexture());
+	} else if (newType == B_QUEEN) {
+		pieces[index]->changeTexture(blackQueen.getTexture());
+	} else if (newType == B_ROOK) {
+		pieces[index]->changeTexture(blackRook1.getTexture());
+	} else if (newType == B_KNIGHT) {
+		pieces[index]->changeTexture(blackKnight1.getTexture());
+	} else if (newType == B_BISHOP) {
+		pieces[index]->changeTexture(blackBishop1.getTexture());
+	}
+}
+
 void GameScreen::movePiece(std::pair<int,int> move)
 {
 	// Move in GUI
@@ -314,27 +386,29 @@ void GameScreen::movePiece(std::pair<int,int> move)
 	}
 }
 
+void GameScreen::changePlayerOnTurn()
+{
+	if (playerOnTurn == black) {
+		playerOnTurn = white;
+	} else {
+		playerOnTurn = black;
+	}
+	std::cout << "turn changed" << std::endl;
+}
+
 int GameScreen::changeTurn()
 {
 	std::string s;
 	//test if it's checkmate
 
-	// If its black turn
-	if (playerOnTurn == black) {
-		// Format infoText
-		s = playerOnTurn->getName() + " moved " + getMoveStr(getMoveList().back()) + "\n";
-		playerOnTurn = white;
-		s += playerOnTurn->getName() + "'s turn.";
-		infoText.setString(s);
-		s.clear();
-	}
-	else if(playerOnTurn == white){
-		s = playerOnTurn->getName() + " moved " + getMoveStr(getMoveList().back()) + "\n";
-		playerOnTurn = black;
-		s += playerOnTurn->getName() + "'s turn.";
-		infoText.setString(s);
-		s.clear();
-	}
+	// Change playerOnTurn
+	changePlayerOnTurn();
+
+	// Format infoText
+	s = playerOnTurn->getName() + " moved " + getMoveStr(getMoveList().back()) + "\n";
+	s += playerOnTurn->getName() + "'s turn.";
+	infoText.setString(s);
+	s.clear();
 
 	moveSound.play(); // SWWIP
 	if(board.getState() & 0x01)
@@ -565,39 +639,50 @@ std::string GameScreen::getMoveStr(std::pair<int,int> m)
 void GameScreen::initPieces()
 {
 	// Set textures to pieces and push them to pieces vector in a right order
-	whiteRook1.loadContent("media/img/rook_white.png");
-	whiteKnight1.loadContent("media/img/knight_white.png");
-	whiteBishop1.loadContent("media/img/bishop_white.png");
-	whiteQueen.loadContent("media/img/queen_white.png");
-	whiteKing.loadContent("media/img/king_white.png");
-	whiteBishop2.loadContent("media/img/bishop_white.png");
-	whiteKnight2.loadContent("media/img/knight_white.png");
-	whiteRook2.loadContent("media/img/rook_white.png");
+	whiteRook1.loadContent("media/img/rook_white.png", W_ROOK);
+	whiteKnight1.loadContent("media/img/knight_white.png", W_KNIGHT);
+	whiteBishop1.loadContent("media/img/bishop_white.png", W_BISHOP);
+	whiteQueen.loadContent("media/img/queen_white.png", W_QUEEN);
+	whiteKing.loadContent("media/img/king_white.png", W_KING);
+	whiteBishop2.loadContent("media/img/bishop_white.png", W_BISHOP);
+	whiteKnight2.loadContent("media/img/knight_white.png", W_KNIGHT);
+	whiteRook2.loadContent("media/img/rook_white.png", W_ROOK);
+	whitePawn1.loadContent("media/img/pawn_white.png", W_PAWN);
+	whitePawn2.loadContent("media/img/pawn_white.png", W_PAWN);
+	whitePawn3.loadContent("media/img/pawn_white.png", W_PAWN);
+	whitePawn4.loadContent("media/img/pawn_white.png", W_PAWN);
+	whitePawn5.loadContent("media/img/pawn_white.png", W_PAWN);
+	whitePawn6.loadContent("media/img/pawn_white.png", W_PAWN);
+	whitePawn7.loadContent("media/img/pawn_white.png", W_PAWN);
+	whitePawn8.loadContent("media/img/pawn_white.png", W_PAWN);
 
-	whitePawn1.loadContent("media/img/pawn_white.png");
-	whitePawn2.loadContent("media/img/pawn_white.png");
-	whitePawn3.loadContent("media/img/pawn_white.png");
-	whitePawn4.loadContent("media/img/pawn_white.png");
-	whitePawn5.loadContent("media/img/pawn_white.png");
-	whitePawn6.loadContent("media/img/pawn_white.png");
-	whitePawn7.loadContent("media/img/pawn_white.png");
-	whitePawn8.loadContent("media/img/pawn_white.png");
-	blackPawn1.loadContent("media/img/pawn_black.png");
-	blackPawn2.loadContent("media/img/pawn_black.png");
-	blackPawn3.loadContent("media/img/pawn_black.png");
-	blackPawn4.loadContent("media/img/pawn_black.png");
-	blackPawn5.loadContent("media/img/pawn_black.png");
-	blackPawn6.loadContent("media/img/pawn_black.png");
-	blackPawn7.loadContent("media/img/pawn_black.png");
-	blackPawn8.loadContent("media/img/pawn_black.png");
-	blackRook1.loadContent("media/img/rook_black.png");
-	blackKnight1.loadContent("media/img/knight_black.png");
-	blackBishop1.loadContent("media/img/bishop_black.png");
-	blackQueen.loadContent("media/img/queen_black.png");
-	blackKing.loadContent("media/img/king_black.png");
-	blackBishop2.loadContent("media/img/bishop_black.png");
-	blackKnight2.loadContent("media/img/knight_black.png");
-	blackRook2.loadContent("media/img/rook_black.png");
+	blackPawn1.loadContent("media/img/pawn_black.png", B_PAWN);
+	blackPawn2.loadContent("media/img/pawn_black.png", B_PAWN);
+	blackPawn3.loadContent("media/img/pawn_black.png", B_PAWN);
+	blackPawn4.loadContent("media/img/pawn_black.png", B_PAWN);
+	blackPawn5.loadContent("media/img/pawn_black.png", B_PAWN);
+	blackPawn6.loadContent("media/img/pawn_black.png", B_PAWN);
+	blackPawn7.loadContent("media/img/pawn_black.png", B_PAWN);
+	blackPawn8.loadContent("media/img/pawn_black.png", B_PAWN);
+	blackRook1.loadContent("media/img/rook_black.png", B_ROOK);
+	blackKnight1.loadContent("media/img/knight_black.png", B_KNIGHT);
+	blackBishop1.loadContent("media/img/bishop_black.png", B_BISHOP);
+	blackQueen.loadContent("media/img/queen_black.png", B_QUEEN);
+	blackKing.loadContent("media/img/king_black.png", B_KING);
+	blackBishop2.loadContent("media/img/bishop_black.png", B_BISHOP);
+	blackKnight2.loadContent("media/img/knight_black.png", B_KNIGHT);
+	blackRook2.loadContent("media/img/rook_black.png", B_ROOK);
+
+	// Promotion pieces
+	whitePromotionQueen.loadContent("media/img/queen_white.png", W_QUEEN);
+	whitePromotionRook.loadContent("media/img/rook_white.png", W_ROOK);
+	whitePromotionBishop.loadContent("media/img/bishop_white.png", W_BISHOP);
+	whitePromotionKnight.loadContent("media/img/knight_white.png", W_KNIGHT);
+	blackPromotionQueen.loadContent("media/img/queen_black.png", B_QUEEN);
+	blackPromotionRook.loadContent("media/img/rook_black.png", B_ROOK);
+	blackPromotionBishop.loadContent("media/img/bishop_black.png", B_BISHOP);
+	blackPromotionKnight.loadContent("media/img/knight_black.png", B_KNIGHT);
+
 	// This method initialises pieces vector with right starting positions
 	pieces.push_back(&whiteRook1);
 	pieces.push_back(&whiteKnight1);
@@ -640,6 +725,14 @@ void GameScreen::initPieces()
 	pieces.push_back(&blackKnight2);
 	pieces.push_back(&blackRook2);
 
+	whitePromotionPieces.push_back(&whitePromotionQueen);
+	whitePromotionPieces.push_back(&whitePromotionRook);
+	whitePromotionPieces.push_back(&whitePromotionBishop);
+	whitePromotionPieces.push_back(&whitePromotionKnight);
+	blackPromotionPieces.push_back(&blackPromotionQueen);
+	blackPromotionPieces.push_back(&blackPromotionRook);
+	blackPromotionPieces.push_back(&blackPromotionBishop);
+	blackPromotionPieces.push_back(&blackPromotionKnight);
 }
 
 void GameScreen::setPieceInitialPositions()
@@ -649,6 +742,16 @@ void GameScreen::setPieceInitialPositions()
 			pieces[i]->setPosition(gameBoard[i]->getPosition());
 		}
 	}
+
+	whitePromotionQueen.setPosition(promotionSquares[0]->getPosition());
+	whitePromotionRook.setPosition(promotionSquares[1]->getPosition());
+	whitePromotionBishop.setPosition(promotionSquares[2]->getPosition());
+	whitePromotionKnight.setPosition(promotionSquares[3]->getPosition());
+
+	blackPromotionQueen.setPosition(promotionSquares[0]->getPosition());
+	blackPromotionRook.setPosition(promotionSquares[1]->getPosition());
+	blackPromotionBishop.setPosition(promotionSquares[2]->getPosition());
+	blackPromotionKnight.setPosition(promotionSquares[3]->getPosition());
 }
 
 void GameScreen::playAgainInit()

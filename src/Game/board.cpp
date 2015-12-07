@@ -465,6 +465,11 @@ int Board::getState() const
 	return state;
 }
 
+void Board::setState(int st)
+{
+	state = st;
+}
+
 void Board::changePiece(int index, int newpiece) {
 
 	board[index] = newpiece;
@@ -478,6 +483,13 @@ void Board::saveGame(Player* white, Player* black, const char* savePath)
 	for (auto move : moveList) {
 		ofs << move.first << '-' << move.second << std::endl;
 	}
+	ofs << "BOARD" << std::endl;
+	// std::copy(board.begin(), board.end(), std::ostreambuf_iterator<char>(ofs));
+	for (auto piece : board) {
+		ofs << piece << " ";
+	}
+	ofs << std::endl;
+	ofs << (int)state << std::endl;
 	ofs.close();
 }
 
