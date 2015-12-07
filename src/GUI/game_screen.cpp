@@ -24,6 +24,7 @@ GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 	BOARD_HORIZONTAL_OFFSET = 0;
 	BOARD_VERTICAL_OFFSET = 100;
 
+	thread_flag = false;
 }
 
 void GameScreen::loadContent(void)
@@ -225,9 +226,19 @@ int GameScreen::update()
 	// AI Turn
 	else if (playerOnTurn->getType() == std::string("AI")) {
 
-		std::thread aithread (&GameScreen::getAiMove, this);
+		if (!thread_flag) {
+			std::cout << "spawning thread..." << std::endl;
+			aithread = std::thread(&GameScreen::getAiMove, this);
+			std::cout << "thread spawned" << std::endl;
+			thread_flag = true;
+			}
+
 		sf::Event event;
+
+		//std::cout << "loop is starting" << std::endl;
 		while (window.pollEvent(event)) {
+			std::cout << "loop started" << std::endl;
+
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 				return 0;
 			}
@@ -250,6 +261,11 @@ int GameScreen::update()
 					showSaveGameDialog();
 				}
 				else if (mainMenuButton.containsMousePos(mousePos)) {
+					aithread.detach();
+					//aithread.~thread();
+					std::cout << "thread detached" << std::endl;
+					tearDown();
+					std::cout << "tearDown completed" << std::endl;
 					return 0;
 				}
 			}
@@ -267,9 +283,14 @@ int GameScreen::update()
 				aimove.second = 0;
 				ai_algorithm_mutex.unlock();
 				std::cout << playerOnTurn->getName() << " made move. (Level: " << playerOnTurn->getLevel() << ")" << std::endl;
+				thread_flag = false;
+				std::cout << "thread ended" << std::endl;
 				return changeTurn();
 			}
-			}
+		std::cout << "loop continuing" << std::endl;
+		}
+
+	//std::cout << "out of loop" << std::endl;
 	}
 	return 2;
 }
@@ -459,6 +480,8 @@ void GameScreen::getAiMove(void)
 	aimove.first = test2.first;
 	aimove.second = test2.second;
 	ai_algorithm_mutex.unlock();
+
+	std::cout << "getAiMove ended" << std::endl;
 }
 
 void GameScreen::changePiece(int index)

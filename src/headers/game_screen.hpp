@@ -3,6 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+
+#include <thread>
+
 #include "player.hpp"
 #include "board.hpp"
 #include "human.hpp"
@@ -152,7 +155,7 @@ public:
 	// Parameters for graphical design
 	int BOARD_HORIZONTAL_OFFSET;
 	int BOARD_VERTICAL_OFFSET;
-	
+
 	// End game functions
 	int endGame();
 	void drawEndGame();
@@ -169,6 +172,11 @@ public:
 	void setPieceInitialPositions();
 	void playAgainInit();
 	void initPlayers(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
+
+	//Threads
+	std::thread aithread;
+	bool thread_flag;
+
 
 };
 
