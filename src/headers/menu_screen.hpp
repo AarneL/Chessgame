@@ -19,6 +19,7 @@ private:
 	sf::Texture backgroundTexture;
 	sf::Sprite background;
 
+	Button continueButton;
 	Button newGameButton;
 	Button loadGameButton;
 	Button optionsButton;
@@ -27,11 +28,16 @@ private:
 	// Background music
 	sf::SoundBuffer backgroundMusicBuffer;
 	sf::Sound backgroundMusic;
-	// Containers for Button elements so it can be looped
+
+	// Containers for Button elements for iteration
 	std::vector<Button*> elements;
-
+	
+	// Utility functions
 	void clearButtonHighlights();
-
+	void showContinueButton(); // Moves all buttons down to make room for continueButton
+	void hideContinueButton(); // Moves buttons back up
+	bool isGameActive();
+	
 	GameScreen* gameScreen;
 };
 

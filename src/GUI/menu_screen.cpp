@@ -24,6 +24,9 @@ void MenuScreen::loadContent(void)
 	backgroundTexture.loadFromFile("media/img/background.png");
 	background.setTexture(backgroundTexture);
 
+	continueButton.loadContent("media/img/continue_button.png", "media/img/continue_highlighted_button.png", "", sf::Vector2f(buttonsFromLeftEdge, topMargin-100), false);
+	elements.push_back(&continueButton);
+
 	newGameButton.loadContent("media/img/new_game_button.png", "media/img/new_game_highlighted_button.png", "", sf::Vector2f(buttonsFromLeftEdge, topMargin), true);
 	elements.push_back(&newGameButton);
 
@@ -43,6 +46,14 @@ void MenuScreen::loadContent(void)
 
 int MenuScreen::update()
 {
+	// Make continue visible and move buttons
+	if (continueButton.isVisible() && !isGameActive()) {
+		hideContinueButton();
+	}
+	else if (!continueButton.isVisible() && isGameActive()) {
+		showContinueButton();
+	}
+
 	sf::Event event;
 	while(window.pollEvent(event)) {
 
@@ -51,7 +62,13 @@ int MenuScreen::update()
 		// Hovering button highlights the sprite
 		if (event.type == sf::Event::MouseMoved)
 		{
-			if (newGameButton.containsMousePos(v))
+			if (continueButton.containsMousePos(v) && isGameActive())
+			{
+				// Highlight newGameButton
+				continueButton.setState(Highlighted);
+			}
+
+			else if (newGameButton.containsMousePos(v))
 			{
 				// Highlight newGameButton
 				newGameButton.setState(Highlighted);
@@ -77,7 +94,15 @@ int MenuScreen::update()
 
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			if (newGameButton.containsMousePos(v))
+			if (continueButton.containsMousePos(v) && isGameActive())
+			{
+				// Start newgamescreen
+				std::cout << "User pressed continueButton." << std::endl;
+				backgroundMusic.stop();
+				return 2; // NOTE: For now new game will start game immeaditely
+			}
+
+			else if (newGameButton.containsMousePos(v))
 			{
 				// Start newgamescreen
 				std::cout << "User pressed newGameButton." << std::endl;
@@ -130,7 +155,23 @@ void MenuScreen::clearButtonHighlights()
 	}
 }
 
-// int MenuScreen::loadGame()
-// {
+void MenuScreen::showContinueButton()
+{
+	continueButton.drawObject = true;
+	newGameButton.move(sf::Vector2f(0, 100));
+	loadGameButton.move(sf::Vector2f(0, 100));
+	exitButton.move(sf::Vector2f(0, 100));
+}
 
-// }
+void MenuScreen::hideContinueButton()
+{
+	continueButton.drawObject = false;
+	newGameButton.move(sf::Vector2f(0, -100));
+	loadGameButton.move(sf::Vector2f(0, -100));
+	exitButton.move(sf::Vector2f(0, -100));
+}
+
+bool MenuScreen::isGameActive()
+{
+	return gameScreen->isGameActive();
+}
