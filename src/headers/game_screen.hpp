@@ -182,7 +182,7 @@ public:
 	//Threads
 	std::thread aithread;
 	bool thread_flag;
-
+	bool thread_erased;
 
 };
 

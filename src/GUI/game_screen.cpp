@@ -26,6 +26,7 @@ GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 	BOARD_VERTICAL_OFFSET = 100;
 
 	thread_flag = false;
+	thread_erased = true;
 }
 
 void GameScreen::loadContent(void)
@@ -104,6 +105,7 @@ int GameScreen::update()
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+				tearDown();
 				return 0;
 			}
 			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
@@ -123,6 +125,7 @@ int GameScreen::update()
 					showSaveGameDialog();
 				}
 				else if (mainMenuButton.containsMousePos(mousePos)) {
+					tearDown();
 					return 0;
 				}
 				else {
@@ -179,6 +182,7 @@ int GameScreen::update()
 			std::cout << "loop started" << std::endl;
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+				tearDown();
 				return 0;
 			}
 			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
@@ -208,7 +212,7 @@ int GameScreen::update()
 					return 0;
 				}
 			}
-			if(aimove.first != aimove.second) //means that getaimove thread is almost ready
+			if(aimove.first != aimove.second && thread_flag == true) //means that getaimove thread is almost ready
 			{
 				aithread.join();
 				std::pair<int, int> test;
@@ -277,7 +281,8 @@ void GameScreen::clearButtonHighlights(std::vector<Button*> v)
 
 void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
 {
-	tearDown();
+	//tearDown();
+	thread_flag = false;
 	// Game starts with white players turn
 	board = Board();
 	activeSquare = -1;
@@ -514,6 +519,7 @@ std::vector<std::pair<int, int> > GameScreen::getMoveList() const
 
 void GameScreen::getAiMove(void)
 {
+	thread_erased = false;
 	std::pair<int, int> test2 = AiAlgorithm::algorithm(board, playerOnTurn->getLevel(), (playerOnTurn->getColor() == ColorType::White));
 	// will fail because the thread will be stopped when the first is written
 	ai_algorithm_mutex.lock();
@@ -522,6 +528,7 @@ void GameScreen::getAiMove(void)
 	ai_algorithm_mutex.unlock();
 
 	std::cout << "getAiMove ended" << std::endl;
+	thread_erased = true;
 }
 
 void GameScreen::changePiece(int index)
