@@ -18,6 +18,7 @@
 #include <fstream>
 
 std::mutex ai_algorithm_mutex;
+static volatile std::pair<int, int> aimove = std::make_pair(0, 0);
 
 GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 {
@@ -98,8 +99,6 @@ void GameScreen::loadContent(void)
 	black = NULL;
 }
 
-static volatile std::pair<int, int> aimove = std::make_pair(0, 0);
-
 int GameScreen::update()
 {
 	// Human turn
@@ -167,27 +166,24 @@ int GameScreen::update()
 	}
 	// AI Turn
 	else if (playerOnTurn->getType() == std::string("AI")) {
-
+	/* thread_flag tells if we need a new move
+	 * thread_erased tells if last thread we launched has finished so even if we need a new move we can't ask for one before that
+	 */		
 		if (!thread_flag && !(board.getState() & 0x3)) { //make sure that no moves is asked after checkmate or stalemate
-			if(thread_erased)
+			if(thread_erased) //see if last aithread has finished
 			{
-				std::cout << "spawning thread..." << std::endl;
 				aithread = std::thread(&GameScreen::getAiMove, this);
-				std::cout << "thread spawned" << std::endl;
 				thread_flag = true;
 			}
 		}
 
 		sf::Event event;
 
-		//std::cout << "loop is starting" << std::endl;
 		while (window.pollEvent(event)) {
-			//std::cout << "loop started" << std::endl;
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 				thread_flag = false;
 				aithread.detach();
-				std::cout << "thread detached" << std::endl;
 				return 0;
 			}
 			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
@@ -215,33 +211,35 @@ int GameScreen::update()
 						{
 							thread_flag = false;
 							aithread.detach();
-							std::cout << "thread detached" << std::endl;
 						}
 					}
 					return 0;
 				}
 			}
-		//std::cout << "loop continuing" << std::endl;
 		}
 		if(aimove.first != aimove.second && thread_flag == true) //means that getaimove thread is almost ready
 		{
 			aithread.join();
 			std::pair<int, int> test;
 			ai_algorithm_mutex.lock();
-			test.first = aimove.first;
-			test.second = aimove.second;
+			{
+				test.first = aimove.first;
+				test.second = aimove.second;
+			}
 			ai_algorithm_mutex.unlock();
+			
 			movePiece(test);
+			
 			ai_algorithm_mutex.lock();
-			aimove.first = 0;
-			aimove.second = 0;
+			{
+				aimove.first = 0;
+				aimove.second = 0;
+			}
 			ai_algorithm_mutex.unlock();
 			std::cout << playerOnTurn->getName() << " made move. (Level: " << playerOnTurn->getLevel() << ")" << std::endl;
 			thread_flag = false;
-			std::cout << "thread ended" << std::endl;
 			return changeTurn();
 		}
-	//std::cout << "out of loop" << std::endl;
 	}
 	return 2;
 }
