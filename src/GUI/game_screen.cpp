@@ -107,7 +107,6 @@ int GameScreen::update()
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				tearDown();
 				return 0;
 			}
 			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
@@ -127,7 +126,6 @@ int GameScreen::update()
 					showSaveGameDialog();
 				}
 				else if (mainMenuButton.containsMousePos(mousePos)) {
-					tearDown();
 					return 0;
 				}
 				else {
@@ -170,7 +168,7 @@ int GameScreen::update()
 	// AI Turn
 	else if (playerOnTurn->getType() == std::string("AI")) {
 
-		if (!thread_flag) {
+		if (!thread_flag && !(board.getState() & 0x3)) { //make sure that no moves is asked after checkmate or stalemate
 			if(thread_erased)
 			{
 				std::cout << "spawning thread..." << std::endl;
@@ -184,10 +182,12 @@ int GameScreen::update()
 
 		//std::cout << "loop is starting" << std::endl;
 		while (window.pollEvent(event)) {
-			std::cout << "loop started" << std::endl;
+			//std::cout << "loop started" << std::endl;
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				tearDown();
+				thread_flag = false;
+				aithread.detach();
+				std::cout << "thread detached" << std::endl;
 				return 0;
 			}
 			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
@@ -211,16 +211,17 @@ int GameScreen::update()
 				else if (mainMenuButton.containsMousePos(mousePos)) {
 					if(!thread_erased)
 					{
-						aithread.detach();
-						//aithread.~thread();
-						std::cout << "thread detached" << std::endl;
+						if(thread_flag == true)
+						{
+							thread_flag = false;
+							aithread.detach();
+							std::cout << "thread detached" << std::endl;
+						}
 					}
-					tearDown();
-					std::cout << "tearDown completed" << std::endl;
 					return 0;
 				}
 			}
-		std::cout << "loop continuing" << std::endl;
+		//std::cout << "loop continuing" << std::endl;
 		}
 		if(aimove.first != aimove.second && thread_flag == true) //means that getaimove thread is almost ready
 		{
@@ -692,7 +693,6 @@ int GameScreen::endGameOptions()
 		}
 		else if (event.type == sf::Event::MouseButtonPressed) {
 			if (endGameMainMenuButton.containsMousePos(mousePos)) {
-				tearDown();
 				return 0;
 			}
 			else if (endGamePlayAgainButton.containsMousePos(mousePos)) {
