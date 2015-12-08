@@ -128,8 +128,14 @@ public:
 	void initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
 	void tearDown(void);
 
+	// Load game from file
+	int loadGame();
+
+	void changeTexture(int index, int newType);
+
 	// Game updating and analysis
 	void movePiece(std::pair<int, int> move);
+	void changePlayerOnTurn();
 	int changeTurn();
 	bool containsPlayerPiece(int i, Player* p);
 	bool belongsToPlayer(int i, Player* p);

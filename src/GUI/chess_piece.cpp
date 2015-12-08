@@ -5,12 +5,13 @@ ChessPiece::ChessPiece()
 {
 }
 
-void ChessPiece::loadContent(const std::string& texturePath)
+void ChessPiece::loadContent(const std::string& texturePath, Piece t)
 {
 	if (!texture.loadFromFile(texturePath))
 		std::cout << "File " << texturePath << " not found!" << std::endl;
 
 	sprite.setTexture(texture);
+	type = t;
 }
 
 sf::Vector2f ChessPiece::getPosition() const
@@ -41,6 +42,11 @@ const sf::Texture* ChessPiece::getTexture() const
 void ChessPiece::setState(ObjectState state)
 {
 	state = Normal;
+}
+
+Piece ChessPiece::getType() const
+{
+	return type;
 }
 
 void ChessPiece::draw(sf::RenderWindow &window)

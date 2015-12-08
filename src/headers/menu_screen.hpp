@@ -9,7 +9,6 @@ class MenuScreen : public BaseScreen
 public:
     // Menu screen needs to be able to use gameScreens initializer
     MenuScreen(GameScreen* g, sf::RenderWindow &w);
-    int loadGame();
 	virtual void loadContent(void);
 	virtual int update();
     virtual void draw();
