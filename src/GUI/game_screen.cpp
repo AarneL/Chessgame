@@ -319,6 +319,7 @@ void GameScreen::tearDown(void)
 	pieces.clear();
 	initPieces();
 	setPieceInitialPositions();
+	clearHighlights(gameBoard);
 }
 
 int GameScreen::loadGame()
