@@ -13,6 +13,7 @@ public:
 	bool containsMousePos(sf::Vector2f v);
 	sf::Vector2f getPosition() const;
 	void draw(sf::RenderWindow &window);
+	void move(sf::Vector2f v);
 private:
 	sf::Texture normalTexture;
 	sf::Texture highlightedTexture;

@@ -178,6 +178,7 @@ public:
 	void setPieceInitialPositions();
 	void playAgainInit();
 	void initPlayers(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
+	bool isGameActive();
 
 	//Threads
 	std::thread aithread;

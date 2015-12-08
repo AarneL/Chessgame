@@ -866,6 +866,16 @@ void GameScreen::initPlayers(std::string whiteName, int whiteLevel, std::string 
 	}
 }
 
+bool GameScreen::isGameActive()
+{
+	if (white != NULL) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void GameScreen::showSaveGameDialog() {
 	// This should show file dialog for saving file
 	// Save the game
