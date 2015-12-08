@@ -383,7 +383,7 @@ int GameScreen::loadGame()
 	}
 
 	std::string state;
-	std::getline(ifs, state);
+	ifs >> state;
 	unsigned char* stateChar = (unsigned char*)state.c_str();
 	std::cout << "State: " << stateChar << std::endl;
 	board.setState(*stateChar);
