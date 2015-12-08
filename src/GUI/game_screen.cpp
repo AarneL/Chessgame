@@ -94,6 +94,8 @@ void GameScreen::loadContent(void)
 	endGameButtons.push_back(&endGameMainMenuButton);
 	endGameButtons.push_back(&endGamePlayAgainButton);
 	endGameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
+	white = NULL;
+	black = NULL;
 }
 
 static volatile std::pair<int, int> aimove = std::make_pair(0, 0);
@@ -287,7 +289,9 @@ void GameScreen::clearButtonHighlights(std::vector<Button*> v)
 void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
 {
 	tearDown();
+
 	thread_flag = false;
+	
 	// Game starts with white players turn
 	board = Board();
 	activeSquare = -1;
@@ -306,9 +310,11 @@ void GameScreen::tearDown(void)
 	//Create base board starting from down left corner
 	if (white != NULL) {
 		delete white;
+		white = NULL;
 	}
 	if (black != NULL) {
 		delete black;
+		black = NULL;
 	}
 	pieces.clear();
 	initPieces();
@@ -495,7 +501,7 @@ int GameScreen::changeTurn()
 	{
 		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
 		std::cout << "Stalemate" << std::endl;
-		endGameText.setString("Game ended!");
+		endGameText.setString("Game ended to stalemate!\nDraw!");
 		return endGame();
 	}
 	return 2;
