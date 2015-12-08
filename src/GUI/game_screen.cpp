@@ -169,11 +169,14 @@ int GameScreen::update()
 	else if (playerOnTurn->getType() == std::string("AI")) {
 
 		if (!thread_flag) {
-			std::cout << "spawning thread..." << std::endl;
-			aithread = std::thread(&GameScreen::getAiMove, this);
-			std::cout << "thread spawned" << std::endl;
-			thread_flag = true;
+			if(thread_erased)
+			{
+				std::cout << "spawning thread..." << std::endl;
+				aithread = std::thread(&GameScreen::getAiMove, this);
+				std::cout << "thread spawned" << std::endl;
+				thread_flag = true;
 			}
+		}
 
 		sf::Event event;
 
@@ -204,35 +207,37 @@ int GameScreen::update()
 					showSaveGameDialog();
 				}
 				else if (mainMenuButton.containsMousePos(mousePos)) {
-					aithread.detach();
-					//aithread.~thread();
-					std::cout << "thread detached" << std::endl;
+					if(!thread_erased)
+					{
+						aithread.detach();
+						//aithread.~thread();
+						std::cout << "thread detached" << std::endl;
+					}
 					tearDown();
 					std::cout << "tearDown completed" << std::endl;
 					return 0;
 				}
 			}
-			if(aimove.first != aimove.second && thread_flag == true) //means that getaimove thread is almost ready
-			{
-				aithread.join();
-				std::pair<int, int> test;
-				ai_algorithm_mutex.lock();
-				test.first = aimove.first;
-				test.second = aimove.second;
-				ai_algorithm_mutex.unlock();
-				movePiece(test);
-				ai_algorithm_mutex.lock();
-				aimove.first = 0;
-				aimove.second = 0;
-				ai_algorithm_mutex.unlock();
-				std::cout << playerOnTurn->getName() << " made move. (Level: " << playerOnTurn->getLevel() << ")" << std::endl;
-				thread_flag = false;
-				std::cout << "thread ended" << std::endl;
-				return changeTurn();
-			}
 		std::cout << "loop continuing" << std::endl;
 		}
-
+		if(aimove.first != aimove.second && thread_flag == true) //means that getaimove thread is almost ready
+		{
+			aithread.join();
+			std::pair<int, int> test;
+			ai_algorithm_mutex.lock();
+			test.first = aimove.first;
+			test.second = aimove.second;
+			ai_algorithm_mutex.unlock();
+			movePiece(test);
+			ai_algorithm_mutex.lock();
+			aimove.first = 0;
+			aimove.second = 0;
+			ai_algorithm_mutex.unlock();
+			std::cout << playerOnTurn->getName() << " made move. (Level: " << playerOnTurn->getLevel() << ")" << std::endl;
+			thread_flag = false;
+			std::cout << "thread ended" << std::endl;
+			return changeTurn();
+		}
 	//std::cout << "out of loop" << std::endl;
 	}
 	return 2;
@@ -281,7 +286,7 @@ void GameScreen::clearButtonHighlights(std::vector<Button*> v)
 
 void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
 {
-	//tearDown();
+	tearDown();
 	thread_flag = false;
 	// Game starts with white players turn
 	board = Board();
