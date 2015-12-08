@@ -403,32 +403,27 @@ void GameScreen::changePlayerOnTurn()
 
 int GameScreen::changeTurn()
 {
-	std::string s;
-	//test if it's checkmate
-
+	std::string nameOfOther = playerOnTurn->getName();
+	
 	// Change playerOnTurn
 	changePlayerOnTurn();
 
 	// Format infoText
-	s = playerOnTurn->getName() + " moved " + getMoveStr(getMoveList().back()) + "\n";
-	s += playerOnTurn->getName() + "'s turn.";
-	infoText.setString(s);
-	s.clear();
+	infoText.setString(nameOfOther + " moved " + getMoveStr(getMoveList().back()) + "\n" + playerOnTurn->getName() + "'s turn.");
 
 	moveSound.play(); // SWWIP
 	if(board.getState() & 0x01)
 	{
-		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
-		infoText.setString("Checkmate by " + playerOnTurn->getName() + "!");
-		endGameText.setString("Game ended!\n" + playerOnTurn->getName() + " wins!");
-		return endGame();
+		infoText.setString("Checkmate by " + nameOfOther + "!");
+		endGameText.setString("Game ended!\n" + nameOfOther + " wins!");
+		return endGame(); // End game info box
 	}
 	else if (board.getState() & 0x02)
 	{
 		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
 		std::cout << "Stalemate" << std::endl;
 		endGameText.setString("Game ended to stalemate!\nDraw!");
-		return endGame();
+		return endGame(); // End game info box
 	}
 	return 2;
 }
