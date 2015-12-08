@@ -39,9 +39,8 @@ void MenuScreen::loadContent(void)
 	// Music :D
 	backgroundMusicBuffer.loadFromFile("media/sound/chess.wav");
 	backgroundMusic.setBuffer(backgroundMusicBuffer);
-	backgroundMusic.setVolume(2);
+	backgroundMusic.setVolume(100);
 	backgroundMusic.play();
-
 }
 
 int MenuScreen::update()

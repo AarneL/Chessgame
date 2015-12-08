@@ -47,6 +47,7 @@ void GameScreen::loadContent(void)
 			gameBoard.push_back(square);
 		}
 	}
+
 	// Pawn promotion window
 	rectangle.setSize(sf::Vector2f(530, 250));
 	rectangle.setFillColor(sf::Color::Black);
@@ -689,7 +690,7 @@ int GameScreen::endGameOptions()
 				return 0;
 			}
 			else if (endGamePlayAgainButton.containsMousePos(mousePos)) {
-				initialize(white->getName(), white->getLevel(), black->getName(), black->getLevel());
+				playAgainInit();
 				return 2;
 			}
 		}
@@ -837,7 +838,10 @@ void GameScreen::setPieceInitialPositions()
 
 void GameScreen::playAgainInit()
 {
-	initialize(white->getName(), white->getLevel(), black->getName(), black->getLevel());
+	std::string whiteName = (white->getType() == "AI") ? "Computer" : white->getName();
+	std::string blackName = (black->getType() == "AI") ? "Computer" : black->getName();
+
+	initialize(blackName, white->getLevel(), whiteName, black->getLevel());
 }
 
 void GameScreen::initPlayers(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)
