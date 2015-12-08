@@ -169,7 +169,7 @@ int GameScreen::update()
 	else if (playerOnTurn->getType() == std::string("AI")) {
 	/* thread_flag tells if we need a new move
 	 * thread_erased tells if last thread we launched has finished so even if we need a new move we can't ask for one before that
-	 */		
+	 */
 		if (!thread_flag && !(board.getState() & 0x3)) { //make sure that no moves is asked after checkmate or stalemate
 			if(thread_erased) //see if last aithread has finished
 			{
@@ -198,10 +198,10 @@ int GameScreen::update()
 				else
 					clearButtonHighlights(buttons);
 			}
-			if (event.type == sf::Event::MouseButtonPressed) 
+			if (event.type == sf::Event::MouseButtonPressed)
 			{
 
-				if (saveButton.containsMousePos(mousePos)) 
+				if (saveButton.containsMousePos(mousePos))
 				{
 					showSaveGameDialog();
 				}
@@ -228,9 +228,9 @@ int GameScreen::update()
 				test.second = aimove.second;
 			}
 			ai_algorithm_mutex.unlock();
-			
+
 			movePiece(test);
-			
+
 			ai_algorithm_mutex.lock();
 			{
 				aimove.first = 0;
@@ -291,7 +291,7 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 	tearDown();
 
 	thread_flag = false;
-	
+
 	// Game starts with white players turn
 	board = Board();
 	activeSquare = -1;
@@ -382,14 +382,14 @@ int GameScreen::loadGame()
 		}
 	}
 
-	// std::string state;
-	// std::getline(ifs, state);
-	// std::cout << "State: " << state << std::endl;
-	// board.setState(atoi(state).c_str());
+	std::string state;
+	std::getline(ifs, state);
+	unsigned char* stateChar = (unsigned char*)state.c_str();
+	std::cout << "State: " << stateChar << std::endl;
+	board.setState(*stateChar);
 
 	// Format infoText
 	std::string s;
-
 	s = "Game continues!\n";
 	s += playerOnTurn->getName() + "'s turn.";
 	infoText.setString(s);
@@ -478,7 +478,7 @@ void GameScreen::changePlayerOnTurn()
 int GameScreen::changeTurn()
 {
 	std::string nameOfOther = playerOnTurn->getName();
-	
+
 	// Change playerOnTurn
 	changePlayerOnTurn();
 

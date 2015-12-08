@@ -469,7 +469,7 @@ int Board::getState() const
 	return state;
 }
 
-void Board::setState(int st)
+void Board::setState(unsigned char st)
 {
 	state = st;
 }
@@ -488,12 +488,11 @@ void Board::saveGame(Player* white, Player* black, const char* savePath)
 		ofs << move.first << '-' << move.second << std::endl;
 	}
 	ofs << "BOARD" << std::endl;
-	// std::copy(board.begin(), board.end(), std::ostreambuf_iterator<char>(ofs));
 	for (auto piece : board) {
 		ofs << piece << " ";
 	}
 	ofs << std::endl;
-	ofs << (int)state << std::endl;
+	ofs << state << std::endl;
 	ofs.close();
 }
 
