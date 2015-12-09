@@ -509,18 +509,24 @@ int GameScreen::changeTurn()
 	if(board.getState() & 0x01)
 	{
 		infoText.setString("Checkmate by " + nameOfOther + "!");
-		endGameText.setString("Game ended!\n" + nameOfOther + " wins!");
-		//endGameSound.play()
+		//checkmateSound.play()
 		highlightCheckmate();
 		// Sleep
 		draw();
 		sf::sleep(sf::seconds(3));
+		endGameText.setString("Game ended!\n" + nameOfOther + " wins!");
 		return endGame(); // End game info box
 	}
 	else if (board.getState() & 0x02)
 	{
 		// TODO: Needs to print some box that announces winner and when ok pressed goes to main menu
 		std::cout << "Stalemate" << std::endl;
+		infoText.setString("Stalemate!");
+		//stalemateSound.play()
+		highlightCheckmate();
+		// Sleep
+		draw();
+		sf::sleep(sf::seconds(3));
 		endGameText.setString("Game ended to stalemate!\nDraw!");
 		return endGame(); // End game info box
 	}
