@@ -367,15 +367,6 @@ int Board::updateState(int index, int caller) //index is the destination of last
 }
 
 
-bool Board::isCheckMate(int king_location) const
-{
-	//this algorithm must only be called in case there is check
-	std::pair<int, int> pair = AiAlgorithm::algorithm(*this, 1, ((board[king_location]) % 2)==1);
-	if(pair.first || pair.second)
-		return false;
-	return true;
-}
-
 int Board::isCheck(int turn) const //0 test if black is checked
 {
 	std::vector<int> moves;
