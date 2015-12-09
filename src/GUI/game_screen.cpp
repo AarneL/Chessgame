@@ -94,7 +94,7 @@ void GameScreen::loadContent(void)
 	// Clocktext
 	clockText.setColor(sf::Color::Green);
 	texts.push_back(&clockText);
-	clockText.loadContent("media/img/Calibri.ttf", 60, sf::Vector2f(900, 700), true);
+	clockText.loadContent("media/img/Calibri.ttf", 60, sf::Vector2f(900, 650), true);
 
 	// Game ending
 	endGameMainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(250, 450), true);
