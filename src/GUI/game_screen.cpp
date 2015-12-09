@@ -82,10 +82,6 @@ void GameScreen::loadContent(void)
 	infoText.setColor(sf::Color::Yellow);
 	texts.push_back(&infoText);
 
-	// Clocktext
-	clockText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 200), true);
-	clockText.setColor(sf::Color::Green);
-	texts.push_back(&clockText);
 
 	// Buttons
 	// Save button
@@ -94,6 +90,11 @@ void GameScreen::loadContent(void)
 	// MainMenu button
 	mainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(900, 600), true);
 	buttons.push_back(&mainMenuButton);
+	
+	// Clocktext
+	clockText.setColor(sf::Color::Green);
+	texts.push_back(&clockText);
+	clockText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(900, 700), true);
 
 	// Game ending
 	endGameMainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(250, 450), true);
