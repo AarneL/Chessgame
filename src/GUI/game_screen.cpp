@@ -675,6 +675,7 @@ int GameScreen::endGame()
 void GameScreen::drawEndGame()
 {
 	window.clear();
+	window.draw(background);
 	for (auto square : gameBoard) {
 		square->draw(window);
 	}
