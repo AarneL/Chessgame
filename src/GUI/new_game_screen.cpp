@@ -287,13 +287,9 @@ int NewGameScreen::update()
 			}
 			if (playButton.containsMousePos(v)) {
 				createGame();
-<<<<<<< Updated upstream
 				return 2; // Goes to gamescreen
-=======
-				return 2;
 			} else if (mainMenuButton.containsMousePos(v)) {
 				return 0;
->>>>>>> Stashed changes
 			}
 			return 1;
 		}
