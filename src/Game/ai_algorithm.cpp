@@ -101,11 +101,27 @@ namespace AiAlgorithm
 
 	int alphaBeta(Board& board, int depth, int a, int b, bool maximizingPlayer)
 	{
-		// Check if the algorithm has reached it's depth
-		
-		if( depth == 0 )
-			return evaluate(board);
 
+		
+		if( depth == 0 )  // Check if the algorithm has reached it's depth
+		{
+			if(board.isStaleMate(maximizingPlayer))  //before evaluation see if it's stalemate or checkmate
+			{
+				//do some stuff to end the game
+				if(board.isCheck(maximizingPlayer))
+				{
+					if(maximizingPlayer)
+						return MIN + 100;
+					else
+						return MAX - 100;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+			return evaluate(board);
+		}
 		// Find all own pieces
 		if (maximizingPlayer)//White players turn
 		{
