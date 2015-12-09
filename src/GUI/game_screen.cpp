@@ -23,8 +23,8 @@ static volatile std::pair<int, int> aimove = std::make_pair(0, 0);
 GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 {
 	// Graphical design constants
-	BOARD_HORIZONTAL_OFFSET = 0;
-	BOARD_VERTICAL_OFFSET = 100;
+	BOARD_HORIZONTAL_OFFSET = 50;
+	BOARD_VERTICAL_OFFSET = 50;
 
 	thread_flag = false;
 	thread_erased = true;
@@ -85,12 +85,12 @@ void GameScreen::loadContent(void)
 
 	// Buttons
 	// Save button
-	saveButton.loadContent("media/img/saveGameButton.png", "media/img/saveGameHighlightedButton.png", "", sf::Vector2f(900, 500), true);
+	saveButton.loadContent("media/img/saveGameButton.png", "media/img/saveGameHighlightedButton.png", "", sf::Vector2f(880, 750), true);
 	buttons.push_back(&saveButton);
 	// MainMenu button
-	mainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(900, 600), true);
+	mainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(1110, 750), true);
 	buttons.push_back(&mainMenuButton);
-	
+
 	// Clocktext
 	clockText.setColor(sf::Color::Green);
 	texts.push_back(&clockText);
@@ -190,7 +190,7 @@ int GameScreen::update()
 				// Start new thread and calculate time elapsed for algorithm
 				aiClock.restart();
 				aithread = std::thread(&GameScreen::getAiMove, this); // The actual calculation starts here
-				thread_flag = true; 
+				thread_flag = true;
 			}
 		}
 

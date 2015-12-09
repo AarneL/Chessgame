@@ -23,6 +23,8 @@ private:
 	/* To draw board properly program must have different sprite for each piece
 	 *
 	*/
+	sf::Texture backgroundTexture;
+	sf::Sprite background;
 	sf::RenderWindow &window;
 	// Container for all elements to draw
 	std::vector<Object*> elements;

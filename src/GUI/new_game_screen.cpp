@@ -133,6 +133,10 @@ void NewGameScreen::loadContent(void)
 	// Background
 	backgroundTexture.loadFromFile("media/img/game_screen_background.jpg");
 	background.setTexture(backgroundTexture);
+
+	// Main menu button
+	mainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(100, 750), true);
+	elements.push_back(&mainMenuButton);
 }
 
 
@@ -210,6 +214,9 @@ int NewGameScreen::update()
 			if (playButton.containsMousePos(v)) {
 				playButton.setState(Highlighted);
 				buttonHovered = true;
+			} else if (mainMenuButton.containsMousePos(v)) {
+				mainMenuButton.setState(Highlighted);
+				buttonHovered = true;
 			}
 			if (!buttonHovered) {
 				// If nothing hovered
@@ -280,7 +287,13 @@ int NewGameScreen::update()
 			}
 			if (playButton.containsMousePos(v)) {
 				createGame();
+<<<<<<< Updated upstream
 				return 2; // Goes to gamescreen
+=======
+				return 2;
+			} else if (mainMenuButton.containsMousePos(v)) {
+				return 0;
+>>>>>>> Stashed changes
 			}
 			return 1;
 		}

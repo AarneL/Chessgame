@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 
 	// sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	// sf::RenderWindow window(sf::VideoMode(modes[2]), "Chess game", 4); // Last parameter makes window unresizable
-	sf::RenderWindow window(sf::VideoMode(1200, 800), "Chess game", 4);
+	sf::RenderWindow window(sf::VideoMode(1400, 850), "Chess game", 4);
 
 	// Screens
 	GameScreen gameScreen(window);

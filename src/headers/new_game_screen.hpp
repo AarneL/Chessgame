@@ -88,6 +88,9 @@ private:
 	// Background
 	sf::Texture backgroundTexture;
 	sf::Sprite background;
+
+	//Main menu button
+	Button mainMenuButton;
 };
 
 #endif
