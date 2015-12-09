@@ -129,6 +129,10 @@ void NewGameScreen::loadContent(void)
 	// Play button
 	playButton.loadContent("media/img/playButton.png", "media/img/playHighlightedButton.png", "", sf::Vector2f(half - 63, eighthOfHeight * 7), true);
 	elements.push_back(&playButton);
+
+	// Background
+	backgroundTexture.loadFromFile("media/img/game_screen_background.jpg");
+	background.setTexture(backgroundTexture);
 }
 
 
@@ -419,6 +423,7 @@ void NewGameScreen::clearButtonHighlights()
 void NewGameScreen::draw()
 {
 	window.clear(sf::Color(0, 0, 0, 0));
+	window.draw(background);
 	for (auto element : elements) {
 		element->draw(window);
 	}

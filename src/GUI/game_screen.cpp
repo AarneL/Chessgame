@@ -103,6 +103,10 @@ void GameScreen::loadContent(void)
 	endGameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
 	white = NULL;
 	black = NULL;
+
+	// Background
+	backgroundTexture.loadFromFile("media/img/game_screen_background.jpg");
+	background.setTexture(backgroundTexture);
 }
 
 int GameScreen::update()
@@ -258,6 +262,7 @@ int GameScreen::update()
 void GameScreen::draw()
 {
 	window.clear();
+	window.draw(background);
 	for (auto square : gameBoard) {
 		square->draw(window);
 	}

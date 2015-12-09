@@ -120,6 +120,9 @@ private:
 	sf::Clock clock;
 	sf::Clock aiClock; // To debug ai calculationtimes
 
+	sf::Texture backgroundTexture;
+	sf::Sprite background;
+
 public:
     GameScreen(sf::RenderWindow &w);
 

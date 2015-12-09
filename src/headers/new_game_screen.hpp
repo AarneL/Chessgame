@@ -84,6 +84,10 @@ private:
 
 	// Play button
 	Button playButton;
+
+	// Background
+	sf::Texture backgroundTexture;
+	sf::Sprite background;
 };
 
 #endif
