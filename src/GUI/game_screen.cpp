@@ -181,15 +181,16 @@ int GameScreen::update()
 	}
 	// AI Turn
 	else if (playerOnTurn->getType() == std::string("AI")) {
-	/* thread_flag tells if we need a new move
-	 * thread_erased tells if last thread we launched has finished so even if we need a new move we can't ask for one before that
+	/* Here thread_flag tells if we need a new move. if thread_flag IS active it means <> otherwise <>
+	 * thread_erased tells if last thread we launched has finished so even if we need a new move we can't ask for one before that TODO:Why we cant?
 	 */
-		if (!thread_flag && !(board.getState() & 0x3)) { //make sure that no moves is asked after checkmate or stalemate
-			if(thread_erased) //see if last aithread has finished
+		if (!thread_flag && !(board.getState() & 0x3)) { // Make sure that no moves is asked after checkmate or stalemate
+			if(thread_erased) // See if last aithread has finished
 			{
+				// Start new thread and calculate time elapsed for algorithm
 				aiClock.restart();
-				aithread = std::thread(&GameScreen::getAiMove, this);
-				thread_flag = true;
+				aithread = std::thread(&GameScreen::getAiMove, this); // The actual calculation starts here
+				thread_flag = true; 
 			}
 		}
 
@@ -198,7 +199,7 @@ int GameScreen::update()
 		while (window.pollEvent(event)) {
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				thread_flag = false;
+				thread_flag = false; // If user goes to mainmenu while calculating -> abandon calculation
 				aithread.detach();
 				return 0;
 			}
@@ -225,7 +226,7 @@ int GameScreen::update()
 					{
 						if(thread_flag == true)
 						{
-							thread_flag = false;
+							thread_flag = false; // If user goes to mainmenu while calculating -> abandon calculation
 							aithread.detach();
 						}
 					}
@@ -233,8 +234,9 @@ int GameScreen::update()
 				}
 			}
 		}
-		if(aimove.first != aimove.second && thread_flag == true) //means that getaimove thread is almost ready
+		if(aimove.first != aimove.second && thread_flag == true) // Means that getaimove thread is ALMOST ready
 		{
+			// TODO: Comment this block
 			aithread.join();
 			std::pair<int, int> test;
 			ai_algorithm_mutex.lock();

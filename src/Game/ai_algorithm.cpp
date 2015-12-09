@@ -19,27 +19,27 @@ namespace AiAlgorithm
 
 	std::pair<int, int> algorithm(const Board& board, int depth, bool maximizingPlayer)
 	{
-		std::vector<int> v = {0, 0, 0}; //container for best value and the move to get there
+		std::vector<int> v = {0, 0, 0}; // Container for best value and the move to get there
 		
-		int a = MIN; //alpha
-		int b = MAX; //beta
-		std::srand(std::time(0)); //use current time as a seed for random
+		int a = MIN; // Alpha
+		int b = MAX; // Beta
+		std::srand(std::time(0)); // Use current time as a seed for random
 
-		if (maximizingPlayer)//White players turn
+		if (maximizingPlayer) // White players turn
 		{
 
-			v[0] = MIN; //smallest int
-			for(int i = 0; i < 64; i++)//iterate through the board
+			v[0] = MIN; // Smallest int
+			for(int i = 0; i < 64; i++) // Iterate through the board
 			{
-				if(board.getBoard()[i]%2 == 1)//if piece is white
+				if(board.getBoard()[i]%2 == 1) // If piece is white
 				{
 					for(auto j:board.possibleMoves(i))
 					{
 						Board newboard = board;
-						newboard.movePiece(i, j);//supposing possibleMoves doesn't return origin
+						newboard.movePiece(i, j); // Supposing possibleMoves doesn't return origin
 						newboard.updateState(j, 1);
 						int temp = alphaBeta(newboard, depth-1, a, b, false);
-						if(v[0] < temp) //make sure a proper move is chosen
+						if(v[0] < temp) // Make sure a proper move is chosen
 						{
 							v[0] = temp;
 							v[1] = i;
@@ -54,14 +54,14 @@ namespace AiAlgorithm
 						a = std::max(a, v[0]);
 						if (b <= a)
 						{
-							break; //cut off
+							break; // Cut off bad branch
 						}
 					}
 				}
 			}
 		}
 
-		else //Black players turn
+		else // Black players turn (maximizing == false)
 		{
 			v[0] = MAX;
 			for(int i = 0; i < 64; i++)
@@ -74,7 +74,7 @@ namespace AiAlgorithm
 						newboard.movePiece(i, j);
 						newboard.updateState(j, 1);
 						int temp = alphaBeta(newboard, depth-1, a, b, true);
-						if(temp < v[0]) //make sure a proper move is chosen
+						if(temp < v[0]) // Make sure a proper move is chosen
 						{
 							v[0] = temp;
 							v[1] = i;
@@ -89,7 +89,7 @@ namespace AiAlgorithm
 						b = std::min(b,v[0]);
 						if(b<=a)
 						{
-							break; //cut off
+							break; // Cut off bad branch
 						}
 					}
 				}
@@ -101,41 +101,41 @@ namespace AiAlgorithm
 
 	int alphaBeta(Board& board, int depth, int a, int b, bool maximizingPlayer)
 	{
-		//check if the algorithm has reached it's depth
+		// Check if the algorithm has reached it's depth
 		
 		if( depth == 0 )
 			return evaluate(board);
 
-		//find all own pieces
+		// Find all own pieces
 		if (maximizingPlayer)//White players turn
 		{
 
-			int v = MIN; //smallest int
-			for(int i = 0; i < 64; i++)//iterate through the board
+			int v = MIN; // Smallest int
+			for(int i = 0; i < 64; i++)// Iterate through the board
 			{
-				if(board.getBoard()[i]%2 == 1)//if piece is white
+				if(board.getBoard()[i]%2 == 1)// If piece is white
 				{	
 					for(auto j:board.possibleMoves(i))
 					{
 						Board newboard = board;
-						newboard.movePiece(i, j);//supposing possibleMoves doesn't return origin
+						newboard.movePiece(i, j);// Supposing possibleMoves doesn't return origin
 						newboard.updateState(j, 1);
-						v = std::max(v, alphaBeta(newboard, depth-1, a, b, false)); //call alphabeta for black player
+						v = std::max(v, alphaBeta(newboard, depth-1, a, b, false)); // Call alphabeta for black player
 						a = std::max(a, v);
 						if (b <= a)
 						{
-							break; //cut off
+							break; // Cut off
 						}
 					}
 				}
 			}
-			if(v == MIN) //has not chosen a move -> possiblemoves must be empty
+			if(v == MIN) // Has not chosen a move -> possiblemoves must be empty
 			{
 				if(board.isCheck(maximizingPlayer))
 				{
-					return (MIN+100-depth);	//if it's check it's also checkmate
+					return (MIN+100-depth);	// If it's check it's also checkmate
 				}
-				else //otherwise it must be stalemate
+				else // Otherwise it must be stalemate
 				{
 					return 0;
 				}
@@ -143,7 +143,7 @@ namespace AiAlgorithm
 			return v;
 		}
 
-		else //Black players turn
+		else // Black players turn
 		{
 			int v = MAX;
 			for(int i = 0; i < 64; i++)
@@ -159,18 +159,18 @@ namespace AiAlgorithm
 						b = std::min(b,v);
 						if(b<=a)
 						{
-							break; //cut off
+							break; // Cut off
 						}
 					}
 				}
 			}
-			if(v == MAX) //has not chosen a move -> possiblemoves must be empty
+			if(v == MAX) // Has not chosen a move -> possiblemoves must be empty
 			{
-				if(board.isCheck(maximizingPlayer)) //if it's check it's also checkmate
+				if(board.isCheck(maximizingPlayer)) // If it's check it's also checkmate
 				{
 					return (MAX-100+depth);
 				}
-				else //otherwise it must be stalemate
+				else // Otherwise it must be stalemate
 				{
 					return 0;
 				}
@@ -189,10 +189,10 @@ namespace AiAlgorithm
 			value = value + getValue(b[i], i);
 		}
 
-		//evaluate
-		//white pieces are of positive value and black pieces are negative
+		// Evaluate
+		// White pieces are of positive value and black pieces are negative
 
-		//lets make table for values of pieces
+		// Lets make table for values of pieces
 		return value;
 	}
 
