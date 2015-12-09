@@ -114,6 +114,11 @@ private:
 	// InformationBar
 	Text infoText;
 	std::vector<Text*> texts;
+	Text clockText;
+
+	// Clock
+	sf::Clock clock;
+	sf::Clock aiClock; // To debug ai calculationtimes
 
 public:
     GameScreen(sf::RenderWindow &w);

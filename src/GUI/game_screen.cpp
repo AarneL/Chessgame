@@ -82,6 +82,11 @@ void GameScreen::loadContent(void)
 	infoText.setColor(sf::Color::Yellow);
 	texts.push_back(&infoText);
 
+	// Clocktext
+	clockText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 200), true);
+	clockText.setColor(sf::Color::Green);
+	texts.push_back(&clockText);
+
 	// Buttons
 	// Save button
 	saveButton.loadContent("media/img/saveGameButton.png", "media/img/saveGameHighlightedButton.png", "", sf::Vector2f(900, 400), true);
@@ -102,6 +107,10 @@ void GameScreen::loadContent(void)
 
 int GameScreen::update()
 {
+	int currTime = (int)clock.getElapsedTime().asSeconds();
+	// Update clockstring
+	clockText.setString(std::to_string(currTime / 60) + ":" + std::to_string(currTime % 60));
+
 	// Human turn
 	if (playerOnTurn->getType() == std::string("Human")) {
 		sf::Event event;
@@ -173,6 +182,7 @@ int GameScreen::update()
 		if (!thread_flag && !(board.getState() & 0x3)) { //make sure that no moves is asked after checkmate or stalemate
 			if(thread_erased) //see if last aithread has finished
 			{
+				aiClock.restart();
 				aithread = std::thread(&GameScreen::getAiMove, this);
 				thread_flag = true;
 			}
@@ -230,7 +240,7 @@ int GameScreen::update()
 			ai_algorithm_mutex.unlock();
 
 			movePiece(test);
-
+			std::cout << "AI(lvl:" << playerOnTurn->getLevel() << ") calculated next turn in " << aiClock.getElapsedTime().asSeconds() << " seconds." << std::endl;
 			ai_algorithm_mutex.lock();
 			{
 				aimove.first = 0;
@@ -303,6 +313,7 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 
 	// To format info text
 	infoText.setString("Game started!\n" +  playerOnTurn->getName() + "'s turn.");
+	clock.restart();
 }
 
 void GameScreen::tearDown(void)
@@ -473,7 +484,7 @@ void GameScreen::changePlayerOnTurn()
 	} else {
 		playerOnTurn = black;
 	}
-	std::cout << "turn changed" << std::endl;
+	std::cout << "Turn changed" << std::endl;
 }
 
 int GameScreen::changeTurn()
@@ -530,8 +541,10 @@ void GameScreen::getAiMove(void)
 	std::pair<int, int> test2 = AiAlgorithm::algorithm(board, playerOnTurn->getLevel(), (playerOnTurn->getColor() == ColorType::White));
 	// will fail because the thread will be stopped when the first is written
 	ai_algorithm_mutex.lock();
-	aimove.first = test2.first;
-	aimove.second = test2.second;
+	{
+		aimove.first = test2.first;
+		aimove.second = test2.second;
+	}
 	ai_algorithm_mutex.unlock();
 
 	std::cout << "getAiMove ended" << std::endl;

@@ -276,7 +276,7 @@ int NewGameScreen::update()
 			}
 			if (playButton.containsMousePos(v)) {
 				createGame();
-				return 2;
+				return 2; // Goes to gamescreen
 			}
 			return 1;
 		}
