@@ -85,7 +85,7 @@ void GameScreen::loadContent(void)
 
 	// Buttons
 	// Save button
-	saveButton.loadContent("media/img/saveGameButton.png", "media/img/saveGameHighlightedButton.png", "", sf::Vector2f(900, 400), true);
+	saveButton.loadContent("media/img/saveGameButton.png", "media/img/saveGameHighlightedButton.png", "", sf::Vector2f(900, 500), true);
 	buttons.push_back(&saveButton);
 	// MainMenu button
 	mainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(900, 600), true);
@@ -94,7 +94,7 @@ void GameScreen::loadContent(void)
 	// Clocktext
 	clockText.setColor(sf::Color::Green);
 	texts.push_back(&clockText);
-	clockText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(900, 700), true);
+	clockText.loadContent("media/img/Calibri.ttf", 60, sf::Vector2f(900, 700), true);
 
 	// Game ending
 	endGameMainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(250, 450), true);
@@ -510,6 +510,11 @@ int GameScreen::changeTurn()
 	{
 		infoText.setString("Checkmate by " + nameOfOther + "!");
 		endGameText.setString("Game ended!\n" + nameOfOther + " wins!");
+		//endGameSound.play()
+		highlightCheckmate();
+		// Sleep
+		draw();
+		sf::sleep(sf::seconds(5));
 		return endGame(); // End game info box
 	}
 	else if (board.getState() & 0x02)
@@ -892,6 +897,27 @@ bool GameScreen::isGameActive()
 	}
 	else {
 		return false;
+	}
+}
+
+void GameScreen::highlightCheckmate()
+{
+	clearHighlights(gameBoard);
+	// Highlights the position of lost king
+	if (playerOnTurn->getColor() == ColorType::White) {
+		for (int i = 0; i < 64; i++)
+		{
+			if (board.getBoard()[i] == Piece::W_KING) {
+				gameBoard[i]->setState(Highlighted);
+			}
+		}
+	} else {
+		for (int i = 0; i < 64; i++)
+		{
+			if (board.getBoard()[i] == Piece::B_KING) {
+				gameBoard[i]->setState(Highlighted);
+			}
+		}
 	}
 }
 
