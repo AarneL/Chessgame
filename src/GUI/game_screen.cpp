@@ -514,7 +514,7 @@ int GameScreen::changeTurn()
 		highlightCheckmate();
 		// Sleep
 		draw();
-		sf::sleep(sf::seconds(5));
+		sf::sleep(sf::seconds(3));
 		return endGame(); // End game info box
 	}
 	else if (board.getState() & 0x02)
@@ -869,7 +869,7 @@ void GameScreen::playAgainInit()
 	std::string whiteName = (white->getType() == "AI") ? "Computer" : white->getName();
 	std::string blackName = (black->getType() == "AI") ? "Computer" : black->getName();
 
-	initialize(blackName, white->getLevel(), whiteName, black->getLevel());
+	initialize(whiteName, white->getLevel(), blackName, black->getLevel());
 }
 
 void GameScreen::initPlayers(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel)

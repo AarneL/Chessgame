@@ -47,7 +47,7 @@ private:
 
 	ChessPiece whiteQueen;
 	ChessPiece whiteKing;
-
+	
 	// Black pieces
 	ChessPiece blackPawn1;
 	ChessPiece blackPawn2;
