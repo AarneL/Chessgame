@@ -34,6 +34,11 @@ void ChessPiece::changeTexture(const sf::Texture* newTexture)
 	sprite.setTexture(*newTexture, true);
 }
 
+void ChessPiece::changeToInitialTexture()
+{
+	sprite.setTexture(texture, true);
+}
+
 const sf::Texture* ChessPiece::getTexture() const
 {
 	return sprite.getTexture();

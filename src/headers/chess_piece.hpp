@@ -14,6 +14,7 @@ public:
 	void setPosition(sf::Vector2f pos);
 	bool containsMousePos(sf::Vector2f v);
 	void changeTexture(const sf::Texture* newTexture);
+	void changeToInitialTexture();
 	const sf::Texture* getTexture() const;
 	void setState(ObjectState state);
 	Piece getType() const;
