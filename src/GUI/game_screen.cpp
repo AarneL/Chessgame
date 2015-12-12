@@ -31,7 +31,7 @@ GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 void GameScreen::loadContent(void)
 {
 	// Background
-	backgroundTexture.loadFromFile("media/img/game_screen_background.png");
+	backgroundTexture.loadFromFile("media/img/game_background.png");
 	background.setTexture(backgroundTexture);
 
 	if (!boardTexture.loadFromFile("media/img/board10.png"))
