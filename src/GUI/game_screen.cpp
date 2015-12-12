@@ -57,7 +57,7 @@ void GameScreen::loadContent(void)
 
 	// Pawn promotion window
 	rectangle.setSize(sf::Vector2f(530, 250));
-	rectangle.setFillColor(sf::Color::Black);
+	rectangle.setTexture(&backgroundTexture);
 	rectangle.setPosition(230, 300);
 
 	promotionText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
@@ -65,7 +65,7 @@ void GameScreen::loadContent(void)
 
 	for (int i = 0; i < 4; i++) {
 		Square* square = new Square();
-		square->loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((260 + i*96 + i*25), 420));
+		square->loadContent("media/img/light_square.png", "media/img/square_light_highlighted.png", sf::Vector2f((260 + i*96 + i*25), 420));
 		promotionSquares.push_back(square);
 	}
 
