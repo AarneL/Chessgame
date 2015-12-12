@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 {
 	// Applications variables
 	int screen = 0;
-	int previousScreen = 0;
+	// int previousScreen = 0;
 	std::vector<BaseScreen*> screens;
 
 	// Window creation
