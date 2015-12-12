@@ -398,6 +398,28 @@ int GameScreen::loadGame()
 		pieces[destination] = pieces[origin];
 		pieces[origin] = NULL;
 		pieces[destination]->setPosition(gameBoard[destination]->getPosition());
+		// Update state
+		if (playerOnTurn->getType() == std::string("Human")) {
+			board.updateState(destination, 0);
+		} else {
+			board.updateState(destination, 1);
+		}
+		// Check if castling has happened and move rook
+		if ((board.getState() >> 6) ==  0x03) //11000000 castling
+		{
+			if ((destination % 8) > 4) //castling to right
+			{
+				pieces[origin + 1] = pieces[origin + 3]; //move the rook
+				pieces[origin + 3] = NULL;
+				pieces[origin + 1]->setPosition(gameBoard[origin + 1]->getPosition());
+			}
+			else // castling to left
+			{
+				pieces[origin - 1] = pieces[origin - 4]; //move the rook
+				pieces[origin - 4] = NULL;
+				pieces[origin - 1]->setPosition(gameBoard[origin - 1]->getPosition());
+			}
+		}
 		// Change turn
 		changePlayerOnTurn();
 	}
