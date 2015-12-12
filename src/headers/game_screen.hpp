@@ -148,7 +148,7 @@ public:
 	void changeTexture(int index, int newType);
 
 	// Game updating and analysis
-	void movePiece(std::pair<int, int> move);
+	void movePiece(std::pair<int, int>& move);
 	void changePlayerOnTurn();
 	int changeTurn();
 	bool containsPlayerPiece(int i, Player* p);
@@ -198,7 +198,7 @@ public:
 
 	//Threads
 	std::thread aithread;
-	bool thread_flag;
+	bool waitingAiMove;
 	bool thread_erased;
 
 };

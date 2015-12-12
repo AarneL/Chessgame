@@ -16,7 +16,7 @@
 #include <fstream>
 
 std::mutex ai_algorithm_mutex;
-static volatile std::pair<int, int> aimove = std::make_pair(0, 0);
+static std::pair<int, int> aimove = std::make_pair(0, 0);
 
 GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 {
@@ -24,7 +24,7 @@ GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 	BOARD_HORIZONTAL_OFFSET = 50;
 	BOARD_VERTICAL_OFFSET = 50;
 
-	thread_flag = false;
+	waitingAiMove = false;
 	thread_erased = true;
 }
 
@@ -187,25 +187,19 @@ int GameScreen::update()
 	/* Here thread_flag tells if we need a new move. if thread_flag IS active it means <> otherwise <>
 	 * thread_erased tells if last thread we launched has finished so even if we need a new move we can't ask for one before that TODO:Why we cant?
 	 */
-		if (!thread_flag && !(board.getState() & 0x3)) { // Make sure that no moves is asked after checkmate or stalemate
+		if (!waitingAiMove && !(board.getState() & 0x3)) { // Make sure that no moves is asked after checkmate or stalemate
 			if(thread_erased) // See if last aithread has finished
 			{
 				// Start new thread and calculate time elapsed for algorithm
 				aiClock.restart();
 				aithread = std::thread(&GameScreen::getAiMove, this); // The actual calculation starts here
-				thread_flag = true;
+				waitingAiMove = true;
 			}
 		}
 
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				thread_flag = false; // If user goes to mainmenu while calculating -> abandon calculation
-				aithread.detach();
-				return 0;
-			}
 			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
 			if (event.type == sf::Event::MouseMoved) {
 				if (saveButton.containsMousePos(mousePos)) {
@@ -230,9 +224,9 @@ int GameScreen::update()
 				else if (mainMenuButton.containsMousePos(mousePos)) {
 					if(!thread_erased)
 					{
-						if(thread_flag == true)
+						if(waitingAiMove == true)
 						{
-							thread_flag = false; // If user goes to mainmenu while calculating -> abandon calculation
+							waitingAiMove = false; // If user goes to mainmenu while calculating -> abandon calculation
 							aithread.detach();
 						}
 					}
@@ -242,19 +236,12 @@ int GameScreen::update()
 				}
 			}
 		}
-		if(aimove.first != aimove.second && thread_flag == true) // Means that getaimove thread is ALMOST ready
+
+		if(aimove.first != aimove.second && waitingAiMove == true) // Means that getaimove thread is ALMOST ready
 		{
 			// TODO: Comment this block
 			aithread.join();
-			std::pair<int, int> test;
-			ai_algorithm_mutex.lock();
-			{
-				test.first = aimove.first;
-				test.second = aimove.second;
-			}
-			ai_algorithm_mutex.unlock();
-
-			movePiece(test);
+			movePiece(aimove);
 			std::cout << "AI(lvl:" << playerOnTurn->getLevel() << ") calculated next turn in " << aiClock.getElapsedTime().asSeconds() << " seconds." << std::endl;
 			ai_algorithm_mutex.lock();
 			{
@@ -262,8 +249,7 @@ int GameScreen::update()
 				aimove.second = 0;
 			}
 			ai_algorithm_mutex.unlock();
-			std::cout << playerOnTurn->getName() << " made move. (Level: " << playerOnTurn->getLevel() << ")" << std::endl;
-			thread_flag = false;
+			waitingAiMove = false;
 			return changeTurn();
 		}
 	}
@@ -316,7 +302,7 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 {
 	tearDown();
 
-	thread_flag = false;
+	waitingAiMove = false;
 
 	// Game starts with white players turn
 	board = Board();
@@ -489,7 +475,7 @@ void GameScreen::changeTexture(int index, int newType)
 	}
 }
 
-void GameScreen::movePiece(std::pair<int,int> move)
+void GameScreen::movePiece(std::pair<int,int>& move)
 {
 	// Move in GUI
 	pieces[move.second] = pieces[move.first];
@@ -604,16 +590,15 @@ std::vector<std::pair<int, int> > GameScreen::getMoveList() const
 void GameScreen::getAiMove(void)
 {
 	thread_erased = false;
-	std::pair<int, int> test2 = AiAlgorithm::algorithm(board, playerOnTurn->getLevel(), (playerOnTurn->getColor() == ColorType::White));
+	std::pair<int, int> aiAlgorithmResult = AiAlgorithm::algorithm(board, playerOnTurn->getLevel(), (playerOnTurn->getColor() == ColorType::White));
 	// will fail because the thread will be stopped when the first is written
 	ai_algorithm_mutex.lock();
 	{
-		aimove.first = test2.first;
-		aimove.second = test2.second;
+		aimove.first = aiAlgorithmResult.first;
+		aimove.second = aiAlgorithmResult.second;
 	}
 	ai_algorithm_mutex.unlock();
 
-	std::cout << "getAiMove ended" << std::endl;
 	thread_erased = true;
 }
 
