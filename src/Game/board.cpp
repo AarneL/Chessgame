@@ -473,8 +473,24 @@ void Board::changePiece(int index, int newpiece) {
 void Board::saveGame(Player* white, Player* black, const char* savePath)
 {
 	std::ofstream ofs (savePath, std::ofstream::out);
-	ofs << white->getName() << "-" << white->getLevel() << std::endl;
-	ofs << black->getName() << "-" << black->getLevel() << std::endl;
+
+	int blackLvl;
+	int whiteLvl;
+
+	//Set level to 0 if human
+	if (white->getType() == "Human")
+		whiteLvl = 0;
+	else
+		whiteLvl = white->getLevel();
+
+	//Same for black
+	if (black->getType() == "Human")
+		blackLvl = 0;
+	else
+		blackLvl = black->getLevel();
+
+	ofs << white->getName() << "-" << whiteLvl << std::endl;
+	ofs << black->getName() << "-" << blackLvl << std::endl;
 	for (auto move : moveList) {
 		ofs << move.first << '-' << move.second << std::endl;
 	}

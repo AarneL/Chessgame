@@ -363,6 +363,13 @@ int GameScreen::loadGame()
 	int whiteLevel = atoi((white.substr(white.find('-')+1)).c_str());
 	int blackLevel = atoi((black.substr(black.find('-')+1)).c_str());
 
+	//If level > 0 -> AI player
+	if (whiteLevel > 0)
+		whiteName = "Computer";
+
+	if (blackLevel > 0)
+		blackName = "Computer";
+
 	std::cout << whiteName << std::endl;
 	std::cout << blackName << std::endl;
 
