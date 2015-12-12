@@ -398,6 +398,7 @@ int GameScreen::loadGame()
 			std::cout << "pieces[i]->getType is " << pieces[i]->getType() << std::endl;
 			if (pieces[i]->getType() != piece) {
 				changeTexture(i, piece);
+				board.changePiece(i, piece);
 			}
 		}
 	}
