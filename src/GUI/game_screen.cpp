@@ -110,7 +110,7 @@ void GameScreen::loadContent(void)
 
 int GameScreen::update()
 {
-	int currTime = (int)clock.getElapsedTime().asSeconds();
+	int currTime = (int)clock.getElapsedTime().asSeconds() + timeOffset;
 	// Update clockstring
 	clockText.setString(std::to_string(currTime / 60) + ":" + std::to_string(currTime % 60));
 
@@ -135,9 +135,14 @@ int GameScreen::update()
 			if (event.type == sf::Event::MouseButtonPressed) {
 
 				if (saveButton.containsMousePos(mousePos)) {
+					// Get the current time
+					timeOffset += (int)clock.getElapsedTime().asSeconds();
 					showSaveGameDialog();
+					restartClock();
 				}
 				else if (mainMenuButton.containsMousePos(mousePos)) {
+					// Get the current time
+					timeOffset += (int)clock.getElapsedTime().asSeconds();
 					return 0;
 				}
 				else {
@@ -217,7 +222,10 @@ int GameScreen::update()
 
 				if (saveButton.containsMousePos(mousePos))
 				{
+					// Get current time
+					timeOffset += (int)clock.getElapsedTime().asSeconds();
 					showSaveGameDialog();
+					clock.restart();
 				}
 				else if (mainMenuButton.containsMousePos(mousePos)) {
 					if(!thread_erased)
@@ -228,6 +236,8 @@ int GameScreen::update()
 							aithread.detach();
 						}
 					}
+					// Get current time
+					timeOffset += (int)clock.getElapsedTime().asSeconds();
 					return 0;
 				}
 			}
@@ -319,6 +329,8 @@ void GameScreen::initialize(std::string whiteName, int whiteLevel, std::string b
 
 	// To format info text
 	infoText.setString("Game started!\n" +  playerOnTurn->getName() + "'s turn.");
+
+	timeOffset = 0;
 	clock.restart();
 }
 
@@ -363,44 +375,40 @@ int GameScreen::loadGame()
 	int whiteLevel = atoi((white.substr(white.find('-')+1)).c_str());
 	int blackLevel = atoi((black.substr(black.find('-')+1)).c_str());
 
-	//If level > 0 -> AI player
+	// If level > 0 -> AI player
 	if (whiteLevel > 0)
 		whiteName = "Computer";
 
 	if (blackLevel > 0)
 		blackName = "Computer";
 
-	std::cout << whiteName << std::endl;
-	std::cout << blackName << std::endl;
-
 	// Initialize the game screen with the players from file
 	initialize(whiteName, whiteLevel, blackName, blackLevel);
 
+	// Get all moves that are written until 'BOARD' string and move them
 	for (std::string line; std::getline(ifs, line); ) {
 		if (line == "BOARD") {
 			break;
 		}
 		int origin = atoi((line.substr(0, line.find('-'))).c_str());
 		int destination = atoi((line.substr(line.find('-')+1)).c_str());
-		std::cout << "move: " << origin << "->" << destination << std::endl;
 		// Move in board
 		board.movePiece(origin, destination);
-		std::cout << "piece moved in board" << std::endl;
 		// Move in GUI
 		pieces[destination] = pieces[origin];
 		pieces[origin] = NULL;
 		pieces[destination]->setPosition(gameBoard[destination]->getPosition());
-		std::cout << "piece moved in GUI" << std::endl;
 		// Change turn
 		changePlayerOnTurn();
 	}
 
+	// Update the board in GUI and board
+	// This is because only moving the pieces above doesn't promote the pawns,
+	// so have to check the board at the saving time
 	int piece;
 	for (int i = 0; i < 64; i++) {
 		ifs >> piece;
-		std::cout << "piece is " << piece << std::endl;
 		if (pieces[i] != NULL) {
-			std::cout << "pieces[i]->getType is " << pieces[i]->getType() << std::endl;
 			if (pieces[i]->getType() != piece) {
 				changeTexture(i, piece);
 				board.changePiece(i, piece);
@@ -408,11 +416,16 @@ int GameScreen::loadGame()
 		}
 	}
 
+	// Set the saved state
 	std::string state;
 	ifs >> state;
 	unsigned char* stateChar = (unsigned char*)state.c_str();
-	std::cout << "State: " << stateChar << std::endl;
 	board.setState(*stateChar);
+
+	// Set the saved time
+	ifs >> timeOffset;
+
+	ifs.close();
 
 	// Format infoText
 	std::string s;
@@ -421,13 +434,11 @@ int GameScreen::loadGame()
 	infoText.setString(s);
 	s.clear();
 
-	ifs.close();
 	return 2;
 }
 
 void GameScreen::changeTexture(int index, int newType)
 {
-	std::cout << "came to change texture" << std::endl;
 	if (newType == W_QUEEN) {
 		pieces[index]->changeTexture(whiteQueen.getTexture());
 	} else if (newType == W_ROOK) {
@@ -498,7 +509,6 @@ void GameScreen::changePlayerOnTurn()
 	} else {
 		playerOnTurn = black;
 	}
-	std::cout << "Turn changed" << std::endl;
 }
 
 int GameScreen::changeTurn()
@@ -578,7 +588,6 @@ void GameScreen::getAiMove(void)
 
 void GameScreen::changePiece(int index)
 {
-	std::cout << "changePiece" << std::endl;
 	int newPiece = -1;
 	if (playerOnTurn->getType() == std::string("Human")) {
 		while (newPiece == -1) {
@@ -934,9 +943,15 @@ void GameScreen::highlightCheckmate()
 	}
 }
 
-void GameScreen::showSaveGameDialog() {
+void GameScreen::showSaveGameDialog()
+{
 	// This should show file dialog for saving file
-	// Save the game
 	const char* savePath = tinyfd_saveFileDialog("Save game", "", 0, NULL, "text files");
-	board.saveGame(white, black, savePath);
+	// Save the game in Board
+	board.saveGame(white, black, timeOffset, savePath);
+}
+
+void GameScreen::restartClock()
+{
+	clock.restart();
 }

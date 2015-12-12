@@ -470,7 +470,7 @@ void Board::changePiece(int index, int newpiece) {
 	board[index] = newpiece;
 }
 
-void Board::saveGame(Player* white, Player* black, const char* savePath)
+void Board::saveGame(Player* white, Player* black, int timeOffset, const char* savePath)
 {
 	std::ofstream ofs (savePath, std::ofstream::out);
 
@@ -489,17 +489,24 @@ void Board::saveGame(Player* white, Player* black, const char* savePath)
 	else
 		blackLvl = black->getLevel();
 
+	// Save player names and levels
 	ofs << white->getName() << "-" << whiteLvl << std::endl;
 	ofs << black->getName() << "-" << blackLvl << std::endl;
+
+	// Save all the moves
 	for (auto move : moveList) {
 		ofs << move.first << '-' << move.second << std::endl;
 	}
+	// Save the current board that contains piece types
 	ofs << "BOARD" << std::endl;
 	for (auto piece : board) {
 		ofs << piece << " ";
 	}
 	ofs << std::endl;
+	// Save the current state
 	ofs << state << std::endl;
+	// Save the current time
+	ofs << timeOffset << std::endl;
 	ofs.close();
 }
 

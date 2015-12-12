@@ -42,7 +42,7 @@ void NewGameScreen::initialize()
 	currentBlackLevel = &blackLevelOneButton;
 	blackLevelOneButton.setState(Selected);
 
-	// Select name and level elements to draw acconding
+	// Select name and level elements to draw according
 	// to player types
 	selectElementsToDraw();
 

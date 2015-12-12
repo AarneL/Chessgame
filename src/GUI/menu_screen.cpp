@@ -99,6 +99,7 @@ int MenuScreen::update()
 				// The there is a game active, continue it
 				std::cout << "User pressed continueButton." << std::endl;
 				backgroundMusic.stop();
+				gameScreen->restartClock();
 				return 2;
 			}
 

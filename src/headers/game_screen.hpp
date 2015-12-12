@@ -119,6 +119,11 @@ private:
 
 	// Clock
 	sf::Clock clock;
+	// For saving the current time when saving or going to
+	// main menu that is added to clock's elapsed time
+	// when restarting the clock
+	int timeOffset;
+
 	sf::Clock aiClock; // To debug ai calculationtimes
 
 	sf::Texture backgroundTexture;
@@ -189,6 +194,7 @@ public:
 	void initPlayers(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
 	bool isGameActive();
 	void highlightCheckmate();
+	void restartClock(); // Other screens can also restart the clock
 
 	//Threads
 	std::thread aithread;
