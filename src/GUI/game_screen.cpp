@@ -404,6 +404,15 @@ int GameScreen::loadGame()
 		} else {
 			board.updateState(destination, 1);
 		}
+		// Check if passant has happened
+		if((board.getState() >> 6) == 0x01) //01000000 passant made by white
+		{
+			pieces[destination - 8] = NULL;
+		}
+		if((board.getState() >> 6) == 0x02) //10000000 passant made by black
+		{
+			pieces[destination + 8] = NULL;
+		}
 		// Check if castling has happened and move rook
 		if ((board.getState() >> 6) ==  0x03) //11000000 castling
 		{
