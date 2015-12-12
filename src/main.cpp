@@ -29,8 +29,8 @@ int main(int argc, char** argv)
 
 	// Screens
 	GameScreen gameScreen(window);
-	MenuScreen menuScreen(&gameScreen, window);
 	NewGameScreen newGameScreen(&gameScreen, window); // Must be able to modify
+	MenuScreen menuScreen(&gameScreen, &newGameScreen, window);
 
 	screens.push_back(&menuScreen);
 	screens.push_back(&newGameScreen);

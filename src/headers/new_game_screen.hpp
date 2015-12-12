@@ -10,8 +10,8 @@
 #include "player.hpp"
 
 enum PlayerType {
-	Human = 0,
-	AI = 1
+	HumanType = 0,
+	AIType = 1
 };
 
 class NewGameScreen : public BaseScreen
@@ -19,11 +19,13 @@ class NewGameScreen : public BaseScreen
 public:
 	// New game screen needs to be able to use gameScreens initializer
     NewGameScreen(GameScreen* g, sf::RenderWindow &w);
+    void initialize();
 	void loadContent(void);
 	int update();
 	void createGame();
 	void selectLevel(Button* button, ColorType color);
 	void changePlayerType(PlayerType type, ColorType color);
+	void clearButtonSelections();
 	void clearButtonHighlights();
     void draw();
 

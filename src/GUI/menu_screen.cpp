@@ -2,9 +2,10 @@
 #include "../headers/base_screen.hpp"
 #include "../headers/tinyfiledialogs.h"
 
-MenuScreen::MenuScreen(GameScreen* g, sf::RenderWindow &w) : window(w)
+MenuScreen::MenuScreen(GameScreen* g, NewGameScreen* n, sf::RenderWindow &w) : window(w)
 {
 	gameScreen = g;
+	newGameScreen = n;
 }
 
 void MenuScreen::loadContent(void)
@@ -95,10 +96,10 @@ int MenuScreen::update()
 		{
 			if (continueButton.containsMousePos(v) && isGameActive())
 			{
-				// Start newgamescreen
+				// The there is a game active, continue it
 				std::cout << "User pressed continueButton." << std::endl;
 				backgroundMusic.stop();
-				return 2; // NOTE: For now new game will start game immeaditely
+				return 2;
 			}
 
 			else if (newGameButton.containsMousePos(v))
@@ -106,7 +107,9 @@ int MenuScreen::update()
 				// Start newgamescreen
 				std::cout << "User pressed newGameButton." << std::endl;
 				backgroundMusic.stop();
-				return 1; // NOTE: For now new game will start game immeaditely
+				// Initialize the newGameSreen
+				newGameScreen->initialize();
+				return 1;
 			}
 
 			else if (loadGameButton.containsMousePos(v))

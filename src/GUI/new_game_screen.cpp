@@ -9,18 +9,38 @@
 NewGameScreen::NewGameScreen(GameScreen* g, sf::RenderWindow &w) : window(w)
 {
 	gameScreen = g;
-	// Default types
-	whitePlayerSelected = Human;
-	blackPlayerSelected = AI;
+}
+
+void NewGameScreen::initialize()
+/*
+	This method is used every time when the newgame screen is opened
+*/
+{
 	// Default names
 	whiteNameString = "Player1";
+	whitePlayerName.setString(whiteNameString);
 	blackNameString = "Player2";
-	// Default levels
+	blackPlayerName.setString(blackNameString);
+
+	// Clear all button selections
+	clearButtonSelections();
+
+	// Set white human selected as default
+	whitePlayerSelected = HumanType;
+	whiteHumanButton.setState(Selected);
+
+	// Set black AI selected as default
+	blackPlayerSelected = AIType;
+	blackAIButton.setState(Selected);
+
+	// Set level 1 as default
 	whiteLevel = 1;
-	blackLevel = 1;
-	// Current level buttons
 	currentWhiteLevel = &whiteLevelOneButton;
+	whiteLevelOneButton.setState(Selected);
+
+	blackLevel = 1;
 	currentBlackLevel = &blackLevelOneButton;
+	blackLevelOneButton.setState(Selected);
 }
 
 void NewGameScreen::loadContent(void)
@@ -75,8 +95,6 @@ void NewGameScreen::loadContent(void)
 
 	whiteHumanButton.loadContent("media/img/humanButton.png", "media/img/humanHighlightedButton.png", "media/img/humanSelectedButton.png", sf::Vector2f(fifthOfHalf, buttonTopMargin), true);
 	elements.push_back(&whiteHumanButton);
-	// Set white human selected as default
-	whiteHumanButton.setState(Selected);
 
 	blackHumanButton.loadContent("media/img/humanButton.png", "media/img/humanHighlightedButton.png", "media/img/humanSelectedButton.png", sf::Vector2f(half + fifthOfHalf, buttonTopMargin), true);
 	elements.push_back(&blackHumanButton);
@@ -86,16 +104,12 @@ void NewGameScreen::loadContent(void)
 
 	blackAIButton.loadContent("media/img/computerButton.png", "media/img/computerHighlightedButton.png", "media/img/computerSelectedButton.png", sf::Vector2f(half + fifthOfHalf + 200, buttonTopMargin), true);
 	elements.push_back(&blackAIButton);
-	// Set black AI selected as default
-	blackAIButton.setState(Selected);
 
-	// Levels
+	// levels
 	int levelTopMargin = eighthOfHeight * 5;
 
 	whiteLevelOneButton.loadContent("media/img/level1Button.png", "media/img/level1HighlightedButton.png", "media/img/level1SelectedButton.png", sf::Vector2f(fifthOfHalf, levelTopMargin), false);
 	elements.push_back(&whiteLevelOneButton);
-	// Set level 1 as default
-	whiteLevelOneButton.setState(Selected);
 
 	whiteLevelTwoButton.loadContent("media/img/level2Button.png", "media/img/level2HighlightedButton.png", "media/img/level2SelectedButton.png", sf::Vector2f(fifthOfHalf + 85, levelTopMargin), false);
 	elements.push_back(&whiteLevelTwoButton);
@@ -111,8 +125,6 @@ void NewGameScreen::loadContent(void)
 
 	blackLevelOneButton.loadContent("media/img/level1Button.png", "media/img/level1HighlightedButton.png", "media/img/level1SelectedButton.png", sf::Vector2f(half + fifthOfHalf, levelTopMargin), true);
 	elements.push_back(&blackLevelOneButton);
-	// Set level 1 as default
-	blackLevelOneButton.setState(Selected);
 
 	blackLevelTwoButton.loadContent("media/img/level2Button.png", "media/img/level2HighlightedButton.png", "media/img/level2SelectedButton.png", sf::Vector2f(half + fifthOfHalf + 85, levelTopMargin), true);
 	elements.push_back(&blackLevelTwoButton);
@@ -148,24 +160,24 @@ int NewGameScreen::update()
 		if (event.type == sf::Event::MouseMoved)
 		{
 			bool buttonHovered = false;
-			if (whiteHumanButton.containsMousePos(v) && whitePlayerSelected != Human) {
+			if (whiteHumanButton.containsMousePos(v) && whitePlayerSelected != HumanType) {
 				// Highlight whiteHumanButton
 				whiteHumanButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (blackHumanButton.containsMousePos(v) && blackPlayerSelected != Human) {
+			} else if (blackHumanButton.containsMousePos(v) && blackPlayerSelected != HumanType) {
 				// Highlight blackHumanButton
 				blackHumanButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (whiteAIButton.containsMousePos(v) && whitePlayerSelected != AI) {
+			} else if (whiteAIButton.containsMousePos(v) && whitePlayerSelected != AIType) {
 				// Highlight whiteAIButton
 				whiteAIButton.setState(Highlighted);
 				buttonHovered = true;
-			} else if (blackAIButton.containsMousePos(v) && blackPlayerSelected != AI) {
+			} else if (blackAIButton.containsMousePos(v) && blackPlayerSelected != AIType) {
 				// Highlight blackAIButton
 				blackAIButton.setState(Highlighted);
 				buttonHovered = true;
 			}
-			if (whitePlayerSelected == AI) {
+			if (whitePlayerSelected == AIType) {
 				if (whiteLevelOneButton.containsMousePos(v) && whiteLevel != 1) {
 					whiteLevelOneButton.setState(Highlighted);
 					buttonHovered = true;
@@ -188,7 +200,7 @@ int NewGameScreen::update()
 					buttonHovered = true;
 				}
 			}
-			if (blackPlayerSelected == AI) {
+			if (blackPlayerSelected == AIType) {
 				if (blackLevelOneButton.containsMousePos(v) && blackLevel != 1) {
 					blackLevelOneButton.setState(Highlighted);
 					buttonHovered = true;
@@ -226,20 +238,20 @@ int NewGameScreen::update()
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			whitePlayerName.setState(Normal);
 			blackPlayerName.setState(Normal);
-			if (whiteHumanButton.containsMousePos(v) && whitePlayerSelected != Human) {
+			if (whiteHumanButton.containsMousePos(v) && whitePlayerSelected != HumanType) {
 				// Select white human
-				changePlayerType(Human, White);
-			} else if (blackHumanButton.containsMousePos(v) && blackPlayerSelected != Human) {
+				changePlayerType(HumanType, White);
+			} else if (blackHumanButton.containsMousePos(v) && blackPlayerSelected != HumanType) {
 				// Select black human
-				changePlayerType(Human, Black);
-			} else if (whiteAIButton.containsMousePos(v) && whitePlayerSelected != AI) {
+				changePlayerType(HumanType, Black);
+			} else if (whiteAIButton.containsMousePos(v) && whitePlayerSelected != AIType) {
 				// Select white AI
-				changePlayerType(AI, White);
-			} else if (blackAIButton.containsMousePos(v) && blackPlayerSelected != AI) {
+				changePlayerType(AIType, White);
+			} else if (blackAIButton.containsMousePos(v) && blackPlayerSelected != AIType) {
 				// Select black AI
-				changePlayerType(AI, Black);
+				changePlayerType(AIType, Black);
 			}
-			if (whitePlayerSelected == AI) {
+			if (whitePlayerSelected == AIType) {
 				if (whiteLevelOneButton.containsMousePos(v) && whiteLevel != 1) {
 					whiteLevel = 1;
 					selectLevel(&whiteLevelOneButton, White);
@@ -262,7 +274,7 @@ int NewGameScreen::update()
 					blackPlayerName.setState(Normal);
 				}
 			}
-			if (blackPlayerSelected == AI) {
+			if (blackPlayerSelected == AIType) {
 				if (blackLevelOneButton.containsMousePos(v) && blackLevel != 1) {
 					blackLevel = 1;
 					selectLevel(&blackLevelOneButton, Black);
@@ -333,10 +345,10 @@ int NewGameScreen::update()
 
 
 void NewGameScreen::createGame() {
-	if (whitePlayerSelected == AI) {
+	if (whitePlayerSelected == AIType) {
 		whiteNameString = "Computer";
 	}
-	if (blackPlayerSelected == AI) {
+	if (blackPlayerSelected == AIType) {
 		blackNameString = "Computer";
 	}
 	gameScreen->initialize(whiteNameString, whiteLevel, blackNameString, blackLevel);
@@ -360,7 +372,7 @@ void NewGameScreen::changePlayerType(PlayerType type, ColorType color)
 {
 	if (color == White) {
 		whitePlayerSelected = type;
-		if (type == Human) {
+		if (type == HumanType) {
 			whiteHumanButton.setState(Selected);
 			whiteAIButton.setState(Normal);
 			// Dont draw level elements
@@ -373,7 +385,7 @@ void NewGameScreen::changePlayerType(PlayerType type, ColorType color)
 			whiteNameText.drawObject = true;
 			whitePlayerName.drawObject = true;
 
-		} else if (type == AI) {
+		} else if (type == AIType) {
 			whiteAIButton.setState(Selected);
 			whiteHumanButton.setState(Normal);
 			// Draw level elements
@@ -389,7 +401,7 @@ void NewGameScreen::changePlayerType(PlayerType type, ColorType color)
 	}
 	else {
 		blackPlayerSelected = type;
-		if (type == Human) {
+		if (type == HumanType) {
 			blackHumanButton.setState(Selected);
 			blackAIButton.setState(Normal);
 			// Dont draw level elements
@@ -402,7 +414,7 @@ void NewGameScreen::changePlayerType(PlayerType type, ColorType color)
 			blackNameText.drawObject = true;
 			blackPlayerName.drawObject = true;
 
-		} else if (type == AI) {
+		} else if (type == AIType) {
 			blackAIButton.setState(Selected);
 			blackHumanButton.setState(Normal);
 			// Draw level elements
@@ -418,6 +430,12 @@ void NewGameScreen::changePlayerType(PlayerType type, ColorType color)
 	}
 }
 
+void NewGameScreen::clearButtonSelections()
+{
+	for (auto element : elements) {
+		element->setState(Normal);
+	}
+}
 
 void NewGameScreen::clearButtonHighlights()
 {
