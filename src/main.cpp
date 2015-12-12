@@ -10,21 +10,9 @@ int main(int argc, char** argv)
 {
 	// Applications variables
 	int screen = 0;
-	// int previousScreen = 0;
 	std::vector<BaseScreen*> screens;
 
 	// Window creation
-	// std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
-	// for (std::size_t i = 0; i < modes.size(); ++i)
-	// {
-	// 	sf::VideoMode mode = modes[i];
-	// 	std::cout << "Mode #" << i << ": "
- //              << mode.width << "x" << mode.height << " - "
- //              << mode.bitsPerPixel << " bpp" << std::endl;
-	// }
-
-	// sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-	// sf::RenderWindow window(sf::VideoMode(modes[2]), "Chess game", 4); // Last parameter makes window unresizable
 	sf::RenderWindow window(sf::VideoMode(1400, 850), "Chess game", 4);
 
 	// Screens
@@ -39,7 +27,7 @@ int main(int argc, char** argv)
 	// Mouse cursor no more visible
 	window.setMouseCursorVisible(true);
 
-	// Load Screen contents, needs to be only once
+	// Load Screen contents, needs to be done only once
 	for (auto s : screens)
 	{
 		s->loadContent();

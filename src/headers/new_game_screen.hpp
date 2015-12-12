@@ -25,6 +25,7 @@ public:
 	void createGame();
 	void selectLevel(Button* button, ColorType color);
 	void changePlayerType(PlayerType type, ColorType color);
+	void selectElementsToDraw();
 	void clearButtonSelections();
 	void clearButtonHighlights();
     void draw();

@@ -41,6 +41,11 @@ void NewGameScreen::initialize()
 	blackLevel = 1;
 	currentBlackLevel = &blackLevelOneButton;
 	blackLevelOneButton.setState(Selected);
+
+	// Select name and level elements to draw acconding
+	// to player types
+	selectElementsToDraw();
+
 }
 
 void NewGameScreen::loadContent(void)
@@ -372,62 +377,74 @@ void NewGameScreen::changePlayerType(PlayerType type, ColorType color)
 {
 	if (color == White) {
 		whitePlayerSelected = type;
-		if (type == HumanType) {
-			whiteHumanButton.setState(Selected);
-			whiteAIButton.setState(Normal);
-			// Dont draw level elements
-			whiteLevelOneButton.drawObject = false;
-			whiteLevelTwoButton.drawObject = false;
-			whiteLevelThreeButton.drawObject = false;
-			whiteLevelFourButton.drawObject = false;
-			whiteLevelFiveButton.drawObject = false;
-			// Draw name text elements
-			whiteNameText.drawObject = true;
-			whitePlayerName.drawObject = true;
-
-		} else if (type == AIType) {
-			whiteAIButton.setState(Selected);
-			whiteHumanButton.setState(Normal);
-			// Draw level elements
-			whiteLevelOneButton.drawObject = true;
-			whiteLevelTwoButton.drawObject = true;
-			whiteLevelThreeButton.drawObject = true;
-			whiteLevelFourButton.drawObject = true;
-			whiteLevelFiveButton.drawObject = true;
-			// Dont draw name text elements
-			whiteNameText.drawObject = false;
-			whitePlayerName.drawObject = false;
-		}
 	}
 	else {
 		blackPlayerSelected = type;
-		if (type == HumanType) {
-			blackHumanButton.setState(Selected);
-			blackAIButton.setState(Normal);
-			// Dont draw level elements
-			blackLevelOneButton.drawObject = false;
-			blackLevelTwoButton.drawObject = false;
-			blackLevelThreeButton.drawObject = false;
-			blackLevelFourButton.drawObject = false;
-			blackLevelFiveButton.drawObject = false;
-			// Draw name text elements
-			blackNameText.drawObject = true;
-			blackPlayerName.drawObject = true;
-
-		} else if (type == AIType) {
-			blackAIButton.setState(Selected);
-			blackHumanButton.setState(Normal);
-			// Draw level elements
-			blackLevelOneButton.drawObject = true;
-			blackLevelTwoButton.drawObject = true;
-			blackLevelThreeButton.drawObject = true;
-			blackLevelFourButton.drawObject = true;
-			blackLevelFiveButton.drawObject = true;
-			// Dont draw name text elements
-			blackNameText.drawObject = false;
-			blackPlayerName.drawObject = false;
-		}
 	}
+	selectElementsToDraw();
+}
+
+void NewGameScreen::selectElementsToDraw()
+/*
+This method sets name and level elements for each player
+to draw or not to draw depending on the player type
+*/
+{
+	// White player elements
+	if (whitePlayerSelected == HumanType) {
+		whiteHumanButton.setState(Selected);
+		whiteAIButton.setState(Normal);
+		// Dont draw level elements
+		whiteLevelOneButton.drawObject = false;
+		whiteLevelTwoButton.drawObject = false;
+		whiteLevelThreeButton.drawObject = false;
+		whiteLevelFourButton.drawObject = false;
+		whiteLevelFiveButton.drawObject = false;
+		// Draw name text elements
+		whiteNameText.drawObject = true;
+		whitePlayerName.drawObject = true;
+
+	} else if (whitePlayerSelected == AIType) {
+		whiteAIButton.setState(Selected);
+		whiteHumanButton.setState(Normal);
+		// Draw level elements
+		whiteLevelOneButton.drawObject = true;
+		whiteLevelTwoButton.drawObject = true;
+		whiteLevelThreeButton.drawObject = true;
+		whiteLevelFourButton.drawObject = true;
+		whiteLevelFiveButton.drawObject = true;
+		// Dont draw name text elements
+		whiteNameText.drawObject = false;
+		whitePlayerName.drawObject = false;
+	}
+	// Black player elements
+	if (blackPlayerSelected == HumanType) {
+		blackHumanButton.setState(Selected);
+		blackAIButton.setState(Normal);
+		// Dont draw level elements
+		blackLevelOneButton.drawObject = false;
+		blackLevelTwoButton.drawObject = false;
+		blackLevelThreeButton.drawObject = false;
+		blackLevelFourButton.drawObject = false;
+		blackLevelFiveButton.drawObject = false;
+		// Draw name text elements
+		blackNameText.drawObject = true;
+		blackPlayerName.drawObject = true;
+
+	} else if (blackPlayerSelected == AIType) {
+		blackAIButton.setState(Selected);
+		blackHumanButton.setState(Normal);
+		// Draw level elements
+		blackLevelOneButton.drawObject = true;
+		blackLevelTwoButton.drawObject = true;
+		blackLevelThreeButton.drawObject = true;
+		blackLevelFourButton.drawObject = true;
+		blackLevelFiveButton.drawObject = true;
+		// Dont draw name text elements
+		blackNameText.drawObject = false;
+		blackPlayerName.drawObject = false;
+	}
+
 }
 
 void NewGameScreen::clearButtonSelections()

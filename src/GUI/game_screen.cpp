@@ -4,8 +4,6 @@
 #include "../headers/ai_algorithm.hpp"
 #include "../headers/tinyfiledialogs.h"
 
-
-// #include "../headers/board.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <algorithm>
