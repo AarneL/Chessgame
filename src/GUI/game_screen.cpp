@@ -123,9 +123,6 @@ int GameScreen::update()
 	if (playerOnTurn->getType() == std::string("Human")) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				return 0;
-			}
 			sf::Vector2f mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
 			if (event.type == sf::Event::MouseMoved) {
 				if (saveButton.containsMousePos(mousePos)) {
@@ -246,7 +243,16 @@ int GameScreen::update()
 		{
 			// TODO: Comment this block
 			aithread.join();
-			movePiece(aimove);
+			std::pair<int, int> temp;
+			ai_algorithm_mutex.lock();
+			{
+				temp.first = aimove.first;
+				temp.second = aimove.second;
+			}
+			ai_algorithm_mutex.unlock();
+
+			movePiece(temp);
+			
 			std::cout << "AI(lvl:" << playerOnTurn->getLevel() << ") calculated next turn in " << aiClock.getElapsedTime().asSeconds() << " seconds." << std::endl;
 			ai_algorithm_mutex.lock();
 			{
@@ -254,6 +260,7 @@ int GameScreen::update()
 				aimove.second = 0;
 			}
 			ai_algorithm_mutex.unlock();
+
 			waitingAiMove = false;
 			return changeTurn();
 		}

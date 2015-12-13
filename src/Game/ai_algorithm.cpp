@@ -18,84 +18,107 @@
 
 namespace AiAlgorithm
 {
-
-
 	std::pair<int, int> algorithm(const Board& board, int depth, bool whiteOnTurn)
 	{
-		Move currentBestMove = {0, 0, 0}; // Container for best value and the move to get there
-		
+		Move currentBestMove = { 0, 0, 0 }; // Container for best value and the move to get there
+
 		int a = MIN; // Alpha
 		int b = MAX; // Beta
+		currentBestMove.value = (whiteOnTurn) ? a : b;
 
 		// 1. Get number of threads that system can manage
-		unsigned int num_of_threads = std::thread::hardware_concurrency();
+		unsigned int num_of_threads = 4;
 		std::srand((int)std::time(0));
+
 		// 2. Get all possible moves and divide them as tasks to threads
 		std::vector<std::vector<Move>> taskVectors;
-		taskVectors = divideForThreads(getAllPossibleMoves(board, whiteOnTurn), (int)num_of_threads);
+		std::vector<Move> possibleMoves = getAllPossibleMoves(board, whiteOnTurn);
 
+		// In other cases can proceed to dividing tasks for threads
+		taskVectors = divideForThreads(possibleMoves, (int)num_of_threads);
 		// 3. Create threadpool and run tasks with threads
 		std::vector<std::thread> threads;
 
 		// Lambda
-		auto lambda = [taskVectors, board, depth, whiteOnTurn](int i, int a, int b)
+		auto lambda = [depth, whiteOnTurn](Board board, int i, int la, int lb, std::vector<Move> tasks, std::vector<std::vector<Move>>* taskVectorsPtr)
 		{
-			int thread_b = b;
+			// This is what the thread does to its tasks 
+			// This also works as 1st level of algorithm (because of alphaBeta structure)
 			std::srand((int)std::time(0)); // Use current time as a seed for random
 
-										   // This is what the thread does to its tasks 
-										   // This also works as 1st level of algorithm (because of alphaBeta structure)
-			for (auto move : taskVectors[i]) {
+			for (auto move : tasks) {
+				move.value = (whiteOnTurn) ? la : lb; // For white turn=>MIN black=>MAX
 				Board new_board = board;
 				new_board.movePiece(move.origin, move.destination);
-				int temp = alphaBeta(new_board, depth - 1, a, b, whiteOnTurn);
+				new_board.updateState(move.destination, 1);
 
-				if ((temp < move.value) && whiteOnTurn) // Make sure a proper move is chosen
-				{
+				// Recursive part depth needs to decrease now depth at its maximum
+				int temp = alphaBeta(new_board, depth - 1, la, lb, !whiteOnTurn);
+
+				// Make sure a proper move is chosen 
+				// (MEANS that given alphabeta value better than current)
+				if ((temp < move.value) && whiteOnTurn) {
 					move.value = temp;
 				}
-				else if (temp > move.value && !whiteOnTurn)
-				{
+				// Same for black
+				else if (temp > move.value && !whiteOnTurn) {
 					move.value = temp;
 				}
-
+				// Randomly pick if as good as current
 				else if (move.value == temp && (rand() % 8 == 1))
 				{
 					move.value = temp;
 				}
-				thread_b = std::min(b, move.value);
-				if (b <= a)
+				// For cutting bad ones
+				lb = std::min(lb, move.value);
+				if (lb <= la)
 				{
 					break; // Cut off bad branch
 				}
 			}
+			(*taskVectorsPtr)[i] = tasks;
 		};
 
 		// Create threads and push them in vector
 		for (unsigned int i = 0; i < taskVectors.size(); i++) {
 			// Some magic with lambda functions
-			threads.push_back(std::thread(lambda, i, a, b));
+			threads.push_back(std::thread(lambda, board, i, a, b, taskVectors[i], &taskVectors));
+			std::cout << "Started thread number " << i + 1 << std::endl;
 		}
 
+		int i = 1;
 		// 4. Wait threads to finish
 		for (auto thread = threads.begin(); thread != threads.end(); thread++)
 		{
+			std::cout << "Waiting for thread number " << i << " to finish." << std::endl;
 			thread->join();
+			std::cout << "Thread number " << i++ << " finished." << std::endl;
+
 		}
 
 		// 5. Choose best value
 		for (auto list : taskVectors) {
 			for (auto move : list) {
-				if (move.value > currentBestMove.value) {
+				// White turn
+				if (move.value > currentBestMove.value && whiteOnTurn) {
 					currentBestMove = move; // Replace with better one
 				}
-				// To have some random factor if same values
+				// Black turn
+				else if (move.value < currentBestMove.value && !whiteOnTurn) {
+					// To have some random factor if same values
+					currentBestMove = move;
+				}
 				else if (move.value == currentBestMove.value && (rand() % 8 == 1)) {
 					currentBestMove = move;
 				}
 			}
 		}
-		return std::make_pair(currentBestMove.destination,currentBestMove.destination);
+		if (currentBestMove.origin == 0 && currentBestMove.destination == 0) {
+			std::cout << "Illegal move [0,0]" << std::endl;
+		}
+		std::cout << "Returning with move [" << currentBestMove.origin << "," << currentBestMove.destination <<  "]" << std::endl;
+
+		return std::make_pair(currentBestMove.origin ,currentBestMove.destination);
 	}
 
 
@@ -273,16 +296,19 @@ namespace AiAlgorithm
 		// This divides possiblemoves to n vectors (number of usable cores)
 		int size = allPossibleMoves.size();
 		std::vector<std::vector<Move>> returnVector;
-
 		int move = 0;
-		for (int core = 1; core <= threads; core++) {
+		if (size < threads) {
+			returnVector.push_back(allPossibleMoves);
+			return returnVector;
+		}
+		for (int i = 0; i < threads; i++) {
 			std::vector<Move> temp;
-			while (move < ((size - 1)/ threads)*core) {
-				temp.push_back(allPossibleMoves[move++]);
+			while (move < (size/threads)*(i + 1)){
+				temp.push_back(allPossibleMoves[move]);
+				move++;
 			}
 			returnVector.push_back(temp);
 		}
-
 		return returnVector;
 	}
 
