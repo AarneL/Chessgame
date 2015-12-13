@@ -60,7 +60,7 @@ void GameScreen::loadContent(void)
 	rectangle.setTexture(&backgroundTexture);
 	rectangle.setPosition(230, 300);
 
-	promotionText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
+	promotionText.loadContent("media/font/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
 	promotionText.setString("Choose a piece:");
 
 	for (int i = 0; i < 4; i++) {
@@ -80,12 +80,12 @@ void GameScreen::loadContent(void)
 	}
 
 	// Player names
-	whitePlayerText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 10), true);
+	whitePlayerText.loadContent("media/font/Calibri.ttf", 30, sf::Vector2f(900, 10), true);
 	texts.push_back(&whitePlayerText);
-	blackPlayerText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 50), true);
+	blackPlayerText.loadContent("media/font/Calibri.ttf", 30, sf::Vector2f(900, 50), true);
 	texts.push_back(&blackPlayerText);
 	// Information text
-	infoText.loadContent("media/img/Calibri.ttf", 30, sf::Vector2f(900, 100), true);
+	infoText.loadContent("media/font/Calibri.ttf", 30, sf::Vector2f(900, 100), true);
 	infoText.setColor(sf::Color::Yellow);
 	texts.push_back(&infoText);
 
@@ -101,14 +101,14 @@ void GameScreen::loadContent(void)
 	// Clocktext
 	clockText.setColor(sf::Color::Green);
 	texts.push_back(&clockText);
-	clockText.loadContent("media/img/Calibri.ttf", 60, sf::Vector2f(900, 650), true);
+	clockText.loadContent("media/font/Calibri.ttf", 60, sf::Vector2f(900, 650), true);
 
 	// Game ending
 	endGameMainMenuButton.loadContent("media/img/mainMenuButton.png", "media/img/mainMenuHighlightedButton.png", "", sf::Vector2f(250, 450), true);
 	endGamePlayAgainButton.loadContent("media/img/playAgainButton.png", "media/img/playAgainHighlightedButton.png" , "", sf::Vector2f(500, 450), true);
 	endGameButtons.push_back(&endGameMainMenuButton);
 	endGameButtons.push_back(&endGamePlayAgainButton);
-	endGameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
+	endGameText.loadContent("media/font/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
 	white = NULL;
 	black = NULL;
 }

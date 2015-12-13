@@ -7,7 +7,6 @@ class AI : public Player
 {
 public:
 	AI(std::string const &n, ColorType c, int l);
-	void getMove();
 	int getLevel();
 	std::string getType();
 

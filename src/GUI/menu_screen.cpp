@@ -97,16 +97,14 @@ int MenuScreen::update()
 			if (continueButton.containsMousePos(v) && isGameActive())
 			{
 				// The there is a game active, continue it
-				std::cout << "User pressed continueButton." << std::endl;
 				backgroundMusic.stop();
 				gameScreen->restartClock();
+				// Start gameScreen
 				return 2;
 			}
 
 			else if (newGameButton.containsMousePos(v))
 			{
-				// Start newgamescreen
-				std::cout << "User pressed newGameButton." << std::endl;
 				backgroundMusic.stop();
 				// Initialize the newGameSreen
 				newGameScreen->initialize();
@@ -116,16 +114,14 @@ int MenuScreen::update()
 			else if (loadGameButton.containsMousePos(v))
 			{
 				// User pressed loadbutton->Open dialog box
-				std::cout << "User pressed loadButton." << std::endl;
-				// Start gameScreen
 				backgroundMusic.stop();
+				// Start gameScreen
 				return gameScreen->loadGame();
 			}
 
 			else if (exitButton.containsMousePos(v))
 			{
 				// Exit program
-				std::cout << "User pressed exitbutton." << std::endl;
 				return -1;
 			}
 		}

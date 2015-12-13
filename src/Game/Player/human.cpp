@@ -7,11 +7,6 @@ Human::Human(std::string const &n, ColorType c)
 	color = c;
 }
 
-void Human::getMove()
-{
-
-}
-
 std::string Human::getType()
 {
 	return "Human";
@@ -19,5 +14,5 @@ std::string Human::getType()
 
 int Human::getLevel()
 {
-	return 1;
+	return 0;
 }

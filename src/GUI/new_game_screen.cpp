@@ -63,11 +63,11 @@ void NewGameScreen::loadContent(void)
 	// Player texts
 	int topMargin = eighthOfHeight; // Text top margin
 
-	whiteText.loadContent("media/img/Calibri.ttf", 70, sf::Vector2f(thirdOfHalf, topMargin), true);
+	whiteText.loadContent("media/font/Calibri.ttf", 70, sf::Vector2f(thirdOfHalf, topMargin), true);
 	whiteText.setString("White");
 	elements.push_back(&whiteText);
 
-	blackText.loadContent("media/img/Calibri.ttf", 70, sf::Vector2f(half + thirdOfHalf, topMargin), true);
+	blackText.loadContent("media/font/Calibri.ttf", 70, sf::Vector2f(half + thirdOfHalf, topMargin), true);
 	blackText.setString("Black");
 	elements.push_back(&blackText);
 
@@ -79,19 +79,19 @@ void NewGameScreen::loadContent(void)
 	// Player name texts
 	int nameTopMargin = eighthOfHeight * 5;
 
-	whiteNameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(fifthOfHalf, nameTopMargin), true);
+	whiteNameText.loadContent("media/font/Calibri.ttf", 40, sf::Vector2f(fifthOfHalf, nameTopMargin), true);
 	whiteNameText.setString("Name:");
 	elements.push_back(&whiteNameText);
 
-	whitePlayerName.loadContent("media/img/Calibri.ttf", 38, sf::Vector2f(fifthOfHalf + 150, nameTopMargin), true);
+	whitePlayerName.loadContent("media/font/Calibri.ttf", 38, sf::Vector2f(fifthOfHalf + 150, nameTopMargin), true);
 	whitePlayerName.setString(whiteNameString);
 	elements.push_back(&whitePlayerName);
 
-	blackNameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(half + fifthOfHalf, nameTopMargin), false);
+	blackNameText.loadContent("media/font/Calibri.ttf", 40, sf::Vector2f(half + fifthOfHalf, nameTopMargin), false);
 	blackNameText.setString("Name:");
 	elements.push_back(&blackNameText);
 
-	blackPlayerName.loadContent("media/img/Calibri.ttf", 38, sf::Vector2f(half + fifthOfHalf + 150, nameTopMargin), false);
+	blackPlayerName.loadContent("media/font/Calibri.ttf", 38, sf::Vector2f(half + fifthOfHalf + 150, nameTopMargin), false);
 	blackPlayerName.setString(blackNameString);
 	elements.push_back(&blackPlayerName);
 
