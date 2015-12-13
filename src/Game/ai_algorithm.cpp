@@ -6,6 +6,7 @@
 #include <ctime>
 #include <thread>
 
+#include <mutex>
 #include "./../headers/ai_algorithm.hpp"
 #include "./../headers/board.hpp"
 
@@ -16,8 +17,8 @@
 //needs to use board merhods
 
 
-
-
+std::mutex threadMutex;
+static std::vector<std::vector<AiAlgorithm::Move>> taskVectors;
 
 namespace AiAlgorithm
 {
@@ -34,21 +35,26 @@ namespace AiAlgorithm
 		std::srand((int)std::time(0));
 
 		// 2. Get all possible moves and divide them as tasks to threads
-		std::vector<std::vector<Move>> taskVectors;
 		std::vector<Move> possibleMoves = getAllPossibleMoves(board, whiteOnTurn);
-
 		// In other cases can proceed to dividing tasks for threads
+		taskVectors.clear(); // Must be cleared so it's empty on start
 		taskVectors = divideForThreads(possibleMoves, (int)num_of_threads);
+
 		// 3. Create threadpool and run tasks with threads
 		std::vector<std::thread> threads;
 
 		// Lambda
-		auto lambda = [depth, whiteOnTurn](Board board, int i, int la, int lb, std::vector<Move> tasks, std::vector<std::vector<Move>>* taskVectorsPtr)
+		auto lambda = [depth, whiteOnTurn](Board board, int i, int la, int lb)
 		{
 			// This is what the thread does to its tasks 
 			// This also works as 1st level of algorithm (because of alphaBeta structure)
 			std::srand((int)std::time(0)); // Use current time as a seed for random
-
+			
+			// Copy taskVektor so it can be used
+			threadMutex.lock();
+			std::vector<Move> tasks = taskVectors[i];
+			threadMutex.unlock();
+			
 			for (auto move : tasks) {
 				move.value = (whiteOnTurn) ? la : lb; // For white turn=>MIN black=>MAX
 				Board new_board = board;
@@ -79,13 +85,18 @@ namespace AiAlgorithm
 					break; // Cut off bad branch
 				}
 			}
-			(*taskVectorsPtr)[i] = tasks;
+			threadMutex.lock(); // Must be logged so that threads wont do this same time
+			taskVectors[i].clear();
+			for (auto node : tasks) {
+				taskVectors[i].push_back(node);
+			}
+			threadMutex.unlock();
 		};
 
 		// Create threads and push them in vector
 		for (unsigned int i = 0; i < taskVectors.size(); i++) {
 			// Some magic with lambda functions
-			threads.push_back(std::thread(lambda, board, i, a, b, taskVectors[i], &taskVectors));
+			threads.push_back(std::thread(lambda, board, i, a, b));
 			std::cout << "Started thread number " << i + 1 << std::endl;
 		}
 
@@ -119,7 +130,7 @@ namespace AiAlgorithm
 		if (currentBestMove.origin == 0 && currentBestMove.destination == 0) {
 			std::cout << "Illegal move [0,0]" << std::endl;
 		}
-		std::cout << "Returning with move [" << currentBestMove.origin << "," << currentBestMove.destination <<  "]" << std::endl;
+		std::cout << "Returning with move [" << currentBestMove.origin << "," << currentBestMove.destination <<  "]" << ", its value is " << currentBestMove.value << std::endl;
 
 		return std::make_pair(currentBestMove.origin ,currentBestMove.destination);
 	}
