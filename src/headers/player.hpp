@@ -11,9 +11,10 @@ enum ColorType
 class Player
 {
 public:
+	Player() {};
+	virtual ~Player() {};
 	std::string getName() const;
 	ColorType getColor() const;
-	virtual void getMove() = 0;
 	virtual std::string getType() = 0;
 	virtual int getLevel() = 0;
 

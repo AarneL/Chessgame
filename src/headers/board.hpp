@@ -33,8 +33,9 @@ public:
 	bool isCheckMate(int) const; //argument gives turn
 	int isCheck(int) const; //returns position of king if it is checked
 	bool isStaleMate(int) const; //should end the game
-	void saveGame(Player* white, Player* black, const char* savePath);
+	void saveGame(Player* white, Player* black, int timeOffset, const char* savePath);
 	int getState() const;
+	void setState(unsigned char st);
 	void changePiece(int, int);
 
 private:
@@ -59,4 +60,4 @@ private:
 
 std::vector<int> join(std::vector<int>, std::vector<int>);
 
-#endif /* OPTIONS_SCREEN_H */
+#endif

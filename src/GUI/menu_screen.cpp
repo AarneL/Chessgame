@@ -1,18 +1,20 @@
 #include "../headers/menu_screen.hpp"
 #include "../headers/base_screen.hpp"
-#include <fstream>
 #include "../headers/tinyfiledialogs.h"
 
-MenuScreen::MenuScreen(GameScreen* g, sf::RenderWindow &w) : window(w)
+MenuScreen::MenuScreen(GameScreen* g, NewGameScreen* n, sf::RenderWindow &w) : window(w)
 {
 	gameScreen = g;
+	newGameScreen = n;
 }
 
 void MenuScreen::loadContent(void)
 {
 
 	// Button positioning variables
-	int buttonsFromLeftEdge = (int)(1200 / 1.61); // Golden ratio baby
+	sf::Vector2u size = window.getSize();
+	int width = size.x;
+	int buttonsFromLeftEdge = (int)(width / 1.61); // Golden ratio baby
 	int topMargin = 150;
 	int buttonDivLength = 200;
 
@@ -20,31 +22,38 @@ void MenuScreen::loadContent(void)
 	 * so that what is drawn "behind" will be added firsts
 	 */
 
-	backgroundTexture.loadFromFile("media/img/background.jpg");
+	backgroundTexture.loadFromFile("media/img/background.png");
 	background.setTexture(backgroundTexture);
-	elements.push_back(&background);
 
-	newGameButtonTexture.loadFromFile("media/img/new_game_button.png");
-	newGameHighlightedButtonTexture.loadFromFile("media/img/new_game_highlighted_button.png");
-	newGameButton.setTexture(newGameButtonTexture);
-	newGameButton.setPosition(sf::Vector2f(buttonsFromLeftEdge, topMargin));
+	continueButton.loadContent("media/img/continue_button.png", "media/img/continue_highlighted_button.png", "", sf::Vector2f(buttonsFromLeftEdge, topMargin-100), false);
+	elements.push_back(&continueButton);
+
+	newGameButton.loadContent("media/img/new_game_button.png", "media/img/new_game_highlighted_button.png", "", sf::Vector2f(buttonsFromLeftEdge, topMargin), true);
 	elements.push_back(&newGameButton);
 
-	loadGameButtonTexture.loadFromFile("media/img/load_game_button.png");
-	loadGameHighlightedButtonTexture.loadFromFile("media/img/load_game_highlighted_button.png");
-	loadGameButton.setTexture(loadGameButtonTexture);
-	loadGameButton.setPosition(sf::Vector2f(buttonsFromLeftEdge, topMargin+buttonDivLength));
+	loadGameButton.loadContent("media/img/load_game_button.png", "media/img/load_game_highlighted_button.png", "", sf::Vector2f(buttonsFromLeftEdge, topMargin+buttonDivLength), true);
 	elements.push_back(&loadGameButton);
 
-	exitButtonTexture.loadFromFile("media/img/exit_button.png");
-	exitHighlightedButtonTexture.loadFromFile("media/img/exit_highlighted_button.png");
-	exitButton.setTexture(exitButtonTexture);
-	exitButton.setPosition(sf::Vector2f(buttonsFromLeftEdge, topMargin+2*buttonDivLength));
+	exitButton.loadContent("media/img/exit_button.png", "media/img/exit_highlighted_button.png", "", sf::Vector2f(buttonsFromLeftEdge, topMargin+2*buttonDivLength), true);
 	elements.push_back(&exitButton);
+
+	// Music :D
+	backgroundMusicBuffer.loadFromFile("media/sound/chess.wav");
+	backgroundMusic.setBuffer(backgroundMusicBuffer);
+	backgroundMusic.setVolume(100);
+	backgroundMusic.play();
 }
 
 int MenuScreen::update()
 {
+	// Make continue visible and move buttons
+	if (continueButton.isVisible() && !isGameActive()) {
+		hideContinueButton();
+	}
+	else if (!continueButton.isVisible() && isGameActive()) {
+		showContinueButton();
+	}
+
 	sf::Event event;
 	while(window.pollEvent(event)) {
 
@@ -53,58 +62,73 @@ int MenuScreen::update()
 		// Hovering button highlights the sprite
 		if (event.type == sf::Event::MouseMoved)
 		{
-			bool buttonHovered = false;
-			if (newGameButton.getGlobalBounds().contains(v))
+			if (continueButton.containsMousePos(v) && isGameActive())
 			{
 				// Highlight newGameButton
-				newGameButton.setTexture(newGameHighlightedButtonTexture, false);
-				buttonHovered = true;
+				continueButton.setState(Highlighted);
 			}
 
-			else if (loadGameButton.getGlobalBounds().contains(v))
+			else if (newGameButton.containsMousePos(v))
+			{
+				// Highlight newGameButton
+				newGameButton.setState(Highlighted);
+			}
+
+			else if (loadGameButton.containsMousePos(v))
 			{
 				// Highlight loadGameButton
-				loadGameButton.setTexture(loadGameHighlightedButtonTexture, false);
-				buttonHovered = true;
+				loadGameButton.setState(Highlighted);
 			}
 
-			else if (exitButton.getGlobalBounds().contains(v))
+			else if (exitButton.containsMousePos(v))
 			{
 				// Highlight exitButton
-				exitButton.setTexture(exitHighlightedButtonTexture, false);
-				buttonHovered = true;
+				exitButton.setState(Highlighted);
 			}
 
-			else if(!buttonHovered) {
+			else {
 				// If nothing hovered
 				clearButtonHighlights();
 			}
 		}
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			if (newGameButton.getGlobalBounds().contains(v))
+			if (continueButton.containsMousePos(v) && isGameActive())
 			{
-				// Start newgamescreen
-				std::cout << "User pressed newGameButton." << std::endl;
-				return 1; // NOTE: For now new game will start game immeaditely
+				// The there is a game active, continue it
+				backgroundMusic.stop();
+				gameScreen->restartClock();
+				// Start gameScreen
+				return 2;
 			}
 
-			if (loadGameButton.getGlobalBounds().contains(v))
+			else if (newGameButton.containsMousePos(v))
+			{
+				backgroundMusic.stop();
+				// Initialize the newGameSreen
+				newGameScreen->initialize();
+				return 1;
+			}
+
+			else if (loadGameButton.containsMousePos(v))
 			{
 				// User pressed loadbutton->Open dialog box
-				std::cout << "User pressed loadButton." << std::endl;
-				return loadGame();
+				backgroundMusic.stop();
 				// Start gameScreen
+				return gameScreen->loadGame();
 			}
 
-
-			if (exitButton.getGlobalBounds().contains(v))
+			else if (exitButton.containsMousePos(v))
 			{
 				// Exit program
-				std::cout << "User pressed exitbutton." << std::endl;
 				return -1;
 			}
+		}
+
+		else if (event.type == sf::Event::Closed) {
+			window.close();
+			return -1;
 		}
 
 	}
@@ -116,57 +140,37 @@ int MenuScreen::update()
 void MenuScreen::draw()
 {
 	window.clear(sf::Color(250,250,250));
+	window.draw(background);
 	for (auto element : elements) {
-		window.draw(*element);
+		element->draw(window);
 	}
 	window.display();
 }
 
 void MenuScreen::clearButtonHighlights()
 {
-	newGameButton.setTexture(newGameButtonTexture, false);
-	loadGameButton.setTexture(loadGameButtonTexture, false);
-	exitButton.setTexture(exitButtonTexture, false);
+	for (auto element : elements) {
+		element->setState(Normal);
+	}
 }
 
-int MenuScreen::loadGame()
+void MenuScreen::showContinueButton()
 {
-	// This should first open a file dialog where the user can choose file to load
+	continueButton.drawObject = true;
+	newGameButton.move(sf::Vector2f(0, 100));
+	loadGameButton.move(sf::Vector2f(0, 100));
+	exitButton.move(sf::Vector2f(0, 100));
+}
 
-	// Using testfile
-	const char* file_loc = tinyfd_openFileDialog("Open load file", "", 0, NULL, "text files", 0);
-	if (!file_loc) {
-		std::cout << "Error loading file" << std::endl;
-		return 0;
-	}
-	std::ifstream ifs(file_loc, std::ifstream::in);
-	if (!ifs) {
-		std::cout << "File not found" << std::endl;
-	}
+void MenuScreen::hideContinueButton()
+{
+	continueButton.drawObject = false;
+	newGameButton.move(sf::Vector2f(0, -100));
+	loadGameButton.move(sf::Vector2f(0, -100));
+	exitButton.move(sf::Vector2f(0, -100));
+}
 
-	// Collect information about players
-	std::string white;
-	std::getline(ifs, white);
-	std::string black;
-	std::getline(ifs, black);
-
-	std::string whiteName = white.substr(0, white.find('-'));
-	std::string blackName = black.substr(0, black.find('-'));
-	int whiteLevel = atoi((white.substr(white.find('-')+1)).c_str());
-	int blackLevel = atoi((black.substr(black.find('-')+1)).c_str());
-
-	// Initialize the game screen with the players from file
-	gameScreen->initialize(whiteName, whiteLevel, blackName, blackLevel);
-
-	for (std::string line; std::getline(ifs, line); )
-	{
-		std::cout << line << std::endl;
-		std::pair<int, int> move;
-		move.first = atoi((line.substr(0, line.find('-'))).c_str());
-		move.second = atoi((line.substr(line.find('-')+1)).c_str());
-		gameScreen->movePiece(move);
-	}
-
-	ifs.close();
-	return 2;
+bool MenuScreen::isGameActive()
+{
+	return gameScreen->isGameActive();
 }

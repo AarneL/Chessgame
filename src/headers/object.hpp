@@ -13,9 +13,11 @@ class Object
 {
 public:
 	ObjectState getState() const;
+	bool isVisible() const;
 	virtual void setState(ObjectState state) = 0;
 	virtual void draw(sf::RenderWindow &window) = 0;
 	bool drawObject;
+	
 protected:
 	ObjectState state;
 };

@@ -3,6 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+
+#include <thread>
+
 #include "player.hpp"
 #include "board.hpp"
 #include "human.hpp"
@@ -20,6 +23,7 @@ private:
 	/* To draw board properly program must have different sprite for each piece
 	 *
 	*/
+
 	sf::RenderWindow &window;
 	// Container for all elements to draw
 	std::vector<Object*> elements;
@@ -69,6 +73,25 @@ private:
 
 	std::vector<ChessPiece*> pieces;
 
+	// Pawn promotion
+	sf::RectangleShape rectangle;
+	Text promotionText;
+
+	std::vector<Square*> promotionSquares;
+
+	ChessPiece whitePromotionQueen;
+	ChessPiece whitePromotionRook;
+	ChessPiece whitePromotionBishop;
+	ChessPiece whitePromotionKnight;
+
+	ChessPiece blackPromotionQueen;
+	ChessPiece blackPromotionRook;
+	ChessPiece blackPromotionBishop;
+	ChessPiece blackPromotionKnight;
+
+	std::vector<ChessPiece*> whitePromotionPieces;
+	std::vector<ChessPiece*> blackPromotionPieces;
+
 	// Game board
 	std::vector<Square*> gameBoard;
 
@@ -84,9 +107,30 @@ private:
 	Button saveButton;
 	Button mainMenuButton;
 
+	std::vector<Button*> buttons;
+
 	// Player names
 	Text whitePlayerText;
 	Text blackPlayerText;
+	// InformationBar
+	Text infoText;
+	std::vector<Text*> texts;
+	Text clockText;
+
+	// Clock
+	sf::Clock clock;
+	// For saving the current time when saving or going to
+	// main menu that is added to clock's elapsed time
+	// when restarting the clock
+	int timeOffset;
+
+	sf::Clock aiClock; // To debug ai calculationtimes
+
+	sf::Texture backgroundTexture;
+	sf::Sprite background;
+
+	sf::Texture boardTexture;
+	sf::Sprite boardSprite;
 
 public:
     GameScreen(sf::RenderWindow &w);
@@ -96,20 +140,30 @@ public:
 	int update();
     void draw();
 	void highlight(std::vector<int> v);
-	void clearHighlights();
-	void clearButtonHighlights();
+	void clearHighlights(std::vector<Square*> v);
+	void clearButtonHighlights(std::vector<Button*> v);
 	void initialize(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
 	void tearDown(void);
 
+	// Load game from file
+	int loadGame();
+
+	void changeTexture(int index, int newType);
+
 	// Game updating and analysis
-	void movePiece(std::pair<int, int> move);
+	void movePiece(std::pair<int, int>& move);
+	void changePlayerOnTurn();
 	int changeTurn();
 	bool containsPlayerPiece(int i, Player* p);
 	bool belongsToPlayer(int i, Player* p);
 	std::vector<std::pair<int, int> > getMoveList() const;
-	std::pair<int, int> getAiMove();
-	void changePiece(int index);
+	void getAiMove();
 	void showSaveGameDialog();
+
+	// Pawn promotion
+	void changePiece(int index);
+	int choosePromotion(int index);
+	void drawPromotion();
 
 	// Game interface
 	Board board;
@@ -124,6 +178,33 @@ public:
 	// Parameters for graphical design
 	int BOARD_HORIZONTAL_OFFSET;
 	int BOARD_VERTICAL_OFFSET;
+
+	// End game functions
+	int endGame();
+	void drawEndGame();
+	int endGameOptions();
+
+	Button endGameMainMenuButton;
+	Button endGamePlayAgainButton;
+	std::vector<Button*> endGameButtons;
+	Text endGameText;
+
+	// Utilities
+	std::string getMoveStr(std::pair<int, int> m);
+	void initPieces();
+	void initPiecesVector();
+	void setPieceInitialTextures();
+	void setPieceInitialPositions();
+	void playAgainInit();
+	void initPlayers(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
+	bool isGameActive();
+	void highlightCheckmate();
+	void restartClock(); // Other screens can also restart the clock
+
+	//Threads
+	std::thread aithread;
+	bool waitingAiMove;
+	bool thread_erased;
 
 };
 

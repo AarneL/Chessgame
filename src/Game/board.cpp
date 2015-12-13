@@ -92,7 +92,7 @@ std::vector<int> Board::possibleMoves(int index) const
 	int turn = board[index] % 2;
 	for(int i = 0 ; i < (int) moves.size() ; i++)
 	{
-		Board test_board = *this;		
+		Board test_board = *this;
 		test_board.movePiece(index, moves[i]); //simulate move
 		if(test_board.isCheck(turn)) //see if it leads to check from player on turns point of view
 		{
@@ -157,7 +157,7 @@ std::vector<int> Board::allPossibleMoves(int index) const
 				moves = join(moves, Rules::leftCastlingMove(board, index));
 			}
 			if(state & 0x8)
-			{				
+			{
 				moves = join(moves, Rules::rightCastlingMove(board, index));
 			}
 			break;
@@ -228,13 +228,29 @@ int Board::updateState(int index, int caller) //index is the destination of last
 	//Check for promotion
 	if ( (board[lastMove.second] == W_PAWN && lastMove.second >= 56 && lastMove.second <= 63)
 		|| (board[lastMove.second] == B_PAWN && lastMove.second >= 0 && lastMove.second <= 7) )
-		retVal = lastMove.second;
+	{
+		if(caller) //for ai algorithm the update must be made immediately and not depending on the retval
+		{
+			if(turn)
+			{
+				this->changePiece(index, W_QUEEN);
+			}
+			else
+			{
+				this->changePiece(index, B_QUEEN);
+			}
+		}
+		else
+		{
+			retVal = lastMove.second;
+		}
+	}
 
 	//check for el passant
 	if(moveList.size() > 4) //this needs to be done so we don't try invalid indexes
 	{
 		//test for white pawns
-		if (board[lastMove.second] == 1 
+		if (board[lastMove.second] == 1
 			&& ((lastMove.second % 2) != (lastMove.first % 2)))
 		{
 			std::pair<int, int> secondLastMove;
@@ -250,7 +266,7 @@ int Board::updateState(int index, int caller) //index is the destination of last
 		}
 
 		//test for black pawns
-		else if (board[lastMove.second] == 2 
+		else if (board[lastMove.second] == 2
 			&& ((lastMove.second % 2) != (lastMove.first % 2)))
 		{
 			std::pair<int, int> secondLastMove;
@@ -296,14 +312,14 @@ int Board::updateState(int index, int caller) //index is the destination of last
 			if((board[4] != 11) || (board[7] != 7))
 			{
 				state = state & 0xF7; //11110111
-			} 
+			}
 		}
 		if((state >> 2) & 0x1)//left castling for white
 		{
 			if((board[4] != 11) || (board[0] != 7))
 			{
 				state = state & 0xFB; //11111011
-			} 
+			}
 		}
 	}
 
@@ -314,14 +330,14 @@ int Board::updateState(int index, int caller) //index is the destination of last
 			if((board[60] != 12) || (board[63] != 8))
 			{
 				state = state & 0xDF; //11011111
-			} 
+			}
 		}
 		if((state >> 4) & 0x1)//left castling for black
 		{
 			if((board[60] != 12) || (board[56] != 8))
 			{
 				state = state & 0xEF; //11101111
-			} 
+			}
 		}
 	}
 
@@ -331,65 +347,25 @@ int Board::updateState(int index, int caller) //index is the destination of last
 	else
 		turn = 1;
 
-//lightweight update function for the ai
-	if(caller)
+	if(!caller)
 	{
-		if(isCheck(turn))
+		if(isStaleMate(turn))
 		{
-			if(isStaleMate(turn))
-				{
-					state = state | 0x2;
-					//do some stuff to end the game
-					return retVal;
-				}
+			//do some stuff to end the game
+			if(isCheck(turn))
+			{
+				state = state | 0x1; //checkmate
+			}
+			else
+			{
+				state = state | 0x2; //slatemate
+			}
+			//return retVal;
 		}
 	}
-	//this is omited when the caller is ai_algorithm in order to speed it up.	
-	else
-	{
-		int king_location = 0;
-		for(int i=0;i<64;i++)
-		{
-			if(board[i] == (12 - turn))
-			{
-				king_location = i;
-			}
-		}
-
-		//see if it's check
-		if(isCheck(turn))
-		{
-			if(isCheckMate(king_location))
-			{
-				state = state | 0x1;
-				//do some stuff to end the game
-				return retVal;
-			}
-		}
-
-		else
-		{
-			if(isStaleMate(turn))
-			{
-				state = state | 0x2;
-				//do some stuff to end the game
-				return retVal;
-			}
-		}
-	}		
-
 	return retVal;
 }
 
-
-bool Board::isCheckMate(int king_location) const
-{
-	//this algorithm must only be called in case there is check
-	std::pair<int, int> pair = AiAlgorithm::algorithm(*this, 1, ((board[king_location]) % 2)==1);
-	if(pair.first || pair.second)
-		return false;
-	return true;
-}
 
 int Board::isCheck(int turn) const //0 test if black is checked
 {
@@ -408,7 +384,7 @@ int Board::isCheck(int turn) const //0 test if black is checked
 	//check moves for rook
 	moves = Rules::rookMove(board, king_location);
 	for(auto a:moves)
-	{	
+	{
 		if(board[a] == (7+turn) || board[a] == (9+turn))//check for enemys rook and queen
 		{
 			return king_location;
@@ -462,7 +438,7 @@ int Board::isCheck(int turn) const //0 test if black is checked
 				return king_location;
 			}
 		}
-	}		
+	}
 
 	return 0;
 }
@@ -484,19 +460,53 @@ int Board::getState() const
 	return state;
 }
 
+void Board::setState(unsigned char st)
+{
+	state = st;
+}
+
 void Board::changePiece(int index, int newpiece) {
 
 	board[index] = newpiece;
 }
 
-void Board::saveGame(Player* white, Player* black, const char* savePath)
+void Board::saveGame(Player* white, Player* black, int timeOffset, const char* savePath)
 {
 	std::ofstream ofs (savePath, std::ofstream::out);
-	ofs << white->getName() << "-" << white->getLevel() << std::endl;
-	ofs << black->getName() << "-" << black->getLevel() << std::endl;
+
+	int blackLvl;
+	int whiteLvl;
+
+	//Set level to 0 if human
+	if (white->getType() == "Human")
+		whiteLvl = 0;
+	else
+		whiteLvl = white->getLevel();
+
+	//Same for black
+	if (black->getType() == "Human")
+		blackLvl = 0;
+	else
+		blackLvl = black->getLevel();
+
+	// Save player names and levels
+	ofs << white->getName() << "-" << whiteLvl << std::endl;
+	ofs << black->getName() << "-" << blackLvl << std::endl;
+
+	// Save all the moves
 	for (auto move : moveList) {
 		ofs << move.first << '-' << move.second << std::endl;
 	}
+	// Save the current board that contains piece types
+	ofs << "BOARD" << std::endl;
+	for (auto piece : board) {
+		ofs << piece << " ";
+	}
+	ofs << std::endl;
+	// Save the current state
+	ofs << state << std::endl;
+	// Save the current time
+	ofs << timeOffset << std::endl;
 	ofs.close();
 }
 

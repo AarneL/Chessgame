@@ -52,3 +52,8 @@ void Button::draw(sf::RenderWindow &window)
 		window.draw(sprite);
 	}
 }
+
+void Button::move(sf::Vector2f v)
+{
+	sprite.move(v);
+}

@@ -505,5 +505,111 @@ namespace Rules
 	}
 
 
+	//Check whether draw can be claimed under the fifty-move rule, return true if so
+	//NOTE: "move" = both players have completed a move
+	bool fiftyMoveRule(const std::vector<std::vector<int>>& boardHistory, const std::vector<std::pair<int,int>>& moveHistory){
+
+		bool ret = true;
+
+		//Less than 50 moves (move pairs) made, return immediately
+		if (boardHistory.size() < 100)
+			return false;
+
+		//Start from end and check until 100 moves (50 "moves") have been checked, no need to check further
+		for (int i=boardHistory.size()-1; i>( (int)boardHistory.size()-1-100); i--) {
+
+			//Pawn moved
+			//Break immediately, draw cannot be claimed
+			if (boardHistory[i][moveHistory[i].first] == W_PAWN || boardHistory[i][moveHistory[i].first] == B_PAWN ) {
+				ret = false;
+				break;
+			}
+
+			//Capture made, no need to check color when the move history is assumed to contain valid moves only
+			if (boardHistory[i][moveHistory[i].second] != NONE) {
+				ret = false;
+				break;
+			}
+
+		}
+
+		return ret;
+	}
+
+	//Check threefold repetition (= current (!) position has occurred 3 or more times)
+	//Return true if draw can be claimed
+	bool threefoldRepetition(const std::vector<std::vector<int>>& boardHistory, const std::vector<std::pair<int,int>>& moveHistory, const std::vector<unsigned char>& stateHistory){
+
+		//Return immediately if not enough moves
+		if (boardHistory.size() < 3)
+			return false;
+
+		//Get current board status
+		std::vector<int> currentBoard = boardHistory.back();
+		std::pair<int,int> lastMove = moveHistory.back();
+		unsigned char currentState = stateHistory.back();
+
+		//Get pawn moves, they're needed for en passant check
+		std::vector<int> pawnMoves;
+		for (int a=0; a<64; a++){
+			if (currentBoard[a] == W_PAWN){
+				pawnMoves = join(pawnMoves, whitePawnMoveForwardLeft(currentBoard, a, lastMove));
+				pawnMoves = join(pawnMoves, whitePawnMoveForwardRight(currentBoard, a, lastMove));
+			}
+			else if (currentBoard[a] == B_PAWN){
+				pawnMoves = join(pawnMoves, blackPawnMoveForwardLeft(currentBoard, a, lastMove));
+				pawnMoves = join(pawnMoves, blackPawnMoveForwardRight(currentBoard, a, lastMove));
+			}
+		}
+
+		std::vector<int> pawnMovesTemp;
+
+		size_t posCount = 1;
+		size_t posNum = boardHistory.size()-1;
+		bool ret = false;
+
+		//Find equal positions
+		for (size_t i=0; i<boardHistory.size(); i++){
+
+			//Same turn (fast check, skip every 2nd position)
+			if (posNum%2 == i%2) {
+
+				//Same piece positions (slow check?)
+				if (boardHistory[i] == currentBoard) {
+
+					//Same rights to castle, check flags
+					if ( (currentState & 60) && (stateHistory[i] & 60) ) {
+
+						//Same rights to capture en passant
+						//Collect all pawn moves
+						pawnMovesTemp = std::vector<int>();
+						for (int a=0; a<64; a++){
+							if (boardHistory[i][a] == W_PAWN){
+								pawnMovesTemp = join(pawnMovesTemp, whitePawnMoveForwardLeft(boardHistory[i], a, moveHistory[i]));
+								pawnMovesTemp = join(pawnMovesTemp, whitePawnMoveForwardRight(boardHistory[i], a, moveHistory[i]));
+							}
+							else if (boardHistory[i][a] == B_PAWN){
+								pawnMovesTemp = join(pawnMovesTemp, blackPawnMoveForwardLeft(boardHistory[i], a, moveHistory[i]));
+								pawnMovesTemp = join(pawnMovesTemp, blackPawnMoveForwardRight(boardHistory[i], a, moveHistory[i]));
+							}
+						}
+						//If the pawns have the same possible moves, then en passant rights are equal
+						//Now also the positions are equal
+						if (pawnMovesTemp == pawnMoves){
+							posCount++;
+							if (posCount >= 3){
+								ret = true;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return ret;
+	}
+
+
 
 }
