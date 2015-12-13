@@ -736,6 +736,7 @@ void GameScreen::drawEndGame()
 {
 	window.clear();
 	window.draw(background);
+	window.draw(boardSprite);
 	for (auto square : gameBoard) {
 		square->draw(window);
 	}
@@ -744,8 +745,11 @@ void GameScreen::drawEndGame()
 			piece->draw(window);
 		}
 	}
-	for (auto element : elements) {
-		element->draw(window);
+	for (auto text : texts) {
+		text->draw(window);
+	}
+	for (auto button : buttons) {
+		button->draw(window);
 	}
 	window.draw(rectangle);
 	for (auto button : endGameButtons) {

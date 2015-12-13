@@ -148,7 +148,7 @@ void NewGameScreen::loadContent(void)
 	elements.push_back(&playButton);
 
 	// Background
-	backgroundTexture.loadFromFile("media/img/game_screen_background.png");
+	backgroundTexture.loadFromFile("media/img/game_background.png");
 	background.setTexture(backgroundTexture);
 
 	// Main menu button
