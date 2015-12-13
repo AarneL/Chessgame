@@ -38,10 +38,6 @@ int AI::getLevel()
 	return level;
 }
 
-void AI::getMove()
-{
-
-}
 std::string AI::getType()
 {
 	return "AI";

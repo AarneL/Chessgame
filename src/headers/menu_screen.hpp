@@ -26,7 +26,6 @@ private:
 	Button continueButton;
 	Button newGameButton;
 	Button loadGameButton;
-	Button optionsButton;
 	Button exitButton;
 
 	// Background music
