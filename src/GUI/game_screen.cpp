@@ -21,8 +21,8 @@ static std::pair<int, int> aimove = std::make_pair(0, 0);
 GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 {
 	// Graphical design constants
-	BOARD_HORIZONTAL_OFFSET = 50;
-	BOARD_VERTICAL_OFFSET = 50;
+	BOARD_HORIZONTAL_OFFSET = 40;
+	BOARD_VERTICAL_OFFSET = 42;
 
 	waitingAiMove = false;
 	thread_erased = true;
@@ -30,17 +30,26 @@ GameScreen::GameScreen(sf::RenderWindow &w) : window(w)
 
 void GameScreen::loadContent(void)
 {
+	// Background
+	backgroundTexture.loadFromFile("media/img/game_background.png");
+	background.setTexture(backgroundTexture);
+
+	if (!boardTexture.loadFromFile("media/img/board10.png"))
+		std::cout << "board not found" << std::endl;
+	boardSprite.setTexture(boardTexture);
+
 	initPieces(); // Load piece contents and put piece pointers to pieces vector
+	initPiecesVector();
 
 	//Create base board starting from down left corner
 	for (int i = 7; i >= 0; i--) {
 		for (int j = 0; j < 8; j++) {
 			Square* square = new Square();
 			if ( (i+j)%2 == 0 ) {
-				square->loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
+				square->loadContent("media/img/light_square.png", "media/img/square_light_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
 			}
 			else if ( (i+j)%2 == 1 ) {
-				square->loadContent("media/img/square_dark.png", "media/img/square_dark_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
+				square->loadContent("media/img/dark_square.png", "media/img/square_dark_highlighted.png", sf::Vector2f((j*96 + BOARD_VERTICAL_OFFSET), (i*96 + BOARD_HORIZONTAL_OFFSET)));
 			}
 			gameBoard.push_back(square);
 		}
@@ -48,7 +57,7 @@ void GameScreen::loadContent(void)
 
 	// Pawn promotion window
 	rectangle.setSize(sf::Vector2f(530, 250));
-	rectangle.setFillColor(sf::Color::Black);
+	rectangle.setTexture(&backgroundTexture);
 	rectangle.setPosition(230, 300);
 
 	promotionText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
@@ -56,7 +65,7 @@ void GameScreen::loadContent(void)
 
 	for (int i = 0; i < 4; i++) {
 		Square* square = new Square();
-		square->loadContent("media/img/square_light.png", "media/img/square_light_highlighted.png", sf::Vector2f((260 + i*96 + i*25), 420));
+		square->loadContent("media/img/light_square.png", "media/img/square_light_highlighted.png", sf::Vector2f((260 + i*96 + i*25), 420));
 		promotionSquares.push_back(square);
 	}
 
@@ -102,10 +111,6 @@ void GameScreen::loadContent(void)
 	endGameText.loadContent("media/img/Calibri.ttf", 40, sf::Vector2f(260, 320), true);
 	white = NULL;
 	black = NULL;
-
-	// Background
-	backgroundTexture.loadFromFile("media/img/game_screen_background.jpg");
-	background.setTexture(backgroundTexture);
 }
 
 int GameScreen::update()
@@ -260,6 +265,7 @@ void GameScreen::draw()
 {
 	window.clear();
 	window.draw(background);
+	window.draw(boardSprite);
 	for (auto square : gameBoard) {
 		square->draw(window);
 	}
@@ -331,8 +337,10 @@ void GameScreen::tearDown(void)
 		delete black;
 		black = NULL;
 	}
-	pieces.clear();
-	initPieces();
+	// Set initial textures so that promoted textures
+	// are no longer on
+	initPiecesVector();
+	setPieceInitialTextures();
 	setPieceInitialPositions();
 	clearHighlights(gameBoard);
 }
@@ -829,8 +837,12 @@ void GameScreen::initPieces()
 	blackPromotionRook.loadContent("media/img/rook_black.png", B_ROOK);
 	blackPromotionBishop.loadContent("media/img/bishop_black.png", B_BISHOP);
 	blackPromotionKnight.loadContent("media/img/knight_black.png", B_KNIGHT);
+}
 
-	// This method initialises pieces vector with right starting positions
+void GameScreen::initPiecesVector()
+{
+	pieces.clear();
+	// This method initialises pieces vector
 	pieces.push_back(&whiteRook1);
 	pieces.push_back(&whiteKnight1);
 	pieces.push_back(&whiteBishop1);
@@ -880,6 +892,15 @@ void GameScreen::initPieces()
 	blackPromotionPieces.push_back(&blackPromotionRook);
 	blackPromotionPieces.push_back(&blackPromotionBishop);
 	blackPromotionPieces.push_back(&blackPromotionKnight);
+}
+
+void GameScreen::setPieceInitialTextures()
+{
+	for (auto piece : pieces) {
+		if (piece != NULL) {
+			piece->changeToInitialTexture();
+		}
+	}
 }
 
 void GameScreen::setPieceInitialPositions()

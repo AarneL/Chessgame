@@ -129,6 +129,9 @@ private:
 	sf::Texture backgroundTexture;
 	sf::Sprite background;
 
+	sf::Texture boardTexture;
+	sf::Sprite boardSprite;
+
 public:
     GameScreen(sf::RenderWindow &w);
 
@@ -189,6 +192,8 @@ public:
 	// Utilities
 	std::string getMoveStr(std::pair<int, int> m);
 	void initPieces();
+	void initPiecesVector();
+	void setPieceInitialTextures();
 	void setPieceInitialPositions();
 	void playAgainInit();
 	void initPlayers(std::string whiteName, int whiteLevel, std::string blackName, int blackLevel);
