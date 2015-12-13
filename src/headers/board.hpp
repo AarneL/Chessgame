@@ -60,4 +60,4 @@ private:
 
 std::vector<int> join(std::vector<int>, std::vector<int>);
 
-#endif /* OPTIONS_SCREEN_H */
+#endif
