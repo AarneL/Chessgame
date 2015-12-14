@@ -54,41 +54,45 @@ namespace AiAlgorithm
 			threadMutex.lock();
 			std::vector<Move> tasks = taskVectors[i];
 			threadMutex.unlock();
-			
+			Move bestThreadMove = { 0, 0, 0};
+			bestThreadMove.value = (whiteOnTurn) ? la : lb;
+
 			for (auto move : tasks) {
 				move.value = (whiteOnTurn) ? la : lb; // For white turn=>MIN black=>MAX
 				Board new_board = board;
 				new_board.movePiece(move.origin, move.destination);
 				new_board.updateState(move.destination, 1);
 
-				// Recursive part depth needs to decrease now depth at its maximum
 				int temp = alphaBeta(new_board, depth - 1, la, lb, !whiteOnTurn);
 
-				// Make sure a proper move is chosen 
-				// (MEANS that given alphabeta value better than current)
-				if ((temp < move.value) && whiteOnTurn) {
-					move.value = temp;
+				// Recursive part depth needs to decrease now depth at its maximum
+				if (whiteOnTurn) {
+					if ((bestThreadMove.value < temp) || (bestThreadMove.value == temp && (rand() % 8 == 1))) {
+						bestThreadMove = move;
+						bestThreadMove.value = temp;
+					}
+					la = std::max(la, bestThreadMove.value);
+				} else {
+					if ((bestThreadMove.value > temp) || (bestThreadMove.value == temp && (rand() % 8 == 1))) {
+						bestThreadMove = move;
+						bestThreadMove.value = temp;
+					}
+					lb = std::min(lb, bestThreadMove.value);
 				}
-				// Same for black
-				else if (temp > move.value && !whiteOnTurn) {
-					move.value = temp;
-				}
-				// Randomly pick if as good as current
-				else if (move.value == temp && (rand() % 8 == 1))
-				{
-					move.value = temp;
-				}
-				// For cutting bad ones
-				lb = std::min(lb, move.value);
+
 				if (lb <= la)
 				{
 					break; // Cut off bad branch
 				}
+
+				// Randomly pick if as good as current
+
 			}
+
 			threadMutex.lock(); // Must be logged so that threads wont do this same time
-			taskVectors[i].clear();
-			for (auto node : tasks) {
-				taskVectors[i].push_back(node);
+			{
+				taskVectors[i].clear();
+				taskVectors[i].push_back(bestThreadMove);
 			}
 			threadMutex.unlock();
 		};
