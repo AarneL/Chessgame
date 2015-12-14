@@ -580,9 +580,10 @@ int GameScreen::changeTurn()
 		highlightCheckmate();
 		// Sleep
 		draw();
-		sf::sleep(sf::seconds(3));
-		endGameText.setString("Game ended!\n" + nameOfOther + " wins!");
+		sf::sleep(sf::seconds(1));
 		gameWinSound.play();
+		sf::sleep(sf::seconds(2));
+		endGameText.setString("Game ended!\n" + nameOfOther + " wins!");
 		return endGame(); // End game info box
 	}
 	else if (board.getState() & 0x02)
@@ -594,9 +595,10 @@ int GameScreen::changeTurn()
 		highlightCheckmate();
 		// Sleep
 		draw();
-		sf::sleep(sf::seconds(3));
-		endGameText.setString("Game ended to stalemate!\nDraw!");
+		sf::sleep(sf::seconds(1));
 		gameStaleMateSound.play();
+		sf::sleep(sf::seconds(2));
+		endGameText.setString("Game ended to stalemate!\nDraw!");
 		return endGame(); // End game info box
 	}
 	return 2;
