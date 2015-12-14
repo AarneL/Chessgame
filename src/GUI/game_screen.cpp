@@ -78,6 +78,18 @@ void GameScreen::loadContent(void)
 	else {
 		moveSound.setBuffer(moveSoundBuffer);
 	}
+	if (!gameWinSoundBuffer.loadFromFile("media/sound/winSound.wav")) {
+		std::cout << "Could not load sound file." << std::endl;
+	}
+	else {
+		gameWinSound.setBuffer(gameWinSoundBuffer);
+	}
+	if (!gameStaleMateSoundBuffer.loadFromFile("media/sound/staleMateSound.wav")) {
+		std::cout << "Could not load sound file." << std::endl;
+	}
+	else {
+		gameStaleMateSound.setBuffer(gameStaleMateSoundBuffer);
+	}
 
 	// Player names
 	whitePlayerText.loadContent("media/font/Calibri.ttf", 30, sf::Vector2f(900, 10), true);
@@ -570,6 +582,7 @@ int GameScreen::changeTurn()
 		draw();
 		sf::sleep(sf::seconds(3));
 		endGameText.setString("Game ended!\n" + nameOfOther + " wins!");
+		gameWinSound.play();
 		return endGame(); // End game info box
 	}
 	else if (board.getState() & 0x02)
@@ -583,6 +596,7 @@ int GameScreen::changeTurn()
 		draw();
 		sf::sleep(sf::seconds(3));
 		endGameText.setString("Game ended to stalemate!\nDraw!");
+		gameStaleMateSound.play();
 		return endGame(); // End game info box
 	}
 	return 2;

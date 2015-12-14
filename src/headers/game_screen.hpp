@@ -97,11 +97,13 @@ private:
 
 	std::vector<std::pair<int, int> > moveList;
 
+	// Sounds
 	sf::SoundBuffer moveSoundBuffer;
 	sf::Sound moveSound;
-
-	//sf::SoundBuffer gameWinSoundBuffer;
-	//sf::SoundBuffer gameLoseSoundBuffer;
+	sf::SoundBuffer gameWinSoundBuffer;
+	sf::Sound gameWinSound;
+	sf::SoundBuffer gameStaleMateSoundBuffer;
+	sf::Sound gameStaleMateSound;
 
 	// Buttons
 	Button saveButton;
