@@ -1,0 +1,11 @@
+Terminal based UI for easy use over ssh.
+
+#1 phase
+Possibility to select which lvl of ai plays which amount of games against which ai
+output to file
+Number of wins for both
+average amount of moves for black
+average thinking time for black
+average amount of moves for white
+average thinking time for white
+
