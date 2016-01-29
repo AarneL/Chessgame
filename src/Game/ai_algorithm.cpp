@@ -12,7 +12,7 @@
 
 #define MAX 1000000
 #define MIN -1000000
-#define THREADS 4
+#define THREADS 8
 //black pieces have negative value so black player is always minimizing
 //needs to use board merhods
 
@@ -31,7 +31,7 @@ namespace AiAlgorithm
 		currentBestMove.value = (whiteOnTurn) ? a : b;
 
 		// 1. Get number of threads that system can manage
-		unsigned int num_of_threads = 4;
+		unsigned int num_of_threads = THREADS;
 		std::srand((int)std::time(0));
 
 		// 2. Get all possible moves and divide them as tasks to threads
@@ -246,6 +246,7 @@ namespace AiAlgorithm
 
 		// Evaluate
 		// White pieces are of positive value and black pieces are negative
+
 
 		// Lets make table for values of pieces
 		return value;
