@@ -370,7 +370,7 @@ int Board::updateState(int index, int caller) //index is the destination of last
 int Board::isCheck(int turn) const //0 test if black is checked
 {
 	std::vector<int> moves;
-	int king_location;
+	int king_location = -1;
 
 	//search the king
 	for(int i = 0; i<64;i++)
@@ -387,7 +387,7 @@ int Board::isCheck(int turn) const //0 test if black is checked
 	{
 		if(board[a] == (7+turn) || board[a] == (9+turn))//check for enemys rook and queen
 		{
-			return king_location;
+			return 1;
 		}
 	}
 
@@ -398,7 +398,7 @@ int Board::isCheck(int turn) const //0 test if black is checked
 	{
 		if(board[a] == (5+turn) || board[a] == (9+turn))
 		{
-			return king_location;
+			return 1;
 		}
 	}
 
@@ -408,7 +408,7 @@ int Board::isCheck(int turn) const //0 test if black is checked
 	{
 		if(board[a] == (3+turn))
 		{
-			return king_location;
+			return 1;
 		}
 	}
 
@@ -422,7 +422,7 @@ int Board::isCheck(int turn) const //0 test if black is checked
 		{
 			if(board[a] == 2)
 			{
-				return king_location;
+				return 1;
 			}
 
 		}
@@ -435,10 +435,13 @@ int Board::isCheck(int turn) const //0 test if black is checked
 		{
 			if(board[a] == 1)
 			{
-				return king_location;
+				return 1;
 			}
 		}
 	}
+
+	if(king_location == -1)
+		std::cout << "There is a bug in isCheck " << std::endl;
 
 	return 0;
 }
