@@ -13,6 +13,22 @@
 #include <string>
 #include <vector>
 
+#include <stdio.h>
+#include <time.h>
+
+// Get current date/time, format is YYYY-MM-DD.HH:mm:ss
+const std::string currentDateTime() {
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+    tstruct = *localtime(&now);
+    // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+    // for more information about date/time format
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+
+    return buf;
+}
+
 int main(void)
 {
 	int games = 0;
@@ -67,6 +83,8 @@ int main(void)
 			draw++;
 		}
 		std::cout << "Whitewins: " << whitewins << std::endl << "Blackwins: " << blackwins << std::endl << "Stalemates: " << stalemate << std::endl << "Draw: " << draw << std::endl << "Turns played: " << turn << std::endl;
+    std::cout << "currentDateTime()=" << currentDateTime() << std::endl;
+std::cout << std::endl;
 		status = 2;
 	}
 
