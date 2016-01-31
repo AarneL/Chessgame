@@ -101,16 +101,16 @@ namespace AiAlgorithm
 		for (unsigned int i = 0; i < taskVectors.size(); i++) {
 			// Some magic with lambda functions
 			threads.push_back(std::thread(lambda, board, i, a, b));
-			std::cout << "Started thread number " << i + 1 << std::endl;
+			//std::cout << "Started thread number " << i + 1 << std::endl;
 		}
 
-		int i = 1;
+		//int i = 1; //This is for the cout below
 		// 4. Wait threads to finish
 		for (auto thread = threads.begin(); thread != threads.end(); thread++)
 		{
-			std::cout << "Waiting for thread number " << i << " to finish." << std::endl;
+			//std::cout << "Waiting for thread number " << i << " to finish." << std::endl;
 			thread->join();
-			std::cout << "Thread number " << i++ << " finished." << std::endl;
+			//std::cout << "Thread number " << i++ << " finished." << std::endl;
 
 		}
 
@@ -134,7 +134,7 @@ namespace AiAlgorithm
 		if (currentBestMove.origin == 0 && currentBestMove.destination == 0) {
 			std::cout << "Illegal move [0,0]" << std::endl;
 		}
-		std::cout << "Returning with move [" << currentBestMove.origin << "," << currentBestMove.destination <<  "]" << ", its value is " << currentBestMove.value << std::endl;
+		//std::cout << "Returning with move [" << currentBestMove.origin << "," << currentBestMove.destination <<  "]" << ", its value is " << currentBestMove.value << std::endl;
 
 		return std::make_pair(currentBestMove.origin ,currentBestMove.destination);
 	}
@@ -313,16 +313,23 @@ namespace AiAlgorithm
 	std::vector<std::vector<Move>> divideForThreads(std::vector<Move> allPossibleMoves, int threads)
 	{
 		// This divides possiblemoves to n vectors (number of usable cores)
+		//why allpossiblemoves is used? luckily it's just name of a parameter and not the actual allpossiblemoves
 		int size = allPossibleMoves.size();
 		std::vector<std::vector<Move>> returnVector;
 		int move = 0;
-		if (size < threads) {
-			returnVector.push_back(allPossibleMoves);
+		if (size < threads) {//In case theres not enough threads for every move then each move should at least have it's own thread
+			for(int i = 0;i < size;i++)
+			{
+			std::vector<Move> temp;
+			temp.push_back(allPossibleMoves[i]);
+			returnVector.push_back(temp);
+			}			
 			return returnVector;
 		}
+		//Done once for every thread
 		for (int i = 0; i < threads; i++) {
 			std::vector<Move> temp;
-			while (move < (size/threads)*(i + 1)){
+			while (move < (size/threads)*(i + 1)){//size/threads is how many moves one thread shall take
 				temp.push_back(allPossibleMoves[move]);
 				move++;
 			}
