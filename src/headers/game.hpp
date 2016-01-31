@@ -8,7 +8,6 @@
 #include "../headers/human.hpp"
 #include "../headers/ai.hpp"
 
-#include "../headers/chess_piece.hpp"
 
 class Game
 {
