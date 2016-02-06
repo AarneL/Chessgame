@@ -17,6 +17,20 @@ debug:
 	GUI/tinyfiledialogs.c \
 	-lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system -lpthread
 
+autotesting:
+	g++ -std=c++11 -Wall -pedantic -O3 -o autotest.bin -pthread autotest/automatic.cpp \
+	autotest/game.cpp \
+	Game/Player/player.cpp Game/Player/human.cpp Game/Player/ai.cpp \
+	Game/board.cpp Game/rules.cpp Game/ai_algorithm.cpp \
+	-lpthread
+
+autotestingdebug:
+	g++ -std=c++11 -gstabs+ -Wall -pedantic -O0 -o autotest.bin autotest/automatic.cpp \
+	autotest/game.cpp \
+	Game/Player/player.cpp Game/Player/human.cpp Game/Player/ai.cpp \
+	Game/board.cpp Game/rules.cpp Game/ai_algorithm.cpp 
+	-lpthread
+
 
 clean:
 	rm Chessgame.bin
